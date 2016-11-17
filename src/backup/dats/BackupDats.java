@@ -5,13 +5,10 @@
  */
 package backup.dats;
 
-import java.awt.Image;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import sun.swing.BakedArrayList;
 
 /**
  *
