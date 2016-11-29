@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -47,9 +46,8 @@ public class FrmPost extends javax.swing.JFrame {
         txtPorta = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtServidor = new javax.swing.JTextField();
-        txtDestinoPost = new javax.swing.JTextField();
-        btLoadExecutaAntes1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        txtSenha = new javax.swing.JPasswordField();
         btSalvaConfig = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -88,16 +86,9 @@ public class FrmPost extends javax.swing.JFrame {
 
         txtServidor.setText("localhost");
 
-        txtDestinoPost.setText("C:\\BackupPostgreSQL.backup");
+        jLabel3.setText("Senha");
 
-        btLoadExecutaAntes1.setText("Selecionar");
-        btLoadExecutaAntes1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btLoadExecutaAntes1ActionPerformed(evt);
-            }
-        });
-
-        jLabel3.setText("Arquivo de destino");
+        txtSenha.setText("postgres");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -111,26 +102,26 @@ public class FrmPost extends javax.swing.JFrame {
                         .addComponent(btLoadExecutaAntes))
                     .addComponent(jLabel1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(txtServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6)
+                                .addComponent(txtServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
-                            .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(txtDestinoPost, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btLoadExecutaAntes1))
-                    .addComponent(jLabel3))
+                            .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -154,17 +145,17 @@ public class FrmPost extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDestinoPost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btLoadExecutaAntes1)))
+                        .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(26, 26, 26)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btSalvaConfig.setText("Salvar configurações");
@@ -181,17 +172,19 @@ public class FrmPost extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btSalvaConfig)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btSalvaConfig))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSalvaConfig)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -219,8 +212,8 @@ public class FrmPost extends javax.swing.JFrame {
             cfg.setPropriedade("servidor_post", txtServidor.getText());
             cfg.setPropriedade("porta_post", txtPorta.getText());
             cfg.setPropriedade("usuario_post", txtUsuario.getText());
+            cfg.setPropriedade("senha_post", String.valueOf(txtSenha.getPassword()));
             cfg.setPropriedade("banco_post", txtDatabase.getText());
-            cfg.setPropriedade("destino_post", txtDestinoPost.getText());
             setVisible(false);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FrmPost.class.getName()).log(Level.SEVERE, null, ex);
@@ -238,30 +231,14 @@ public class FrmPost extends javax.swing.JFrame {
             txtServidor.setText(cfg.getPropriedade("servidor_post"));
             txtPorta.setText(cfg.getPropriedade("porta_post"));
             txtUsuario.setText(cfg.getPropriedade("usuario_post"));
+            txtSenha.setText(cfg.getPropriedade("senha_post"));
             txtDatabase.setText(cfg.getPropriedade("banco_post"));
-            txtDestinoPost.setText(cfg.getPropriedade("destino_post"));
-
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FrmPost.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FrmPost.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowOpened
-
-    private void btLoadExecutaAntes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoadExecutaAntes1ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser j = new JFileChooser(new File("C:\\"));
-        j.setDialogType(JFileChooser.SAVE_DIALOG);
-        j.setDialogTitle("Salvar arquivo de backup PostgresSQL");
-        String nome = "BackupPostgreSQL.backup";
-        j.setSelectedFile(new File(nome));
-        j.setFileFilter(new FileNameExtensionFilter("Arquivo BACKUP", "BACKUP"));
-        Integer opt = j.showSaveDialog(this);
-        if (opt == 0) {
-            String arquivoSelecionado = j.getSelectedFile().getAbsolutePath();
-            txtDestinoPost.setText(arquivoSelecionado);
-        }
-    }//GEN-LAST:event_btLoadExecutaAntes1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -300,7 +277,6 @@ public class FrmPost extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLoadExecutaAntes;
-    private javax.swing.JButton btLoadExecutaAntes1;
     private javax.swing.JButton btSalvaConfig;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -311,8 +287,8 @@ public class FrmPost extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField txtCaminhoBin;
     private javax.swing.JTextField txtDatabase;
-    private javax.swing.JTextField txtDestinoPost;
     private javax.swing.JTextField txtPorta;
+    private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtServidor;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

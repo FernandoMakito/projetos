@@ -12,6 +12,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -311,9 +312,9 @@ public class FrmConfig extends javax.swing.JFrame {
 
     private void radioDatStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radioDatStateChanged
         // TODO add your handling code here:
-        if(radioDat.isSelected()){
+        if (radioDat.isSelected()) {
             btConfiguraPost.setEnabled(false);
-        }else{
+        } else {
             btConfiguraPost.setEnabled(true);
         }
     }//GEN-LAST:event_radioDatStateChanged
@@ -335,10 +336,14 @@ public class FrmConfig extends javax.swing.JFrame {
         j.setFileFilter(new FileNameExtensionFilter("Arquivo BAT", "BAT"));
         Integer opt = j.showSaveDialog(this);
         if (opt == 0) {
-            if (local.equals("antes")) {
-                txtExecutaAntes.setText(j.getSelectedFile().getAbsolutePath());
+            if (!j.getSelectedFile().getName().contains(" ")) {
+                if (local.equals("antes")) {
+                    txtExecutaAntes.setText(j.getSelectedFile().getAbsolutePath());
+                } else {
+                    txtExecutaDepois.setText(j.getSelectedFile().getAbsolutePath());
+                }
             } else {
-                txtExecutaDepois.setText(j.getSelectedFile().getAbsolutePath());
+                JOptionPane.showMessageDialog(this, "O nome do arquivo não pode conter espaços");
             }
         }
     }

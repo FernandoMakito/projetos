@@ -26,7 +26,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="Makito Backup 1.0.0"/>
+    <Property name="title" type="java.lang.String" value="Makito Backup"/>
     <Property name="locationByPlatform" type="boolean" value="true"/>
     <Property name="resizable" type="boolean" value="false"/>
   </Properties>
@@ -62,10 +62,6 @@
                       <Component id="txtDestino" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="380" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
@@ -80,27 +76,36 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btSelecionar" min="-2" pref="93" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="ckDat" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="ckFr3" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="ckFlx" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="ckHdr" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="ckK" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="ckTag" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="lblTipo" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="progresso" min="-2" pref="380" max="-2" attributes="0"/>
                                   <Component id="statusSistema" alignment="0" min="-2" pref="380" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="btExtensoes" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="txtExtSelecionandas" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="btIgnoraPasta" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                                      <Component id="lblPostgres" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jScrollPane1" min="-2" pref="380" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -114,18 +119,17 @@
                   <Component id="btSelecionar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtOrigem" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-              <Component id="lblTipo" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="ckDat" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ckHdr" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ckK" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ckFr3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ckFlx" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ckTag" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btExtensoes" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btIgnoraPasta" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtExtSelecionandas" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblPostgres" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="240" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -224,64 +228,6 @@
         <Property name="text" type="java.lang.String" value="0 arquivos"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblTipo">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Tipos de arquivos"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="ckDat">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=".DAT"/>
-      </Properties>
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="ckDatStateChanged"/>
-        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckDatMouseReleased"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="ckHdr">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=".HDR"/>
-      </Properties>
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="ckHdrStateChanged"/>
-        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckHdrMouseReleased"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="ckTag">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=".TAG"/>
-      </Properties>
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="ckTagStateChanged"/>
-        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckTagMouseReleased"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="ckK">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=".K"/>
-      </Properties>
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="ckKStateChanged"/>
-        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckKMouseReleased"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="ckFlx">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=".FLX"/>
-      </Properties>
-      <Events>
-        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckFlxMouseReleased"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JCheckBox" name="ckFr3">
-      <Properties>
-        <Property name="text" type="java.lang.String" value=".FR3"/>
-      </Properties>
-      <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="ckFr3StateChanged"/>
-        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckFr3MouseReleased"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JButton" name="salvaBackup">
       <Properties>
         <Property name="text" type="java.lang.String" value="Salvar backup"/>
@@ -303,11 +249,44 @@
       </Events>
     </Component>
     <Component class="javax.swing.JProgressBar" name="progresso">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+        <Property name="borderPainted" type="boolean" value="false"/>
+        <Property name="focusable" type="boolean" value="false"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="statusSistema">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="   "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btExtensoes">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Selecionar Extens&#xf5;es"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btExtensoesActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="txtExtSelecionandas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="N&#xe3;o h&#xe1; extens&#xf5;es selecionadas"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btIgnoraPasta">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ignorar SubPastas"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btIgnoraPastaActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPostgres">
+      <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="33" red="0" type="rgb"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

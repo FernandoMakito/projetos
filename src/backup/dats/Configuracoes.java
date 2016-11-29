@@ -32,17 +32,20 @@ public class Configuracoes {
         boolean a = arquivoConfig.createNewFile();
         Properties novoArquivo = abreArquivo();
         novoArquivo.setProperty("modo", "dat");
-        novoArquivo.setProperty("extensoes", "dat/fr3/");
+        novoArquivo.setProperty("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/tag/flx/exe/cfg/");
+        novoArquivo.setProperty("extensoes_ativas", "dat/fr3/");
         novoArquivo.setProperty("pasta_origem", "");
         novoArquivo.setProperty("pasta_destino", "");
         novoArquivo.setProperty("compactacao", "7");
         novoArquivo.setProperty("executa_antes", "");
+        novoArquivo.setProperty("executa_depois", "");
         novoArquivo.setProperty("caminho_post", "C:\\Program Files (x86)\\PostgreSQL\\9.3\\bin");
         novoArquivo.setProperty("banco_post", "");
         novoArquivo.setProperty("porta_post", "5432");
         novoArquivo.setProperty("servidor_post", "localhost");
         novoArquivo.setProperty("usuario_post", "postgres");
-        novoArquivo.setProperty("destino_post", "C:\\BackupPostgreSQL.backup");
+        novoArquivo.setProperty("senha_post", "postgres");
+        novoArquivo.setProperty("pastas_ignoradas", "tempor,FastEstrutura,FirefoxPortable,Log,LogEcf,LogTerminais,MkoLog,MONITOR,NFELOG,recebido,relcry");
         salvaArquivo(novoArquivo);
 
     }
