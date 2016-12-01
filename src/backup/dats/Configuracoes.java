@@ -32,8 +32,8 @@ public class Configuracoes {
         boolean a = arquivoConfig.createNewFile();
         Properties novoArquivo = abreArquivo();
         novoArquivo.setProperty("modo", "dat");
-        novoArquivo.setProperty("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/tag/flx/exe/cfg/");
-        novoArquivo.setProperty("extensoes_ativas", "dat/fr3/");
+        novoArquivo.setProperty("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/tag/flx/exe/cfg/dll/txt/con");
+        novoArquivo.setProperty("extensoes_ativas", "dat/fr3/con");
         novoArquivo.setProperty("pasta_origem", "");
         novoArquivo.setProperty("pasta_destino", "");
         novoArquivo.setProperty("compactacao", "7");
@@ -45,7 +45,8 @@ public class Configuracoes {
         novoArquivo.setProperty("servidor_post", "localhost");
         novoArquivo.setProperty("usuario_post", "postgres");
         novoArquivo.setProperty("senha_post", "postgres");
-        novoArquivo.setProperty("pastas_ignoradas", "tempor,FastEstrutura,FirefoxPortable,Log,LogEcf,LogTerminais,MkoLog,MONITOR,NFELOG,recebido,relcry");
+        novoArquivo.setProperty("backup_facil", "false");
+        novoArquivo.setProperty("pastas_ignoradas", "tempor,FastEstrutura,FirefoxPortable,GoogleChromePortable,Log,LogEcf,LogTerminais,MkoLog,MONITOR,NFELOG,recebido,relcry,DownloadTmp");
         salvaArquivo(novoArquivo);
 
     }
