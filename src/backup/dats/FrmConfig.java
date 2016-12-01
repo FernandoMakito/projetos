@@ -56,6 +56,7 @@ public class FrmConfig extends javax.swing.JFrame {
         radioDat = new javax.swing.JRadioButton();
         radioPost = new javax.swing.JRadioButton();
         btConfiguraPost = new javax.swing.JButton();
+        ckBkFacil = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurações do Backup");
@@ -219,6 +220,14 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(btConfiguraPost))
         );
 
+        ckBkFacil.setText("Backup Fácil");
+        ckBkFacil.setToolTipText("Com esse modo ativo o backup irá iniciar automáticamente ao executar o programa");
+        ckBkFacil.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckBkFacilMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -226,21 +235,24 @@ public class FrmConfig extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ckBkFacil)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btSalvaConfig)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -248,7 +260,9 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ckBkFacil)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(btSalvaConfig))
@@ -266,6 +280,7 @@ public class FrmConfig extends javax.swing.JFrame {
             cfg.setPropriedade("executa_depois", txtExecutaDepois.getText());
             cfg.setPropriedade("compactacao", String.valueOf(getTipoCompactacao()));
             cfg.setPropriedade("modo", setTipoDados());
+            cfg.setPropriedade("backup_facil", String.valueOf(ckBkFacil.isSelected()));
             fecharForm();
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
@@ -288,6 +303,7 @@ public class FrmConfig extends javax.swing.JFrame {
             txtExecutaDepois.setText(cfg.getPropriedade("executa_depois"));
             setTipoCompactacao(cfg.getPropriedade("compactacao"));
             getTipoDados(cfg.getPropriedade("modo"));
+            ckBkFacil.setSelected(Boolean.valueOf(cfg.getPropriedade("backup_facil")));
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -324,6 +340,23 @@ public class FrmConfig extends javax.swing.JFrame {
         FrmPost frm = new FrmPost();
         frm.setVisible(true);
     }//GEN-LAST:event_btConfiguraPostActionPerformed
+
+    private void ckBkFacilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseClicked
+        if(ckBkFacil.isSelected()){
+        try {
+            // TODO add your handling code here:
+            Configuracoes cfg = new Configuracoes();
+           if(cfg.getPropriedade("pasta_origem").equals("") || cfg.getPropriedade("pasta_destino").equals("")){
+              JOptionPane.showMessageDialog(null,"Para usar o backup rápido deve ser realizado pelo menos um backup pelo sistema"); 
+              ckBkFacil.setSelected(false);
+           }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }        
+    }//GEN-LAST:event_ckBkFacilMouseClicked
     private void fecharForm() {
         setVisible(false);
     }
@@ -418,15 +451,11 @@ public class FrmConfig extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FrmConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
@@ -442,6 +471,7 @@ public class FrmConfig extends javax.swing.JFrame {
     private javax.swing.JButton btLoadExecutaAntes;
     private javax.swing.JButton btLoadExecutaDepois;
     private javax.swing.JButton btSalvaConfig;
+    private javax.swing.JCheckBox ckBkFacil;
     private javax.swing.ButtonGroup grRadioCompactacao;
     private javax.swing.ButtonGroup grRadioModo;
     private javax.swing.JButton jButton1;

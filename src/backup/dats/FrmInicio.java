@@ -5,6 +5,8 @@
  */
 package backup.dats;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedReader;
@@ -20,11 +22,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import net.lingala.zip4j.core.ZipFile;
@@ -45,6 +49,10 @@ public class FrmInicio extends javax.swing.JFrame {
     long tamanhoArquivos;
     List<String> extSelecionadas;
     List<String> pastasIgnoradas;
+    Timer timer = null;
+    Boolean rapido = false;
+    Boolean postgres = false;
+    Boolean erroPostgres = false;
 
     public FrmInicio() {
         initComponents();
@@ -71,10 +79,8 @@ public class FrmInicio extends javax.swing.JFrame {
         btExtensoes = new javax.swing.JButton();
         txtExtSelecionandas = new javax.swing.JLabel();
         btIgnoraPasta = new javax.swing.JButton();
-        lblPostgres = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Makito Backup");
@@ -165,7 +171,7 @@ public class FrmInicio extends javax.swing.JFrame {
 
         txtQtdArquivos.setText("0 arquivos");
 
-        salvaBackup.setText("Salvar backup");
+        salvaBackup.setText("Iniciar backup");
         salvaBackup.setEnabled(false);
         salvaBackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,8 +210,6 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
 
-        lblPostgres.setForeground(new java.awt.Color(0, 51, 255));
-
         jMenu1.setText("Configurar");
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -218,14 +222,6 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
         jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("teste");
-        jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu2MouseClicked(evt);
-            }
-        });
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -256,18 +252,10 @@ public class FrmInicio extends javax.swing.JFrame {
                                     .addComponent(statusSistema, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btExtensoes)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(28, 28, 28)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btIgnoraPasta)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(10, 10, 10)
-                                        .addComponent(lblPostgres)))))
+                                .addComponent(btExtensoes)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btIgnoraPasta))
+                            .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -285,9 +273,7 @@ public class FrmInicio extends javax.swing.JFrame {
                     .addComponent(btExtensoes)
                     .addComponent(btIgnoraPasta))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtExtSelecionandas)
-                    .addComponent(lblPostgres))
+                .addComponent(txtExtSelecionandas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -296,10 +282,11 @@ public class FrmInicio extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtQtdArquivos)
                         .addComponent(salvaBackup)))
-                .addGap(10, 10, 10)
+                .addGap(5, 5, 5)
                 .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusSistema))
+                .addGap(2, 2, 2)
+                .addComponent(statusSistema)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -380,25 +367,95 @@ public class FrmInicio extends javax.swing.JFrame {
             }
             getExtSelecionadas();
             listaArquivos();
+            verificarBkRapido();
         } catch (IOException ex) {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_formWindowOpened
 
+    private void verificarBkRapido() {
+        try {
+            Configuracoes cfg = new Configuracoes();
+            if (cfg.getPropriedade("backup_facil").equals("true")) {
+                File pastaOrigem = new File(cfg.getPropriedade("pasta_origem"));
+                if (pastaOrigem.isDirectory()) {
+                    rapido = true;
+                    iniciaBackupRapido();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Não foi possivel iniciar o backup automaticamente");
+                }
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void iniciaBackupRapido() {
+
+        Object[] options1 = {"Cancelar"};
+        final JPanel panel = new JPanel();
+        final JLabel lbl = new JLabel("Iniciando backup rápido em 5 segundos");
+        panel.add(lbl);
+        timer = new Timer(1000, new ActionListener() {
+            int segundos = 5;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (segundos > 0) {
+                    lbl.setText("Iniciando backup rápido em " + String.valueOf(segundos) + " segundos");
+                    segundos--;
+                } else {
+                    timer.stop();
+                    JOptionPane.getRootFrame().dispose();
+                    try {
+                        iniciaBackupAuto();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        timer.start();
+        int result = JOptionPane.showOptionDialog(null, panel, "Backup Rápido",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, options1, null);
+
+        if (result == JOptionPane.YES_OPTION) {
+            timer.stop();
+            rapido = false;
+        }
+    }
+
+    private void iniciaBackupAuto() throws InterruptedException {
+        try {
+            String pastaSalva = new File(txtDestino.getText()).getParent();
+            String nome = "BackupMakito" + dataBackup() + ".zip";
+            File novoArquivo = new File(pastaSalva + "\\" + nome);
+            int i = 1;
+            while (novoArquivo.exists()) {
+                novoArquivo = new File(pastaSalva + "\\" + nome.replace(".zip", "_copia(" + String.valueOf(i) + ").zip"));
+                i++;
+            }
+            txtDestino.setText(novoArquivo.getAbsolutePath());
+            if (!ePostgres()) {
+                copiarArquivos();
+            } else {
+                while (!conferePostgres()) {
+                    conferePostgres();
+                }
+                backupPostgres();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
         // TODO add your handling code here:
         FrmConfig frm = new FrmConfig();
         frm.setVisible(true);
-        frm.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                try {
-                    ePostgres();
-                } catch (IOException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void txtDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDestinoActionPerformed
@@ -409,19 +466,6 @@ public class FrmInicio extends javax.swing.JFrame {
         // TODO add your handling code here:
 
     }//GEN-LAST:event_jMenu1ActionPerformed
-    private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        try {
-            executaInicio();
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try {
-            executaDepois();
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jMenu2MouseClicked
 
     private void btExtensoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExtensoesActionPerformed
         // TODO add your handling code here:
@@ -459,22 +503,8 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private void executaComandos(String arquivo) throws IOException, InterruptedException {
-        final Process p = Runtime.getRuntime().exec("cmd /c start " + arquivo);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line = null;
-                try {
-                    while ((line = input.readLine()) != null) {
-                        System.out.println(line);
-                    }
-                } catch (IOException e) {
-                    e.getLocalizedMessage();
-                }
-            }
-        }).start();
-        p.waitFor(30, TimeUnit.SECONDS);
+        final Process p = Runtime.getRuntime().exec("cmd /c start /wait " + arquivo);
+        p.waitFor();
         statusSistema.setText("");
     }
 
@@ -507,16 +537,16 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private void copiarArquivos() {
+        try {
+            //execute no inicio
+            executaInicio();
+        } catch (IOException | InterruptedException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
         new Thread(new Runnable() {
             public void run() {
                 //desabilitar botoes
                 habilitaComandos(false);
-                try {
-                    //execute no inicio
-                    executaInicio();
-                } catch (IOException | InterruptedException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 //copiar arquivos
                 String pastaOrigem = txtOrigem.getText();
                 String pastaDestino = txtDestino.getText();
@@ -608,13 +638,13 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private void apagaPasta(File folder) throws IOException, UnsupportedEncodingException, InterruptedException {
         statusSistema.setText("Apagando arquivos temporários");
-        
+
         //apaga arquivo postgres Makito
         File postgresBk = new File(txtOrigem.getText() + "\\PostgresMakito" + dataBackup() + ".backup");
-        if(postgresBk.exists()){
+        if (postgresBk.exists()) {
             postgresBk.delete();
         }
-        
+
         File[] listOfFiles = folder.listFiles();
         ArrayList<String> pastaApagar = new ArrayList<>();
         for (File listOfFile : listOfFiles) {
@@ -645,7 +675,14 @@ public class FrmInicio extends javax.swing.JFrame {
 
         statusSistema.setText("Backup concluido ;)");
         salvaConfig();
-        JOptionPane.showMessageDialog(this, "Backup finalizado!");
+        String mensagem = "Backup finalizado!";
+        if (rapido) {
+            mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
+        }
+        JOptionPane.showMessageDialog(this, mensagem);
+        if (rapido) {
+            System.exit(0);
+        }
     }
 
     private void salvaConfig() throws UnsupportedEncodingException, IOException {
@@ -725,11 +762,7 @@ public class FrmInicio extends javax.swing.JFrame {
     private boolean ePostgres() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         Boolean ep = cfg.getPropriedade("modo").equals("post");
-        if (ep) {
-            lblPostgres.setText("Backup PostgreSQL");
-        } else {
-            lblPostgres.setText("");
-        }
+        postgres = true;
         return ep;
     }
 
@@ -772,6 +805,11 @@ public class FrmInicio extends javax.swing.JFrame {
                 barraProgresso(true);
                 File folder = new File(caminho);
                 tamanhoArquivos = 0;
+                try {
+                    ePostgres();
+                } catch (IOException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 if (folder.isDirectory()) {
                     File[] todosArquivos = folder.listFiles();
                     DefaultTableModel model = (DefaultTableModel) tabelaArquivos.getModel();
@@ -805,7 +843,7 @@ public class FrmInicio extends javax.swing.JFrame {
         progresso.setIndeterminate(ativa);
         if (ativa) {
             progresso.setValue(1);
-        }else{
+        } else {
             progresso.setValue(0);
         }
     }
@@ -823,7 +861,7 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         }
         txtQtdArquivos.setText(String.valueOf(qtdFiles) + " arquivos, cerca de " + humanReadableByteCount(tamanhoArquivos, true));
-        if (qtdFiles == 0) {
+        if (qtdFiles == 0 && !postgres) {
             File pasta = new File(txtOrigem.getText());
             if (pasta.isDirectory()) {
                 JOptionPane.showMessageDialog(this, "Nenhum arquivo encontrado nessa pasta, \nSelecione a pasta do sistema e as extensões desejadas");
@@ -831,7 +869,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Selecione a pasta do sistema primeiramente");
             }
             salvaBackup.setEnabled(false);
-        } else if(btSelecionar.isEnabled()) {
+        } else if (btSelecionar.isEnabled()) {
             salvaBackup.setEnabled(true);
         }
 
@@ -915,17 +953,21 @@ public class FrmInicio extends javax.swing.JFrame {
                         if (line == null) {
                             break;
                         }
-                        int dialogResult = JOptionPane.showConfirmDialog(null, "Ocorreu o seguinte erro: \n**" + line + "**\nDeseja continuar o backup?", "Erro no Backup do PostgreSQL", JOptionPane.YES_NO_OPTION);
+                        int dialogResult = JOptionPane.showConfirmDialog(null, "Ocorreu o seguinte erro: \n" + line + "\nDeseja continuar o backup dos arquivos?", "Erro no Backup do PostgreSQL", JOptionPane.YES_NO_OPTION);
                         if (dialogResult == JOptionPane.NO_OPTION) {
                             System.exit(0);
+                        } else {
+                            erroPostgres = true;
                         }
                     }
-                    File postgresBk = new File(txtOrigem.getText() + "\\PostgresMakito" + dataBackup() + ".backup");
-                    DefaultTableModel model = (DefaultTableModel) tabelaArquivos.getModel();
-                    model.addRow(new Object[]{true, postgresBk.getName(), (postgresBk.length() / 1024)});
-                    atualizaQtdFiles();
+                    if (!erroPostgres) {
+                        File postgresBk = new File(txtOrigem.getText() + "\\PostgresMakito" + dataBackup() + ".backup");
+                        DefaultTableModel model = (DefaultTableModel) tabelaArquivos.getModel();
+                        model.addRow(new Object[]{true, postgresBk.getName(), (postgresBk.length() / 1024)});
+                        atualizaQtdFiles();
+                        statusSistema.setText("Backup Postgres finalizado");
+                    }
                     barraProgresso(false);
-                    statusSistema.setText("Backup Postgres finalizado");
                     copiarArquivos();
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
@@ -987,10 +1029,8 @@ public class FrmInicio extends javax.swing.JFrame {
     private javax.swing.JButton btIgnoraPasta;
     private javax.swing.JButton btSelecionar;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblPostgres;
     private javax.swing.JProgressBar progresso;
     private javax.swing.JButton salvaBackup;
     private javax.swing.JLabel statusSistema;
