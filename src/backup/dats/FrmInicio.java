@@ -16,8 +16,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -243,19 +243,16 @@ public class FrmInicio extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(salvaBackup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(statusSistema, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(txtOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(progresso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(btExtensoes)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btIgnoraPasta))
-                            .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(statusSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -527,12 +524,9 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private String dataBackup() {
+        DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy-HHmm");
         Date date = new Date();
-        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        int year = localDate.getYear();
-        int month = localDate.getMonthValue();
-        int day = localDate.getDayOfMonth();
-        String data = String.valueOf(day) + "-" + String.valueOf(month) + "-" + String.valueOf(year);
+        String data = sdf.format(date);
         return data;
     }
 
@@ -594,9 +588,9 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private void criaSubPastas(String destino, String arquivo) {
         String[] quebra = arquivo.split("/");
-        File novaPasta = new File(quebra[0].trim());
-        if (!novaPasta.isDirectory()) {
-            Boolean criar = (new File(destino + novaPasta)).mkdirs();
+        File novaPasta = new File(destino + quebra[0].trim());
+        if (!novaPasta.exists()) {
+            Boolean criar = novaPasta.mkdirs();
         }
     }
 
@@ -762,7 +756,7 @@ public class FrmInicio extends javax.swing.JFrame {
     private boolean ePostgres() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         Boolean ep = cfg.getPropriedade("modo").equals("post");
-        postgres = true;
+        postgres = ep;
         return ep;
     }
 
@@ -861,15 +855,15 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         }
         txtQtdArquivos.setText(String.valueOf(qtdFiles) + " arquivos, cerca de " + humanReadableByteCount(tamanhoArquivos, true));
+        File pasta = new File(txtOrigem.getText());
         if (qtdFiles == 0 && !postgres) {
-            File pasta = new File(txtOrigem.getText());
             if (pasta.isDirectory()) {
                 JOptionPane.showMessageDialog(this, "Nenhum arquivo encontrado nessa pasta, \nSelecione a pasta do sistema e as extensões desejadas");
             } else if (txtOrigem.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Selecione a pasta do sistema primeiramente");
             }
             salvaBackup.setEnabled(false);
-        } else if (btSelecionar.isEnabled()) {
+        } else if ((qtdFiles > 0 || postgres) && pasta.isDirectory()) {
             salvaBackup.setEnabled(true);
         }
 

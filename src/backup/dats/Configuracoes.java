@@ -32,7 +32,7 @@ public class Configuracoes {
         boolean a = arquivoConfig.createNewFile();
         Properties novoArquivo = abreArquivo();
         novoArquivo.setProperty("modo", "dat");
-        novoArquivo.setProperty("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/tag/flx/exe/cfg/dll/txt/con");
+        novoArquivo.setProperty("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/tag/flx/exe/cfg/dll/txt/con/int");
         novoArquivo.setProperty("extensoes_ativas", "dat/fr3/con");
         novoArquivo.setProperty("pasta_origem", "");
         novoArquivo.setProperty("pasta_destino", "");

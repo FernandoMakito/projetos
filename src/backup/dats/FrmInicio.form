@@ -61,24 +61,19 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="salvaBackup" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="txtOrigem" min="-2" pref="281" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btSelecionar" min="-2" pref="93" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="progresso" min="-2" pref="380" max="-2" attributes="0"/>
-                                  <Component id="statusSistema" alignment="0" min="-2" pref="380" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="txtOrigem" min="-2" pref="281" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btSelecionar" min="-2" pref="93" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="progresso" max="32767" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="btExtensoes" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="btIgnoraPasta" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="txtExtSelecionandas" max="32767" attributes="0"/>
+                          <Component id="statusSistema" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
