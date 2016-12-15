@@ -5,12 +5,18 @@
  */
 package backup.dats;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -48,6 +54,7 @@ public class FrmPost extends javax.swing.JFrame {
         txtServidor = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtSenha = new javax.swing.JPasswordField();
+        btTesta = new javax.swing.JButton();
         btSalvaConfig = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -90,6 +97,13 @@ public class FrmPost extends javax.swing.JFrame {
 
         txtSenha.setText("postgres");
 
+        btTesta.setText("jButton1");
+        btTesta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btTestaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -121,7 +135,8 @@ public class FrmPost extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
-                            .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btTesta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -151,7 +166,9 @@ public class FrmPost extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btTesta)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(26, 26, 26)))
@@ -171,11 +188,10 @@ public class FrmPost extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(btSalvaConfig))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btSalvaConfig))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -240,6 +256,65 @@ public class FrmPost extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void btTestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTestaActionPerformed
+        confereConexao();
+
+    }//GEN-LAST:event_btTestaActionPerformed
+
+    private void confereConexao() {
+        if (new File(txtCaminhoBin.getText() + "\\pg_dump.exe").exists()) {
+            try {
+                List<String> comandos = new ArrayList<>();
+                comandos.add(txtCaminhoBin.getText() + "\\pg_dump.exe");
+                comandos.add("-i");
+                comandos.add("-h");
+                comandos.add(txtServidor.getText());
+                comandos.add("-p");
+                comandos.add(txtPorta.getText());
+                comandos.add("-U");
+                comandos.add(txtUsuario.getText());
+                comandos.add("-t");
+                comandos.add("SLCTPC");
+                comandos.add("-F");
+                comandos.add("tar");
+                comandos.add("-f");
+                comandos.add("C:\\testarPostgres.backup");
+                comandos.add(txtDatabase.getText());
+                ProcessBuilder builder = new ProcessBuilder(comandos);
+                builder.environment().put("PGPASSWORD", String.valueOf(txtSenha.getPassword()));
+                builder.redirectErrorStream(true);
+                Process p = builder.start();
+                BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line;
+                while (true) {
+                    line = r.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    JOptionPane.showMessageDialog(null, "Ocorreu o seguinte erro: \n" + line + "\n");
+                    //apaga arquivo de teste
+                    File teste = new File("C:\\testarPostgres.backup");
+                    if (teste.exists()) {
+                        teste.delete();
+                    }
+                    return;
+                }
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            JOptionPane.showMessageDialog(null, "Tudo ok com a conexão PostgreSQL!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o arquivo pg_dump.exe em:\n" + txtCaminhoBin.getText());
+        }
+        //apaga arquivo de teste
+        File teste = new File("C:\\testarPostgres.backup");
+        if (teste.exists()) {
+            teste.delete();
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -260,7 +335,7 @@ public class FrmPost extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FrmPost.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -274,6 +349,7 @@ public class FrmPost extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLoadExecutaAntes;
     private javax.swing.JButton btSalvaConfig;
+    private javax.swing.JButton btTesta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

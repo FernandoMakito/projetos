@@ -38,7 +38,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
@@ -55,6 +55,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -65,20 +66,22 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="ckBkFacil" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btSalvaConfig" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -127,6 +130,7 @@
               <ComponentRef name="grRadioCompactacao"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Baixa (R&#xe1;pida)"/>
+            <Property name="toolTipText" type="java.lang.String" value="Resulta em um arquivo de tamanho maior, por&#xe9;m o tempo de compacta&#xe7;&#xe3;o &#xe9; menor"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JRadioButton" name="radioNormal">
@@ -142,6 +146,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="grRadioCompactacao"/>
             </Property>
+            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Alta"/>
           </Properties>
         </Component>
@@ -151,6 +156,7 @@
               <ComponentRef name="grRadioCompactacao"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Ultra (Lenta)"/>
+            <Property name="toolTipText" type="java.lang.String" value="Resulta em um arquivo de tamanho menor, por&#xe9;m o tempo de compacta&#xe7;&#xe3;o &#xe9; maior"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -185,10 +191,14 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="txtExecutaAntes">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="Selecione um arquivo .bat para executar antes de copiar os arquivos"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btLoadExecutaAntes">
           <Properties>
             <Property name="text" type="java.lang.String" value="Buscar"/>
+            <Property name="toolTipText" type="java.lang.String" value="Selecione um arquivo .bat para executar antes de copiar os arquivos"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLoadExecutaAntesActionPerformed"/>
@@ -227,10 +237,14 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="txtExecutaDepois">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="Selecione um arquivo .bat para executar depois de copiar os arquivos"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btLoadExecutaDepois">
           <Properties>
             <Property name="text" type="java.lang.String" value="Buscar"/>
+            <Property name="toolTipText" type="java.lang.String" value="Selecione um arquivo .bat para executar depois de copiar os arquivos"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLoadExecutaDepoisActionPerformed"/>
@@ -293,7 +307,6 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="grRadioModo"/>
             </Property>
-            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" value="Dat"/>
           </Properties>
           <Events>
@@ -312,7 +325,7 @@
         <Component class="javax.swing.JButton" name="btConfiguraPost">
           <Properties>
             <Property name="text" type="java.lang.String" value="Dados PostgreSQL"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" value="Inclua os dados para conex&#xe3;o com o PostgreSQL"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btConfiguraPostActionPerformed"/>
@@ -329,5 +342,57 @@
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckBkFacilMouseClicked"/>
       </Events>
     </Component>
+    <Container class="javax.swing.JPanel" name="jPanel5">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="FTP"/>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="ckFtp" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="btDadosFtp" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                  <Component id="btDadosFtp" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="ckFtp" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="btDadosFtp">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Dados do FTP"/>
+            <Property name="toolTipText" type="java.lang.String" value="Inclua os dados de conex&#xe3;o com o servidor de FTP"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btDadosFtpActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="ckFtp">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Fazer backup no FTP"/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckFtpMouseClicked"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckFtpActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

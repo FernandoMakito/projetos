@@ -47,6 +47,12 @@ public class Configuracoes {
         novoArquivo.setProperty("senha_post", "postgres");
         novoArquivo.setProperty("backup_facil", "false");
         novoArquivo.setProperty("pastas_ignoradas", "tempor,FastEstrutura,FirefoxPortable,GoogleChromePortable,Log,LogEcf,LogTerminais,MkoLog,MONITOR,NFELOG,recebido,relcry,DownloadTmp");
+        novoArquivo.setProperty("ftp_backup", "false");
+        novoArquivo.setProperty("ftp_servidor", "");
+        novoArquivo.setProperty("ftp_porta", "21");
+        novoArquivo.setProperty("ftp_usuario", "");
+        novoArquivo.setProperty("ftp_senha", "");
+        novoArquivo.setProperty("ftp_caminho", "");
         salvaArquivo(novoArquivo);
 
     }

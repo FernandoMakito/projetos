@@ -6,7 +6,8 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Configurar"/>
+            <Property name="text" type="java.lang.String" value="Configura&#xe7;&#xf5;es"/>
+            <Property name="toolTipText" type="java.lang.String" value="Clique para configurar op&#xe7;&#xf5;es do backup"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jMenu1MouseClicked"/>
@@ -123,6 +124,7 @@
     <Component class="javax.swing.JButton" name="btSelecionar">
       <Properties>
         <Property name="text" type="java.lang.String" value="Selecionar"/>
+        <Property name="toolTipText" type="java.lang.String" value="Selecione a pasta onde o sistema est&#xe1; instalado"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btSelecionarActionPerformed"/>
@@ -236,6 +238,7 @@
     <Component class="javax.swing.JButton" name="btExtensoes">
       <Properties>
         <Property name="text" type="java.lang.String" value="Selecionar Extens&#xf5;es"/>
+        <Property name="toolTipText" type="java.lang.String" value="Escolha as extens&#xf5;es que deseja incluir no backup"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btExtensoesActionPerformed"/>
@@ -249,6 +252,7 @@
     <Component class="javax.swing.JButton" name="btIgnoraPasta">
       <Properties>
         <Property name="text" type="java.lang.String" value="Ignorar SubPastas"/>
+        <Property name="toolTipText" type="java.lang.String" value="Escolha as pastas que N&#xc2;O deseja incluir no backup"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btIgnoraPastaActionPerformed"/>

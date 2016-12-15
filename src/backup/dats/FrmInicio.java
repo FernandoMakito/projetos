@@ -35,6 +35,10 @@ import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  *
@@ -53,6 +57,7 @@ public class FrmInicio extends javax.swing.JFrame {
     Boolean rapido = false;
     Boolean postgres = false;
     Boolean erroPostgres = false;
+    Boolean backupFtp = false;
 
     public FrmInicio() {
         initComponents();
@@ -100,6 +105,7 @@ public class FrmInicio extends javax.swing.JFrame {
         });
 
         btSelecionar.setText("Selecionar");
+        btSelecionar.setToolTipText("Selecione a pasta onde o sistema está instalado");
         btSelecionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSelecionarActionPerformed(evt);
@@ -195,6 +201,7 @@ public class FrmInicio extends javax.swing.JFrame {
         statusSistema.setText("   ");
 
         btExtensoes.setText("Selecionar Extensões");
+        btExtensoes.setToolTipText("Escolha as extensões que deseja incluir no backup");
         btExtensoes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btExtensoesActionPerformed(evt);
@@ -204,13 +211,15 @@ public class FrmInicio extends javax.swing.JFrame {
         txtExtSelecionandas.setText("Não há extensões selecionadas");
 
         btIgnoraPasta.setText("Ignorar SubPastas");
+        btIgnoraPasta.setToolTipText("Escolha as pastas que NÂO deseja incluir no backup");
         btIgnoraPasta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btIgnoraPastaActionPerformed(evt);
             }
         });
 
-        jMenu1.setText("Configurar");
+        jMenu1.setText("Configurações");
+        jMenu1.setToolTipText("Clique para configurar opções do backup");
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu1MouseClicked(evt);
@@ -494,6 +503,71 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_btIgnoraPastaActionPerformed
+    private boolean verificaFtp() throws UnsupportedEncodingException, IOException{
+        Configuracoes cfg = new Configuracoes();
+        boolean tudoOk = true;
+        if (cfg.getPropriedade("ftp_servidor").equals("")) {
+            cfg.setPropriedade("ftp_servidor", JOptionPane.showInputDialog(this, "Qual o endereço do servidor FTP?"));
+            tudoOk = false;
+        }
+        if (cfg.getPropriedade("ftp_porta").equals("")) {
+            cfg.setPropriedade("ftp_porta", JOptionPane.showInputDialog(this, "Qual a porta do servidor FTP?"));
+            tudoOk = false;
+        }
+        if (cfg.getPropriedade("ftp_usuario").equals("")) {
+            cfg.setPropriedade("ftp_usuario", JOptionPane.showInputDialog(this, "Qual o usuário do servidor FTP?"));
+            tudoOk = false;
+        }
+        if (cfg.getPropriedade("ftp_senha").equals("")) {
+            cfg.setPropriedade("ftp_senha", JOptionPane.showInputDialog(this, "Qual a senha do servidor FTP?"));
+            tudoOk = false;
+        }
+        if (cfg.getPropriedade("ftp_caminho").equals("")) {
+            cfg.setPropriedade("ftp_caminho", JOptionPane.showInputDialog(this, "Qual a pasta do servidor FTP?"));
+            tudoOk = false;
+        }
+        return tudoOk;
+    }
+    private void enviaFTP() throws IOException {
+        barraProgresso(true);
+        statusSistema.setText("Enviando arquivo ao FTP");
+        while(!verificaFtp()){
+            verificaFtp();
+        }
+        try {
+            Configuracoes cfg = new Configuracoes();
+            String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
+            String host = cfg.getPropriedade("ftp_servidor") +":"+ cfg.getPropriedade("ftp_porta");
+            String user = cfg.getPropriedade("ftp_usuario");
+            String pass = cfg.getPropriedade("ftp_senha");
+            String filePath = txtDestino.getText();
+            File arquivo = new File(txtDestino.getText());
+            String uploadPath = cfg.getPropriedade("ftp_caminho") +"/"+arquivo.getName();
+      
+            ftpUrl = String.format(ftpUrl, user, pass, host, uploadPath);
+    
+            URL url = new URL(ftpUrl);
+            URLConnection conn = url.openConnection();
+            OutputStream outputStream = conn.getOutputStream();
+            FileInputStream inputStream = new FileInputStream(filePath);
+
+            byte[] buffer = new byte[1024];
+            int bytesRead = -1;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            outputStream.close();
+            statusSistema.setText("Arquivo enviado ao FTP");
+            barraProgresso(false);
+
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private String getAtualPath() throws IOException {
         String path = new File(".").getCanonicalPath();
         return path;
@@ -601,6 +675,8 @@ public class FrmInicio extends javax.swing.JFrame {
         if (!compac.equals("")) {
             valorCompac = Integer.parseInt(compac);
         }
+        //aproveitando para verificar se tem backup de ftp
+        backupFtp = cfg.getPropriedade("ftp_backup").equals("true");
         return valorCompac;
     }
 
@@ -663,8 +739,12 @@ public class FrmInicio extends javax.swing.JFrame {
         statusSistema.setText("Arquivos temporários apagados");
         barraProgresso(false);
 
+        //faz backup em ftp
+        if(backupFtp){
+            enviaFTP();
+        }
+        
         habilitaComandos(true);
-
         executaDepois();
 
         statusSistema.setText("Backup concluido ;)");
@@ -991,22 +1071,14 @@ public class FrmInicio extends javax.swing.JFrame {
 
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FrmInicio.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmInicio.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmInicio.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmInicio.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        
         //</editor-fold>
         //</editor-fold>
 
