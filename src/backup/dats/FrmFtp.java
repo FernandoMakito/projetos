@@ -71,8 +71,6 @@ public class FrmFtp extends javax.swing.JFrame {
 
         jLabel5.setText("Porta");
 
-        txtPorta.setText("21");
-
         jLabel3.setText("Senha");
 
         btTestarConexao.setText("Testar Conexão");
@@ -136,7 +134,6 @@ public class FrmFtp extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(26, 26, 26)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addGap(1, 1, 1)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

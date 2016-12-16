@@ -5,6 +5,7 @@
  */
 package backup.dats;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -58,6 +59,7 @@ public class FrmInicio extends javax.swing.JFrame {
     Boolean postgres = false;
     Boolean erroPostgres = false;
     Boolean backupFtp = false;
+    Boolean desligaPC = false;
 
     public FrmInicio() {
         initComponents();
@@ -91,13 +93,6 @@ public class FrmInicio extends javax.swing.JFrame {
         setTitle("Makito Backup");
         setLocationByPlatform(true);
         setResizable(false);
-        addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                formInputMethodTextChanged(evt);
-            }
-        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -117,19 +112,6 @@ public class FrmInicio extends javax.swing.JFrame {
         txtOrigem.setAutoscrolls(false);
         txtOrigem.setMaximumSize(new java.awt.Dimension(88, 20));
         txtOrigem.setName("txtCaminhoOrigem"); // NOI18N
-        txtOrigem.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtOrigemFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtOrigemFocusLost(evt);
-            }
-        });
-        txtOrigem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtOrigemActionPerformed(evt);
-            }
-        });
         txtOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtOrigemKeyReleased(evt);
@@ -199,6 +181,8 @@ public class FrmInicio extends javax.swing.JFrame {
 
         statusSistema.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         statusSistema.setText("   ");
+        statusSistema.setMaximumSize(new java.awt.Dimension(380, 14));
+        statusSistema.setMinimumSize(new java.awt.Dimension(380, 14));
 
         btExtensoes.setText("Selecionar Extensões");
         btExtensoes.setToolTipText("Escolha as extensões que deseja incluir no backup");
@@ -261,7 +245,7 @@ public class FrmInicio extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btIgnoraPasta))
                             .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(statusSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(statusSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -291,7 +275,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(statusSistema)
+                .addComponent(statusSistema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -311,18 +295,6 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btSelecionarActionPerformed
-
-    private void txtOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOrigemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtOrigemActionPerformed
-
-    private void txtOrigemFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOrigemFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtOrigemFocusLost
-
-    private void formInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_formInputMethodTextChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formInputMethodTextChanged
 
     private void tabelaArquivosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaArquivosMouseReleased
         // TODO add your handling code here:
@@ -348,11 +320,6 @@ public class FrmInicio extends javax.swing.JFrame {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txtOrigemKeyReleased
-
-    private void txtOrigemFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOrigemFocusGained
-        // TODO add your handling code here:
-        //txtOrigem.selectAll();
-    }//GEN-LAST:event_txtOrigemFocusGained
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
@@ -503,15 +470,11 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_btIgnoraPastaActionPerformed
-    private boolean verificaFtp() throws UnsupportedEncodingException, IOException{
+    private boolean verificaFtp() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         boolean tudoOk = true;
         if (cfg.getPropriedade("ftp_servidor").equals("")) {
             cfg.setPropriedade("ftp_servidor", JOptionPane.showInputDialog(this, "Qual o endereço do servidor FTP?"));
-            tudoOk = false;
-        }
-        if (cfg.getPropriedade("ftp_porta").equals("")) {
-            cfg.setPropriedade("ftp_porta", JOptionPane.showInputDialog(this, "Qual a porta do servidor FTP?"));
             tudoOk = false;
         }
         if (cfg.getPropriedade("ftp_usuario").equals("")) {
@@ -528,24 +491,23 @@ public class FrmInicio extends javax.swing.JFrame {
         }
         return tudoOk;
     }
+
     private void enviaFTP() throws IOException {
         barraProgresso(true);
         statusSistema.setText("Enviando arquivo ao FTP");
-        while(!verificaFtp()){
+        while (!verificaFtp()) {
             verificaFtp();
         }
+        Configuracoes cfg = new Configuracoes();
+        String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
+        String host = cfg.getPropriedade("ftp_servidor") + ":" + cfg.getPropriedade("ftp_porta");
+        String user = cfg.getPropriedade("ftp_usuario");
+        String pass = cfg.getPropriedade("ftp_senha");
+        String filePath = txtDestino.getText();
+        File arquivo = new File(txtDestino.getText());
+        String uploadPath = cfg.getPropriedade("ftp_caminho") + "/" + arquivo.getName();
         try {
-            Configuracoes cfg = new Configuracoes();
-            String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
-            String host = cfg.getPropriedade("ftp_servidor") +":"+ cfg.getPropriedade("ftp_porta");
-            String user = cfg.getPropriedade("ftp_usuario");
-            String pass = cfg.getPropriedade("ftp_senha");
-            String filePath = txtDestino.getText();
-            File arquivo = new File(txtDestino.getText());
-            String uploadPath = cfg.getPropriedade("ftp_caminho") +"/"+arquivo.getName();
-      
             ftpUrl = String.format(ftpUrl, user, pass, host, uploadPath);
-    
             URL url = new URL(ftpUrl);
             URLConnection conn = url.openConnection();
             OutputStream outputStream = conn.getOutputStream();
@@ -559,12 +521,10 @@ public class FrmInicio extends javax.swing.JFrame {
             inputStream.close();
             outputStream.close();
             statusSistema.setText("Arquivo enviado ao FTP");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
+        } finally {
             barraProgresso(false);
-
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -598,7 +558,7 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private String dataBackup() {
-        DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy-HHmm");
+        DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date date = new Date();
         String data = sdf.format(date);
         return data;
@@ -608,8 +568,8 @@ public class FrmInicio extends javax.swing.JFrame {
         try {
             //execute no inicio
             executaInicio();
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | InterruptedException e) {
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar no inicio", JOptionPane.ERROR_MESSAGE);
         }
         new Thread(new Runnable() {
             public void run() {
@@ -646,6 +606,7 @@ public class FrmInicio extends javax.swing.JFrame {
                         progresso.setValue(i + 1);
                     } catch (IOException e) {
                         statusSistema.setText("Ops, ocorreu algum erro ao copiar");
+                        JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao copiar os arquivos", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 statusSistema.setText("Copia de arquivos finalizada");
@@ -653,7 +614,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 try {
                     compactar(txtDestino.getText(), pastaDestino);
                 } catch (IOException | InterruptedException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + ex.getMessage(), "Erro ao compactar os arquivos", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
@@ -677,6 +638,8 @@ public class FrmInicio extends javax.swing.JFrame {
         }
         //aproveitando para verificar se tem backup de ftp
         backupFtp = cfg.getPropriedade("ftp_backup").equals("true");
+        //aproveitando para verificar se desliga pc
+        desligaPC = cfg.getPropriedade("desliga_pc").equals("true");
         return valorCompac;
     }
 
@@ -740,22 +703,67 @@ public class FrmInicio extends javax.swing.JFrame {
         barraProgresso(false);
 
         //faz backup em ftp
-        if(backupFtp){
+        if (backupFtp) {
             enviaFTP();
         }
-        
+
         habilitaComandos(true);
-        executaDepois();
+        try {
+            executaDepois();
+        } catch (IOException | InterruptedException e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao execeutar depois do backup", JOptionPane.ERROR_MESSAGE);
+        }
 
         statusSistema.setText("Backup concluido ;)");
         salvaConfig();
-        String mensagem = "Backup finalizado!";
-        if (rapido) {
-            mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
+        if (!desligaPC) {
+            String mensagem = "Backup finalizado!";
+            if (rapido) {
+                mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
+            }
+            JOptionPane.showMessageDialog(this, mensagem);
+            if (rapido) {
+                System.exit(0);
+            }
+        } else {
+            desligaPC();
         }
-        JOptionPane.showMessageDialog(this, mensagem);
-        if (rapido) {
-            System.exit(0);
+    }
+
+    private void desligaPC() throws IOException {
+        Object[] options1 = {"Cancelar"};
+        final JPanel panel = new JPanel();
+        final JLabel lbl = new JLabel("O computador será desligado em 10 segundos");
+        panel.add(lbl);
+        timer = new Timer(1000, new ActionListener() {
+            int segundos = 10;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (segundos > 0) {
+                    lbl.setText("O computador será desligado em " + String.valueOf(segundos) + " segundos");
+                    segundos--;
+                } else {
+                    try {
+                        timer.stop();
+                        JOptionPane.getRootFrame().dispose();
+                        Runtime runtime = Runtime.getRuntime();
+                        Process proc = runtime.exec("shutdown -s -t 0");
+                        System.exit(0);
+                    } catch (IOException ex) {
+                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        timer.start();
+        int result = JOptionPane.showOptionDialog(null, panel, "Desligar computador",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, options1, null);
+
+        if (result == JOptionPane.YES_OPTION) {
+            timer.stop();
+            desligaPC = false;
         }
     }
 
@@ -1043,10 +1051,8 @@ public class FrmInicio extends javax.swing.JFrame {
                     }
                     barraProgresso(false);
                     copiarArquivos();
-                } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException | HeadlessException e) {
+                    JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro no backup do PostgreSQL", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -1078,7 +1084,7 @@ public class FrmInicio extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        
+
         //</editor-fold>
         //</editor-fold>
 

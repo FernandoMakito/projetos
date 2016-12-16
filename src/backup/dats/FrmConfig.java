@@ -60,6 +60,7 @@ public class FrmConfig extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         btDadosFtp = new javax.swing.JButton();
         ckFtp = new javax.swing.JCheckBox();
+        ckDesligaPC = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurações do Backup");
@@ -280,6 +281,14 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(ckFtp))
         );
 
+        ckDesligaPC.setText("Desligar o computador ao terminar");
+        ckDesligaPC.setToolTipText("Com esse modo ativo o backup irá iniciar automáticamente ao executar o programa");
+        ckDesligaPC.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckDesligaPCMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -295,7 +304,8 @@ public class FrmConfig extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(ckDesligaPC)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btSalvaConfig)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
@@ -318,9 +328,11 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ckBkFacil)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(btSalvaConfig))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(btSalvaConfig))
+                    .addComponent(ckDesligaPC))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -336,6 +348,7 @@ public class FrmConfig extends javax.swing.JFrame {
             cfg.setPropriedade("compactacao", String.valueOf(getTipoCompactacao()));
             cfg.setPropriedade("modo", setTipoDados());
             cfg.setPropriedade("backup_facil", String.valueOf(ckBkFacil.isSelected()));
+            cfg.setPropriedade("desliga_pc", String.valueOf(ckDesligaPC.isSelected()));
             cfg.setPropriedade("ftp_backup", String.valueOf(ckFtp.isSelected()));
             fecharForm();
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
@@ -359,6 +372,7 @@ public class FrmConfig extends javax.swing.JFrame {
             setTipoCompactacao(cfg.getPropriedade("compactacao"));
             getTipoDados(cfg.getPropriedade("modo"));
             ckBkFacil.setSelected(Boolean.valueOf(cfg.getPropriedade("backup_facil")));
+            ckDesligaPC.setSelected(Boolean.valueOf(cfg.getPropriedade("desliga_pc")));
             ckFtp.setSelected(Boolean.valueOf(cfg.getPropriedade("ftp_backup")));
             if(ckFtp.isSelected()){
                 btDadosFtp.setEnabled(true);
@@ -435,6 +449,10 @@ public class FrmConfig extends javax.swing.JFrame {
     private void ckFtpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckFtpActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ckFtpActionPerformed
+
+    private void ckDesligaPCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckDesligaPCMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ckDesligaPCMouseClicked
     private void fecharForm() {
         setVisible(false);
     }
@@ -551,6 +569,7 @@ public class FrmConfig extends javax.swing.JFrame {
     private javax.swing.JButton btLoadExecutaDepois;
     private javax.swing.JButton btSalvaConfig;
     private javax.swing.JCheckBox ckBkFacil;
+    private javax.swing.JCheckBox ckDesligaPC;
     private javax.swing.JCheckBox ckFtp;
     private javax.swing.ButtonGroup grRadioCompactacao;
     private javax.swing.ButtonGroup grRadioModo;
