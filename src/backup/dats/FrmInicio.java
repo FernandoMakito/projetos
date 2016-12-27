@@ -5,6 +5,11 @@
  */
 package backup.dats;
 
+import it.sauronsoftware.ftp4j.FTPAbortedException;
+import it.sauronsoftware.ftp4j.FTPClient;
+import it.sauronsoftware.ftp4j.FTPDataTransferException;
+import it.sauronsoftware.ftp4j.FTPException;
+import it.sauronsoftware.ftp4j.FTPIllegalReplyException;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,10 +41,7 @@ import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.FileNotFoundException;
 
 /**
  *
@@ -352,11 +354,14 @@ public class FrmInicio extends javax.swing.JFrame {
             Configuracoes cfg = new Configuracoes();
             if (cfg.getPropriedade("backup_facil").equals("true")) {
                 File pastaOrigem = new File(cfg.getPropriedade("pasta_origem"));
-                if (pastaOrigem.isDirectory()) {
+                String pastaDestino = new File(cfg.getPropriedade("pasta_destino")).getParent();
+                String exts = cfg.getPropriedade("extensoes_ativas");
+                File pasta = new File(pastaDestino);
+                if (pastaOrigem.isDirectory() && pasta.isDirectory() && !exts.equals("")) {
                     rapido = true;
                     iniciaBackupRapido();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Não foi possivel iniciar o backup automaticamente");
+                    JOptionPane.showMessageDialog(null, "Não foi possivel iniciar o backup automaticamente\n realize um backup manual primeiramente");
                 }
             }
         } catch (UnsupportedEncodingException ex) {
@@ -492,38 +497,35 @@ public class FrmInicio extends javax.swing.JFrame {
         return tudoOk;
     }
 
-    private void enviaFTP() throws IOException {
+    private void enviaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException {
         barraProgresso(true);
         statusSistema.setText("Enviando arquivo ao FTP");
         while (!verificaFtp()) {
             verificaFtp();
         }
-        Configuracoes cfg = new Configuracoes();
-        String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
-        String host = cfg.getPropriedade("ftp_servidor") + ":" + cfg.getPropriedade("ftp_porta");
-        String user = cfg.getPropriedade("ftp_usuario");
-        String pass = cfg.getPropriedade("ftp_senha");
-        String filePath = txtDestino.getText();
-        File arquivo = new File(txtDestino.getText());
-        String uploadPath = cfg.getPropriedade("ftp_caminho") + "/" + arquivo.getName();
+        final FTPClient client = new FTPClient();
         try {
-            ftpUrl = String.format(ftpUrl, user, pass, host, uploadPath);
-            URL url = new URL(ftpUrl);
-            URLConnection conn = url.openConnection();
-            OutputStream outputStream = conn.getOutputStream();
-            FileInputStream inputStream = new FileInputStream(filePath);
+            Configuracoes cfg = new Configuracoes();
 
-            byte[] buffer = new byte[1024];
-            int bytesRead = -1;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
+            String host = cfg.getPropriedade("ftp_servidor");
+            String porta = cfg.getPropriedade("ftp_porta");
+            String user = cfg.getPropriedade("ftp_usuario");
+            String pass = cfg.getPropriedade("ftp_senha");
+            File arquivo = new File(txtDestino.getText());
+            String uploadPath = cfg.getPropriedade("ftp_caminho");
+            if (porta.equals("")) {
+                client.connect(host);
+            } else {
+                client.connect(host, Integer.valueOf(porta));
             }
-            inputStream.close();
-            outputStream.close();
+            client.login(user, pass);
+            client.changeDirectory(uploadPath);
+            client.upload(arquivo);
             statusSistema.setText("Arquivo enviado ao FTP");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | NumberFormatException e) {
+            // JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
         } finally {
+            client.disconnect(false);
             barraProgresso(false);
         }
     }
@@ -647,24 +649,26 @@ public class FrmInicio extends javax.swing.JFrame {
         statusSistema.setText("Criando arquivo compactado");
         barraProgresso(true);
         try {
-            ZipFile zipFile = new ZipFile(destination);
-            ZipParameters parameters = new ZipParameters();
-            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-            parameters.setCompressionLevel(tipoCompactacao());
-            File folder = new File(source + "\\backupMakito\\");
-            File[] listOfFiles = folder.listFiles();
-            ArrayList filesToAdd = new ArrayList();
-            filesToAdd.addAll(Arrays.asList(listOfFiles));
-            //adiciona o pastas
-            for (File arquivo : listOfFiles) {
-                if (arquivo.isDirectory()) {
-                    zipFile.addFolder(source + "\\backupMakito\\" + arquivo.getName(), parameters);
+                ZipFile zipFile = new ZipFile(new File(destination));
+                ZipParameters parameters = new ZipParameters();
+                parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+                parameters.setCompressionLevel(tipoCompactacao());
+                File folder = new File(source + "\\backupMakito\\");
+                File[] listOfFiles = folder.listFiles();
+                ArrayList filesToAdd = new ArrayList();
+                filesToAdd.addAll(Arrays.asList(listOfFiles));
+                //adiciona o pastas
+                for (File arquivo : listOfFiles) {
+                    if (arquivo.isDirectory()) {
+                        zipFile.addFolder(source + "\\backupMakito\\" + arquivo.getName(), parameters);
+                    }
                 }
-            }
-            zipFile.addFiles(filesToAdd, parameters);
+                zipFile.addFiles(filesToAdd, parameters);
         } catch (ZipException e) {
-            statusSistema.setText("Ops, ocorreu algum erro ao compactar");
-        }
+            statusSistema.setText("Ocorreu algum erro ao compactar os arquivos");
+        }       catch (IOException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
         statusSistema.setText("Arquivo compactado criado");
         apagaPasta(new File(source + "\\backupMakito"));
     }
@@ -704,9 +708,12 @@ public class FrmInicio extends javax.swing.JFrame {
 
         //faz backup em ftp
         if (backupFtp) {
-            enviaFTP();
+            try {
+                enviaFTP();
+            } catch (IllegalStateException | FTPIllegalReplyException | FTPException | FileNotFoundException | FTPDataTransferException | FTPAbortedException ex) {
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + ex.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
+            }
         }
-
         habilitaComandos(true);
         try {
             executaDepois();
@@ -716,12 +723,14 @@ public class FrmInicio extends javax.swing.JFrame {
 
         statusSistema.setText("Backup concluido ;)");
         salvaConfig();
+        progresso.setMaximum(1);
+        progresso.setValue(1);
         if (!desligaPC) {
             String mensagem = "Backup finalizado!";
-            if (rapido) {
-                mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
+            if (!rapido) {
+                //mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
+                JOptionPane.showMessageDialog(this, mensagem);
             }
-            JOptionPane.showMessageDialog(this, mensagem);
             if (rapido) {
                 System.exit(0);
             }

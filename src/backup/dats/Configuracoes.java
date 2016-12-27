@@ -49,11 +49,14 @@ public class Configuracoes {
         novoArquivo.setProperty("desliga_pc", "false");
         novoArquivo.setProperty("pastas_ignoradas", "tempor,FastEstrutura,FirefoxPortable,GoogleChromePortable,Log,LogEcf,LogTerminais,MkoLog,MONITOR,NFELOG,recebido,relcry,DownloadTmp");
         novoArquivo.setProperty("ftp_backup", "false");
-        novoArquivo.setProperty("ftp_servidor", "");
+        novoArquivo.setProperty("ftp_servidor", "177.92.10.162");
         novoArquivo.setProperty("ftp_porta", "21");
-        novoArquivo.setProperty("ftp_usuario", "");
+        novoArquivo.setProperty("ftp_usuario", "salva");
         novoArquivo.setProperty("ftp_senha", "");
-        novoArquivo.setProperty("ftp_caminho", "");
+        novoArquivo.setProperty("ftp_caminho", "SALVA/");
+        novoArquivo.setProperty("agendamento_dias", "MON,TUE,WED,THU,FRI,SAT");
+        novoArquivo.setProperty("agendamento_hora", "00:00");
+        novoArquivo.setProperty("agendamento_ativo", "false");
         salvaArquivo(novoArquivo);
 
     }

@@ -59,7 +59,6 @@ public class FrmPost extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
-        setType(java.awt.Window.Type.UTILITY);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -175,6 +174,8 @@ public class FrmPost extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btSalvaConfig.setBackground(new java.awt.Color(1, 109, 187));
+        btSalvaConfig.setForeground(new java.awt.Color(255, 255, 255));
         btSalvaConfig.setText("Salvar configurações");
         btSalvaConfig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -188,10 +189,9 @@ public class FrmPost extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btSalvaConfig))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btSalvaConfig, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,7 +274,7 @@ public class FrmPost extends javax.swing.JFrame {
                 comandos.add("-U");
                 comandos.add(txtUsuario.getText());
                 comandos.add("-t");
-                comandos.add("SLCTPC");
+                comandos.add("SLCFIL");
                 comandos.add("-F");
                 comandos.add("tar");
                 comandos.add("-f");

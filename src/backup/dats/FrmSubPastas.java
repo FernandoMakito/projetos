@@ -44,7 +44,6 @@ public class FrmSubPastas extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
-        setType(java.awt.Window.Type.POPUP);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -93,7 +92,9 @@ public class FrmSubPastas extends javax.swing.JFrame {
             }
         });
 
-        btSalvar.setText("Salvar");
+        btSalvar.setBackground(new java.awt.Color(1, 109, 187));
+        btSalvar.setForeground(new java.awt.Color(255, 255, 255));
+        btSalvar.setText("Salvar pastas");
         btSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSalvarActionPerformed(evt);

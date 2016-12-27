@@ -44,7 +44,6 @@ public class FrmExtensoes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
-        setType(java.awt.Window.Type.POPUP);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -93,7 +92,9 @@ public class FrmExtensoes extends javax.swing.JFrame {
             }
         });
 
-        btSalvar.setText("Salvar");
+        btSalvar.setBackground(new java.awt.Color(1, 109, 187));
+        btSalvar.setForeground(new java.awt.Color(255, 255, 255));
+        btSalvar.setText("Salvar extensões");
         btSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSalvarActionPerformed(evt);
@@ -129,10 +130,10 @@ public class FrmExtensoes extends javax.swing.JFrame {
                     .addComponent(txtNovaExt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btAddExt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSalvar)
-                .addGap(10, 10, 10))
+                .addGap(15, 15, 15))
         );
 
         pack();

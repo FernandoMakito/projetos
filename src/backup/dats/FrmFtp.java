@@ -5,13 +5,15 @@
  */
 package backup.dats;
 
+import it.sauronsoftware.ftp4j.FTPAbortedException;
+import it.sauronsoftware.ftp4j.FTPClient;
+import it.sauronsoftware.ftp4j.FTPDataTransferException;
+import it.sauronsoftware.ftp4j.FTPException;
+import it.sauronsoftware.ftp4j.FTPIllegalReplyException;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -54,7 +56,6 @@ public class FrmFtp extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
-        setType(java.awt.Window.Type.UTILITY);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -142,6 +143,8 @@ public class FrmFtp extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btSalvaConfig.setBackground(new java.awt.Color(1, 109, 187));
+        btSalvaConfig.setForeground(new java.awt.Color(255, 255, 255));
         btSalvaConfig.setText("Salvar configurações");
         btSalvaConfig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -152,11 +155,9 @@ public class FrmFtp extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(btSalvaConfig)
-                .addContainerGap())
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(btSalvaConfig)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,47 +173,77 @@ public class FrmFtp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btTestarConexaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTestarConexaoActionPerformed
+        verificarFtp();
+    }//GEN-LAST:event_btTestarConexaoActionPerformed
+
+    private void verificarFtp(){
         try {
             testarFTP();
-        } catch (IOException ex) {
-            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btTestarConexaoActionPerformed
-    
-    private void testarFTP() throws IOException {
-        String ftpUrl = "ftp://%s:%s@%s/%s;type=i";
-        String host = txtServidor.getText()+":"+txtPorta.getText();
-        String user = txtUsuario.getText();
-        String pass = String.valueOf(txtSenha.getPassword());
-        File arquivo = new File("C:/ftpTest.txt");
-        if(!arquivo.exists()){
-            arquivo.createNewFile();
-        }
-        String uploadPath = txtDestino.getText()+"/ftpTest.txt";
-
-        ftpUrl = String.format(ftpUrl, user, pass, host, uploadPath);
-        try {
-            URL url = new URL(ftpUrl);
-            URLConnection conn = url.openConnection();
-            OutputStream outputStream = conn.getOutputStream();
-            FileInputStream inputStream = new FileInputStream(arquivo);
-
-            byte[] buffer = new byte[1024];
-            int bytesRead = -1;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
+            JOptionPane.showMessageDialog(null, "Tudo certo com a conexão FTP! ;)");
+        } catch (IllegalStateException | FTPIllegalReplyException | FTPException | FileNotFoundException | FTPDataTransferException | FTPAbortedException ex) {
+            if (ex.getMessage().contains("Arquivo ou diretório não encontrado")) {
+                try {
+                    criarPastaFTP();
+                } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | FTPDataTransferException | FTPAbortedException ex1) {
+                    Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Houve um prolema com a conexão:\n\n" + ex.getMessage());
             }
-            inputStream.close();
-            outputStream.close();
-            JOptionPane.showMessageDialog(null,"Tudo certo com a conexão FTP! ;)");
-            return;
         } catch (IOException ex) {
-             
+            JOptionPane.showMessageDialog(null, "Houve um prolema com a conexão:\n\n" + ex.getMessage());
         }
-        arquivo.delete();
-        JOptionPane.showMessageDialog(null,"Houve um prolema com a conexão \n Verifique as configurações");
     }
     
+    private void testarFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException {
+        final FTPClient client = new FTPClient();
+        Configuracoes cfg = new Configuracoes();
+
+        String host = txtServidor.getText();
+        String porta = txtPorta.getText();
+        String user = txtUsuario.getText();
+        String pass = String.valueOf(txtSenha.getPassword());
+
+        File arquivo = new File("C:/ftpTest.txt");
+        if (!arquivo.exists()) {
+            arquivo.createNewFile();
+        }
+
+        String uploadPath = txtDestino.getText();
+        if (porta.equals("")) {
+            client.connect(host);
+        } else {
+            client.connect(host, Integer.valueOf(porta));
+        }
+        client.login(user, pass);
+        client.changeDirectory(uploadPath);
+        client.upload(arquivo);
+        client.disconnect(false);
+        arquivo.delete();
+
+    }
+
+    private void criarPastaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException {
+        if (JOptionPane.showConfirmDialog(null, "Essa pasta não existe no servidor.\nDeseja criar agora?", "Criar Pasta", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            final FTPClient client = new FTPClient();
+            Configuracoes cfg = new Configuracoes();
+            String host = txtServidor.getText();
+            String porta = txtPorta.getText();
+            String user = txtUsuario.getText();
+            String pass = String.valueOf(txtSenha.getPassword());
+            String uploadPath = txtDestino.getText();
+            if (porta.equals("")) {
+                client.connect(host);
+            } else {
+                client.connect(host, Integer.valueOf(porta));
+            }
+            client.login(user, pass);
+            client.createDirectory(uploadPath);
+            client.disconnect(false);
+            verificarFtp();
+        }
+    }
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         try {
@@ -269,7 +300,7 @@ public class FrmFtp extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */

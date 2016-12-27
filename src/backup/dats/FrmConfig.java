@@ -56,17 +56,18 @@ public class FrmConfig extends javax.swing.JFrame {
         radioDat = new javax.swing.JRadioButton();
         radioPost = new javax.swing.JRadioButton();
         btConfiguraPost = new javax.swing.JButton();
-        ckBkFacil = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
         btDadosFtp = new javax.swing.JButton();
         ckFtp = new javax.swing.JCheckBox();
         ckDesligaPC = new javax.swing.JCheckBox();
+        jPanel6 = new javax.swing.JPanel();
+        btAgendar = new javax.swing.JButton();
+        ckBkFacil = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurações do Backup");
         setLocationByPlatform(true);
         setResizable(false);
-        setType(java.awt.Window.Type.UTILITY);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -178,7 +179,9 @@ public class FrmConfig extends javax.swing.JFrame {
             }
         });
 
-        btSalvaConfig.setText("Salvar");
+        btSalvaConfig.setBackground(new java.awt.Color(1, 109, 187));
+        btSalvaConfig.setForeground(new java.awt.Color(255, 255, 255));
+        btSalvaConfig.setText("Salvar configurações");
         btSalvaConfig.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btSalvaConfigActionPerformed(evt);
@@ -232,14 +235,6 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(btConfiguraPost))
         );
 
-        ckBkFacil.setText("Backup Fácil");
-        ckBkFacil.setToolTipText("Com esse modo ativo o backup irá iniciar automáticamente ao executar o programa");
-        ckBkFacil.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                ckBkFacilMouseClicked(evt);
-            }
-        });
-
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("FTP"));
 
         btDadosFtp.setText("Dados do FTP");
@@ -270,7 +265,7 @@ public class FrmConfig extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(ckFtp)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btDadosFtp)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -289,6 +284,43 @@ public class FrmConfig extends javax.swing.JFrame {
             }
         });
 
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Backup Automático"));
+
+        btAgendar.setText("Agendar");
+        btAgendar.setToolTipText("Inclua os dados de conexão com o servidor de FTP");
+        btAgendar.setEnabled(false);
+        btAgendar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAgendarActionPerformed(evt);
+            }
+        });
+
+        ckBkFacil.setText("Fazer backup automáticamente");
+        ckBkFacil.setToolTipText("Com esse modo ativo o backup irá iniciar automáticamente ao executar o programa");
+        ckBkFacil.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckBkFacilMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ckBkFacil)
+                .addGap(12, 12, 12)
+                .addComponent(btAgendar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btAgendar)
+                .addComponent(ckBkFacil))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -296,20 +328,20 @@ public class FrmConfig extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(ckBkFacil)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(ckDesligaPC)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btSalvaConfig)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ckDesligaPC)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -320,20 +352,20 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ckBkFacil)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(btSalvaConfig))
-                    .addComponent(ckDesligaPC))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(ckDesligaPC)
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(btSalvaConfig))
+                .addContainerGap())
         );
 
         pack();
@@ -374,9 +406,8 @@ public class FrmConfig extends javax.swing.JFrame {
             ckBkFacil.setSelected(Boolean.valueOf(cfg.getPropriedade("backup_facil")));
             ckDesligaPC.setSelected(Boolean.valueOf(cfg.getPropriedade("desliga_pc")));
             ckFtp.setSelected(Boolean.valueOf(cfg.getPropriedade("ftp_backup")));
-            if(ckFtp.isSelected()){
-                btDadosFtp.setEnabled(true);
-            }
+            btDadosFtp.setEnabled(ckFtp.isSelected());
+            btAgendar.setEnabled(ckBkFacil.isSelected());
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -414,23 +445,6 @@ public class FrmConfig extends javax.swing.JFrame {
         frm.setVisible(true);
     }//GEN-LAST:event_btConfiguraPostActionPerformed
 
-    private void ckBkFacilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseClicked
-        if(ckBkFacil.isSelected()){
-        try {
-            // TODO add your handling code here:
-            Configuracoes cfg = new Configuracoes();
-           if(cfg.getPropriedade("pasta_origem").equals("") || cfg.getPropriedade("pasta_destino").equals("")){
-              JOptionPane.showMessageDialog(null,"Para usar o backup rápido deve ser realizado pelo menos um backup pelo sistema"); 
-              ckBkFacil.setSelected(false);
-           }
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }        
-    }//GEN-LAST:event_ckBkFacilMouseClicked
-
     private void btDadosFtpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDadosFtpActionPerformed
         // TODO add your handling code here:
         FrmFtp frm = new FrmFtp();
@@ -439,9 +453,9 @@ public class FrmConfig extends javax.swing.JFrame {
 
     private void ckFtpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckFtpMouseClicked
         // TODO add your handling code here:
-        if(ckFtp.isSelected()){
+        if (ckFtp.isSelected()) {
             btDadosFtp.setEnabled(true);
-        }else{
+        } else {
             btDadosFtp.setEnabled(false);
         }
     }//GEN-LAST:event_ckFtpMouseClicked
@@ -453,8 +467,68 @@ public class FrmConfig extends javax.swing.JFrame {
     private void ckDesligaPCMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckDesligaPCMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_ckDesligaPCMouseClicked
+
+    private void btAgendarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAgendarActionPerformed
+        // TODO add your handling code here:
+        FrmAgendar frm = new FrmAgendar();
+        frm.setVisible(true);
+    }//GEN-LAST:event_btAgendarActionPerformed
+
+    private void ckBkFacilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseClicked
+        btAgendar.setEnabled(ckBkFacil.isSelected());
+        if (ckBkFacil.isSelected()) {
+            verificaConfigBackup();
+        }
+    }//GEN-LAST:event_ckBkFacilMouseClicked
     private void fecharForm() {
         setVisible(false);
+    }
+
+    private void verificaConfigBackup() {
+        try {
+            Configuracoes cfg = new Configuracoes();
+            String pastaOrigem = cfg.getPropriedade("pasta_origem");
+            String pastaDestino = cfg.getPropriedade("pasta_destino");
+            if (pastaOrigem.equals("")) {
+                JOptionPane.showMessageDialog(null, "Para ativar o backup automatico é necessário informar a pasta do sistema!");
+                pastaOrigem = selecionaPasta();
+                if (new File(pastaOrigem).isDirectory()) {
+                    cfg.setPropriedade("pasta_origem", pastaOrigem);
+                } else {
+                    JOptionPane.showMessageDialog(null, "A pasta de origem não é um diretório válido");
+                    ckBkFacil.setSelected(false);
+                }
+            }
+            
+            if (pastaDestino.equals("")) {
+                JOptionPane.showMessageDialog(null, "Para ativar o backup automatico é necessário informar a pasta de destino do backup");
+                pastaDestino = selecionaPasta();
+                if (new File(pastaDestino).isDirectory()) {
+                    cfg.setPropriedade("pasta_destino", pastaDestino + "\\auto.zip");
+                } else {
+                    JOptionPane.showMessageDialog(null, "A pasta de destino não é um diretório válido");
+                    ckBkFacil.setSelected(false);
+                }
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private String selecionaPasta() {
+        JFileChooser j = new JFileChooser(new File("."));
+        j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        j.setDialogTitle("Selecione uma pasta");
+        j.setApproveButtonText("Selecionar Pasta");
+        j.setAcceptAllFileFilterUsed(false);
+        Integer opt = j.showOpenDialog(this);
+        if (opt == 0) {
+            return j.getSelectedFile().getAbsolutePath();
+        } else {
+            return "";
+        }
     }
 
     private void selecionaExecutavel(String local) {
@@ -551,7 +625,7 @@ public class FrmConfig extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FrmConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -563,6 +637,7 @@ public class FrmConfig extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAgendar;
     private javax.swing.JButton btConfiguraPost;
     private javax.swing.JButton btDadosFtp;
     private javax.swing.JButton btLoadExecutaAntes;
@@ -579,6 +654,7 @@ public class FrmConfig extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JRadioButton radioAlta;
     private javax.swing.JRadioButton radioBaixa;
     private javax.swing.JRadioButton radioDat;
