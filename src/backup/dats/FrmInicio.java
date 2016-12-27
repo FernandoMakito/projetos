@@ -649,26 +649,26 @@ public class FrmInicio extends javax.swing.JFrame {
         statusSistema.setText("Criando arquivo compactado");
         barraProgresso(true);
         try {
-                ZipFile zipFile = new ZipFile(new File(destination));
-                ZipParameters parameters = new ZipParameters();
-                parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-                parameters.setCompressionLevel(tipoCompactacao());
-                File folder = new File(source + "\\backupMakito\\");
-                File[] listOfFiles = folder.listFiles();
-                ArrayList filesToAdd = new ArrayList();
-                filesToAdd.addAll(Arrays.asList(listOfFiles));
-                //adiciona o pastas
-                for (File arquivo : listOfFiles) {
-                    if (arquivo.isDirectory()) {
-                        zipFile.addFolder(source + "\\backupMakito\\" + arquivo.getName(), parameters);
-                    }
+            ZipFile zipFile = new ZipFile(new File(destination));
+            ZipParameters parameters = new ZipParameters();
+            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+            parameters.setCompressionLevel(tipoCompactacao());
+            File folder = new File(source + "\\backupMakito\\");
+            File[] listOfFiles = folder.listFiles();
+            ArrayList filesToAdd = new ArrayList();
+            filesToAdd.addAll(Arrays.asList(listOfFiles));
+            //adiciona o pastas
+            for (File arquivo : listOfFiles) {
+                if (arquivo.isDirectory()) {
+                    zipFile.addFolder(source + "\\backupMakito\\" + arquivo.getName(), parameters);
                 }
-                zipFile.addFiles(filesToAdd, parameters);
+            }
+            zipFile.addFiles(filesToAdd, parameters);
         } catch (ZipException e) {
             statusSistema.setText("Ocorreu algum erro ao compactar os arquivos");
-        }       catch (IOException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
         statusSistema.setText("Arquivo compactado criado");
         apagaPasta(new File(source + "\\backupMakito"));
     }
