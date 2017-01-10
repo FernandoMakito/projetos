@@ -42,6 +42,7 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 import java.io.FileNotFoundException;
+import net.lingala.zip4j.progress.ProgressMonitor;
 
 /**
  *
@@ -521,11 +522,11 @@ public class FrmInicio extends javax.swing.JFrame {
             client.login(user, pass);
             client.changeDirectory(uploadPath);
             client.upload(arquivo);
+            client.disconnect(false);
             statusSistema.setText("Arquivo enviado ao FTP");
         } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | NumberFormatException e) {
-            // JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
         } finally {
-            client.disconnect(false);
             barraProgresso(false);
         }
     }
@@ -645,37 +646,60 @@ public class FrmInicio extends javax.swing.JFrame {
         return valorCompac;
     }
 
-    private void compactar(String destination, String source) throws IOException, UnsupportedEncodingException, InterruptedException {
+    private void compactar(final String destination, final String source) throws IOException, UnsupportedEncodingException, InterruptedException {
         statusSistema.setText("Criando arquivo compactado");
-        barraProgresso(true);
-        try {
-            ZipFile zipFile = new ZipFile(new File(destination));
-            ZipParameters parameters = new ZipParameters();
-            parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
-            parameters.setCompressionLevel(tipoCompactacao());
-            File folder = new File(source + "\\backupMakito\\");
-            File[] listOfFiles = folder.listFiles();
-            ArrayList filesToAdd = new ArrayList();
-            filesToAdd.addAll(Arrays.asList(listOfFiles));
-            //adiciona o pastas
-            for (File arquivo : listOfFiles) {
-                if (arquivo.isDirectory()) {
-                    zipFile.addFolder(source + "\\backupMakito\\" + arquivo.getName(), parameters);
+        progresso.setMaximum(100);
+        progresso.setStringPainted(true);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    // Initiate the ZipFile
+                    ZipFile zipFile = new ZipFile(destination);
+
+                    zipFile.setRunInThread(true);
+                    ZipParameters parameters = new ZipParameters();
+                    parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+                    parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+                    parameters.setCompressionLevel(tipoCompactacao());
+                    parameters.setIncludeRootFolder(false);
+
+                    File folder = new File(source + "\\backupMakito\\");
+                    zipFile.addFolder(folder, parameters);
+
+                    ProgressMonitor progressMonitor = zipFile.getProgressMonitor();
+
+                    while (progressMonitor.getState() == ProgressMonitor.STATE_BUSY) {
+                        progresso.setValue(progressMonitor.getPercentDone());
+                        File arquivoAtual = new File(progressMonitor.getFileName());
+                        statusSistema.setText("Compactando " + arquivoAtual.getName());
+                    }
+                    if (progressMonitor.getResult() == ProgressMonitor.RESULT_ERROR) {
+                        // Any exception can be retrieved as below:
+                        if (progressMonitor.getException() != null) {
+                            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao compactar:\n" + progressMonitor.getException().toString(), "Erro ao compactar", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Ocorreu um erro desconhecido ao compactar", "Erro ao compactar", JOptionPane.ERROR_MESSAGE);
+                        }
+                        apagaPasta(new File(source + "\\backupMakito"));
+                    } else {
+                        statusSistema.setText("Arquivo compactado criado");
+                        apagaPasta(new File(source + "\\backupMakito"));
+                    }
+                } catch (ZipException e) {
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Ocorreu um erro desconhecido ao compactar", "Erro ao compactar", JOptionPane.ERROR_MESSAGE);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            zipFile.addFiles(filesToAdd, parameters);
-        } catch (ZipException e) {
-            statusSistema.setText("Ocorreu algum erro ao compactar os arquivos");
-        } catch (IOException ex) {
-            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        statusSistema.setText("Arquivo compactado criado");
-        apagaPasta(new File(source + "\\backupMakito"));
+        }.start();
+
     }
 
     private void apagaPasta(File folder) throws IOException, UnsupportedEncodingException, InterruptedException {
         statusSistema.setText("Apagando arquivos temporários");
-
+        barraProgresso(true);
         //apaga arquivo postgres Makito
         File postgresBk = new File(txtOrigem.getText() + "\\PostgresMakito" + dataBackup() + ".backup");
         if (postgresBk.exists()) {

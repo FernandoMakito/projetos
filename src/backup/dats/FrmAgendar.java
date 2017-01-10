@@ -5,8 +5,7 @@
  */
 package backup.dats;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.HeadlessException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.Timer;
 
 /**
  *
@@ -33,6 +31,7 @@ public class FrmAgendar extends javax.swing.JFrame {
     public FrmAgendar() {
         initComponents();
     }
+    String user, senha;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -177,9 +176,9 @@ public class FrmAgendar extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSalvaConfig)
                     .addComponent(btApagarTask))
@@ -211,6 +210,7 @@ public class FrmAgendar extends javax.swing.JFrame {
 
     private void btSalvaConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvaConfigActionPerformed
         try {
+            confereUser();
             Configuracoes cfg = new Configuracoes();
             if (criarTask()) {
                 cfg.setPropriedade("agendamento_ativo", "true");
@@ -223,10 +223,13 @@ public class FrmAgendar extends javax.swing.JFrame {
         } catch (IOException | InterruptedException ex) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + ex.getMessage(), "Erro ao agendar backup", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_btSalvaConfigActionPerformed
 
     private void btApagarTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btApagarTaskActionPerformed
+        apagaTask();
+    }//GEN-LAST:event_btApagarTaskActionPerformed
+
+    private void apagaTask() {
         try {
             executaComandos("SchTasks /Delete /TN BackupMakito -f");
             Configuracoes cfg = new Configuracoes();
@@ -235,7 +238,21 @@ public class FrmAgendar extends javax.swing.JFrame {
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(FrmAgendar.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btApagarTaskActionPerformed
+    }
+
+    private void confereUser() {
+        user = String.valueOf(JOptionPane.showInputDialog(this, "Qual o usuário do Windows?", System.getProperty("user.name")));
+        System.out.println(user);
+        if (user.equals("") || user.equals("null")) {
+            confereUser();
+            return;
+        }
+        if (!user.equals("system")) {
+            senha = JOptionPane.showInputDialog(this, "Qual a senha para o usuário " + user + "?");
+        } else {
+            senha = "";
+        }
+    }
 
     private void selecionaDias(List<String> dias) {
         ckSegunda.setSelected(dias.contains("MON"));
@@ -274,12 +291,23 @@ public class FrmAgendar extends javax.swing.JFrame {
     }
 
     private boolean criarTask() throws IOException, InterruptedException {
+        apagaTask();
         String nomeArquivo = new File("").getAbsolutePath() + "\\MakitoBackup.exe";
         String dias = diasSelecionados();
+        String cmdSenha = "";
+        String cmdUsuario = "";
+        if (!user.equals("")) {
+            cmdUsuario = "/RU " + user;
+            if (!senha.equals("")) {
+                cmdSenha = "/RP " + senha;
+            }
+        }
+
         if (!dias.equals("")) {
-            String comando = "SchTasks /Create /SC WEEKLY /D " + dias + " /TN BackupMakito /TR \"\\\"" + nomeArquivo + "\"\\\" /ST " + cmbHorario.getSelectedItem().toString() + " -f";
+            String comando = "SchTasks /Create /SC WEEKLY /D " + dias + " /TN BackupMakito /TR \"\\\"" + nomeArquivo + "\"\\\" /ST " + cmbHorario.getSelectedItem().toString() + " " + cmdUsuario + " " + cmdSenha + " -f";
             System.out.println(comando);
             executaComandos(comando);
+            queryTask();
             return true;
         } else {
             JOptionPane.showMessageDialog(null, "Por favor, selecione pelo menos um dia!");
@@ -295,18 +323,39 @@ public class FrmAgendar extends javax.swing.JFrame {
                     new InputStreamReader(p.getInputStream()));
             String line;
             while ((line = in.readLine()) != null) {
-                //System.out.println(line);
-                JOptionPane.showMessageDialog(null, line.replace("�XITO: a", "A").replace("ÒXITO: a", "A").replace("ÓXITO: a", "A"));
-                count++;
-                if(count > 1 && !line.contains("corretamente")){
-                    JOptionPane.showMessageDialog(null, "Houve um problema na criação/exclusão da tarefa\nTente agendar/excluir manualmente pelo agendador de tarefas do Windows");
-                    p.destroy();
-                    fecharForm();
-                }
+                System.out.println(line);
+//                JOptionPane.showMessageDialog(null, line.replace("�XITO: a", "A").replace("ÒXITO: a", "A").replace("ÓXITO: a", "A"));
+//                count++;
+//                if(count > 1 && !line.contains("corretamente")){
+//                    JOptionPane.showMessageDialog(null, "Houve um problema na criação/exclusão da tarefa\n"+line+"\nTente agendar/excluir manualmente pelo agendador de tarefas do Windows");
+//                    p.destroy();
+//                    fecharForm();
+//                }
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao agendar/excluir a tarefa\n" + e.getMessage());
+        } catch (IOException | HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar comando", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void queryTask() throws IOException, InterruptedException {
+        String resultado = "";
+        try {
+            Process p = Runtime.getRuntime().exec("SchTasks /query /Tn BackupMakito");
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+                resultado = resultado + line + "\n";
+            }
+        } catch (IOException | HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao consultar a tarefa\n" + e.getMessage());
+        }
+        if (resultado.equals("")) {
+            resultado = "Não foi possivel criar o agendamento, verifique por favor.";
+        }
+        JOptionPane.showMessageDialog(null, resultado.replace("Pasta: \\", "A tarefa foi agendada"));
+
     }
 
     private void fecharForm() {
@@ -338,10 +387,12 @@ public class FrmAgendar extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmAgendar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAgendar.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
