@@ -6,7 +6,7 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Configura&#xe7;&#xf5;es"/>
+            <Property name="text" type="java.lang.String" value="Avan&#xe7;ado"/>
             <Property name="toolTipText" type="java.lang.String" value="Clique para configurar op&#xe7;&#xf5;es do backup"/>
           </Properties>
           <Events>
@@ -62,8 +62,8 @@
                               <Component id="salvaBackup" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="txtOrigem" min="-2" pref="281" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="txtOrigem" min="-2" pref="277" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="32767" attributes="0"/>
                               <Component id="btSelecionar" min="-2" pref="93" max="-2" attributes="0"/>
                           </Group>
                           <Component id="progresso" max="32767" attributes="0"/>
@@ -73,7 +73,10 @@
                               <Component id="btIgnoraPasta" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="txtExtSelecionandas" max="32767" attributes="0"/>
-                          <Component id="statusSistema" alignment="0" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="statusSistema" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>

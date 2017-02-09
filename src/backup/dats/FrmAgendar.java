@@ -32,6 +32,7 @@ public class FrmAgendar extends javax.swing.JFrame {
         initComponents();
     }
     String user, senha;
+    Log logger;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -190,9 +191,9 @@ public class FrmAgendar extends javax.swing.JFrame {
 
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
         try {
             // TODO add your handling code here:
+            logger = new Log();
             btApagarTask.setVisible(false);
             Configuracoes cfg = new Configuracoes();
             List<String> dias = Arrays.asList(cfg.getPropriedade("agendamento_dias").split(","));
@@ -202,9 +203,9 @@ public class FrmAgendar extends javax.swing.JFrame {
             }
             selecionaDias(dias);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmAgendar.class.getName()).log(Level.SEVERE, null, ex);
+           logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmAgendar.class.getName()).log(Level.SEVERE, null, ex);
+           logger.erro(ex.getMessage());
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -227,6 +228,7 @@ public class FrmAgendar extends javax.swing.JFrame {
 
     private void btApagarTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btApagarTaskActionPerformed
         apagaTask();
+        logger.info("Agendamento apagado");
     }//GEN-LAST:event_btApagarTaskActionPerformed
 
     private void apagaTask() {
@@ -236,7 +238,7 @@ public class FrmAgendar extends javax.swing.JFrame {
             cfg.setPropriedade("agendamento_ativo", "false");
             fecharForm();
         } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(FrmAgendar.class.getName()).log(Level.SEVERE, null, ex);
+           logger.erro(ex.getMessage());
         }
     }
 
@@ -307,7 +309,8 @@ public class FrmAgendar extends javax.swing.JFrame {
             String comando = "SchTasks /Create /SC WEEKLY /D " + dias + " /TN BackupMakito /TR \"\\\"" + nomeArquivo + "\"\\\" /ST " + cmbHorario.getSelectedItem().toString() + " " + cmdUsuario + " " + cmdSenha + " -f";
             System.out.println(comando);
             executaComandos(comando);
-            queryTask();
+            String log = "Tarefa agendada, dias:"+ dias + " horário: "+cmbHorario.getSelectedItem().toString() + " usuário: "+ cmdUsuario;
+            queryTask(log);
             return true;
         } else {
             JOptionPane.showMessageDialog(null, "Por favor, selecione pelo menos um dia!");
@@ -334,10 +337,11 @@ public class FrmAgendar extends javax.swing.JFrame {
             }
         } catch (IOException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar comando", JOptionPane.ERROR_MESSAGE);
+            logger.erro("Ocorreu um erro ao agendar/excluir tarefa" + e.getMessage());
         }
     }
 
-    private void queryTask() throws IOException, InterruptedException {
+    private void queryTask(String log) throws IOException, InterruptedException {
         String resultado = "";
         try {
             Process p = Runtime.getRuntime().exec("SchTasks /query /Tn BackupMakito");
@@ -354,6 +358,7 @@ public class FrmAgendar extends javax.swing.JFrame {
         if (resultado.equals("")) {
             resultado = "Não foi possivel criar o agendamento, verifique por favor.";
         }
+        logger.info(log);
         JOptionPane.showMessageDialog(null, resultado.replace("Pasta: \\", "A tarefa foi agendada"));
 
     }

@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
+import java.util.logging.Level; 
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -24,6 +24,7 @@ public class FrmConfig extends javax.swing.JFrame {
     /**
      * Creates new form FrmConfig
      */
+    Log logger;
     public FrmConfig() {
         initComponents();
     }
@@ -63,6 +64,7 @@ public class FrmConfig extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         btAgendar = new javax.swing.JButton();
         ckBkFacil = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurações do Backup");
@@ -321,6 +323,15 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(ckBkFacil))
         );
 
+        jLabel1.setForeground(new java.awt.Color(0, 102, 204));
+        jLabel1.setText("Visualizar Log");
+        jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel1MouseReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -341,7 +352,8 @@ public class FrmConfig extends javax.swing.JFrame {
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(ckDesligaPC)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -360,7 +372,9 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ckDesligaPC)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ckDesligaPC)
+                    .addComponent(jLabel1))
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -373,6 +387,7 @@ public class FrmConfig extends javax.swing.JFrame {
 
     private void btSalvaConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvaConfigActionPerformed
         try {
+            logger = new Log();
             // TODO add your handling code here:
             Configuracoes cfg = new Configuracoes();
             cfg.setPropriedade("executa_antes", txtExecutaAntes.getText());
@@ -384,9 +399,9 @@ public class FrmConfig extends javax.swing.JFrame {
             cfg.setPropriedade("ftp_backup", String.valueOf(ckFtp.isSelected()));
             fecharForm();
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         }
 
     }//GEN-LAST:event_btSalvaConfigActionPerformed
@@ -409,9 +424,9 @@ public class FrmConfig extends javax.swing.JFrame {
             btDadosFtp.setEnabled(ckFtp.isSelected());
             btAgendar.setEnabled(ckBkFacil.isSelected());
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         }
 
     }//GEN-LAST:event_formWindowOpened
@@ -480,6 +495,15 @@ public class FrmConfig extends javax.swing.JFrame {
             verificaConfigBackup();
         }
     }//GEN-LAST:event_ckBkFacilMouseClicked
+
+    private void jLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseReleased
+        ProcessBuilder pb = new ProcessBuilder("Notepad.exe", System.getProperty("java.io.tmpdir") + "MakitoBackup.log");
+        try {
+            pb.start();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Não foi possivel abrir o Log \n Abra manualmente em: " + System.getProperty("java.io.tmpdir") + "MakitoBackup.log");
+        }
+    }//GEN-LAST:event_jLabel1MouseReleased
     private void fecharForm() {
         setVisible(false);
     }
@@ -499,7 +523,7 @@ public class FrmConfig extends javax.swing.JFrame {
                     ckBkFacil.setSelected(false);
                 }
             }
-            
+
             if (pastaDestino.equals("")) {
                 JOptionPane.showMessageDialog(null, "Para ativar o backup automatico é necessário informar a pasta de destino do backup");
                 pastaDestino = selecionaPasta();
@@ -511,9 +535,9 @@ public class FrmConfig extends javax.swing.JFrame {
                 }
             }
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         }
     }
 
@@ -649,6 +673,7 @@ public class FrmConfig extends javax.swing.JFrame {
     private javax.swing.ButtonGroup grRadioCompactacao;
     private javax.swing.ButtonGroup grRadioModo;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

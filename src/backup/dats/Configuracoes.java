@@ -21,18 +21,21 @@ public class Configuracoes {
 
     String nomeArquivo = "MakitoBackup.properties";
     File arquivoConfig = new File(nomeArquivo);
+    Log logger;
 
     public Configuracoes() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        logger = new Log();
         if (!arquivoConfig.exists()) {
             criaArquivo();
         }
     }
 
     private void criaArquivo() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        logger.info("Criando arquivo de configurações");
         boolean a = arquivoConfig.createNewFile();
         Properties novoArquivo = abreArquivo();
         novoArquivo.setProperty("modo", "dat");
-        novoArquivo.setProperty("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/exe/cfg/dll/txt/con/int");
+        novoArquivo.setProperty("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int");
         novoArquivo.setProperty("extensoes_ativas", "dat/fr3/con");
         novoArquivo.setProperty("pasta_origem", "");
         novoArquivo.setProperty("pasta_destino", "");
@@ -58,6 +61,7 @@ public class Configuracoes {
         novoArquivo.setProperty("agendamento_hora", "00:00");
         novoArquivo.setProperty("agendamento_ativo", "false");
         salvaArquivo(novoArquivo);
+        logger.info("Arquivo de configurações criado");
 
     }
 
@@ -74,6 +78,10 @@ public class Configuracoes {
 
     public void setPropriedade(String campo, String valor) throws IOException {
         Properties config = abreArquivo();
+        String configAtual = config.getProperty(campo);
+        if(!configAtual.equals(valor)){
+        logger.info("Alterando "+campo+ " de '"+configAtual+"' para '"+valor+"'");
+        }
         config.setProperty(campo, valor);
         salvaArquivo(config);
     }

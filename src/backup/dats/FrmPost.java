@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -27,6 +26,7 @@ public class FrmPost extends javax.swing.JFrame {
     /**
      * Creates new form FrmPost
      */
+    Log logger;
     public FrmPost() {
         initComponents();
     }
@@ -232,16 +232,16 @@ public class FrmPost extends javax.swing.JFrame {
             cfg.setPropriedade("banco_post", txtDatabase.getText());
             setVisible(false);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmPost.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmPost.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         }
     }//GEN-LAST:event_btSalvaConfigActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         try {
-            // TODO add your handling code here:
+            logger = new Log();
             Configuracoes cfg = new Configuracoes();
             txtCaminhoBin.setText(cfg.getPropriedade("caminho_post"));
             txtServidor.setText(cfg.getPropriedade("servidor_post"));
@@ -250,9 +250,9 @@ public class FrmPost extends javax.swing.JFrame {
             txtSenha.setText(cfg.getPropriedade("senha_post"));
             txtDatabase.setText(cfg.getPropriedade("banco_post"));
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmPost.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmPost.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -265,6 +265,7 @@ public class FrmPost extends javax.swing.JFrame {
         if (new File(txtCaminhoBin.getText() + "\\pg_dump.exe").exists()) {
             try {
                 List<String> comandos = new ArrayList<>();
+                logger.info("Testando backup do PostgreSQL, pasta_bin:"+ txtCaminhoBin.getText() +" servidor: "+txtServidor.getText()+":"+txtPorta.getText()+" usuario: "+txtUsuario.getText());
                 comandos.add(txtCaminhoBin.getText() + "\\pg_dump.exe");
                 comandos.add("-i");
                 comandos.add("-h");
@@ -305,6 +306,7 @@ public class FrmPost extends javax.swing.JFrame {
                 Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
             }
             JOptionPane.showMessageDialog(null, "Tudo ok com a conexão PostgreSQL!");
+            logger.info("As configurações do PostgresSQL estão corretas.");
         } else {
             JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o arquivo pg_dump.exe em:\n" + txtCaminhoBin.getText());
         }

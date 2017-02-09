@@ -1,0 +1,5 @@
+09/02/2017 - 08:44:37 INFO: Alterando configurações - Campo: executa_antes|Valor: 
+09/02/2017 - 08:48:11 INFO: Alterando executa_antes de '' para '123'
+09/02/2017 - 08:48:11 INFO: Alterando executa_depois de '' para '456'
+09/02/2017 - 08:48:12 INFO: Alterando compactacao de '7' para '9'
+09/02/2017 - 08:48:12 INFO: Alterando backup_facil de 'false' para 'true'

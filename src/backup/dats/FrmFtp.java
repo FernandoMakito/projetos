@@ -27,6 +27,8 @@ public class FrmFtp extends javax.swing.JFrame {
     /**
      * Creates new form FrmPost
      */
+    Log logger;
+
     public FrmFtp() {
         initComponents();
     }
@@ -176,25 +178,28 @@ public class FrmFtp extends javax.swing.JFrame {
         verificarFtp();
     }//GEN-LAST:event_btTestarConexaoActionPerformed
 
-    private void verificarFtp(){
+    private void verificarFtp() {
         try {
             testarFTP();
-            JOptionPane.showMessageDialog(null, "Tudo certo com a conexão FTP! ;)");
+            JOptionPane.showMessageDialog(null, "Tudo certo com a conexão FTP!");
+            logger.info("Sucesso no teste de FTP");
         } catch (IllegalStateException | FTPIllegalReplyException | FTPException | FileNotFoundException | FTPDataTransferException | FTPAbortedException ex) {
             if (ex.getMessage().contains("Arquivo ou diretório não encontrado")) {
                 try {
                     criarPastaFTP();
                 } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | FTPDataTransferException | FTPAbortedException ex1) {
-                    Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex1);
+                    logger.erro(ex1.getMessage());
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Houve um prolema com a conexão:\n\n" + ex.getMessage());
+                logger.erro("Erro ao testar FTP: " + ex.getMessage());
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Houve um prolema com a conexão:\n\n" + ex.getMessage());
+            logger.erro("Erro ao testar FTP: " + ex.getMessage());
         }
     }
-    
+
     private void testarFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException {
         final FTPClient client = new FTPClient();
         Configuracoes cfg = new Configuracoes();
@@ -203,13 +208,14 @@ public class FrmFtp extends javax.swing.JFrame {
         String porta = txtPorta.getText();
         String user = txtUsuario.getText();
         String pass = String.valueOf(txtSenha.getPassword());
-
+        
         File arquivo = new File("C:/ftpTest.txt");
         if (!arquivo.exists()) {
             arquivo.createNewFile();
         }
 
         String uploadPath = txtDestino.getText();
+        logger.info("Testando servidor FTP, host: "+host+":"+porta+" usuário: "+ user+" pasta: "+uploadPath);
         if (porta.equals("")) {
             client.connect(host);
         } else {
@@ -238,7 +244,9 @@ public class FrmFtp extends javax.swing.JFrame {
                 client.connect(host, Integer.valueOf(porta));
             }
             client.login(user, pass);
+            logger.info("Tentando criar pasta no FTP: " + uploadPath);
             client.createDirectory(uploadPath);
+            logger.info("Pasta criada");
             client.disconnect(false);
             verificarFtp();
         }
@@ -247,7 +255,7 @@ public class FrmFtp extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         try {
-            // TODO add your handling code here:
+            logger = new Log();
             Configuracoes cfg = new Configuracoes();
             txtServidor.setText(cfg.getPropriedade("ftp_servidor"));
             txtPorta.setText(cfg.getPropriedade("ftp_porta"));
@@ -255,9 +263,9 @@ public class FrmFtp extends javax.swing.JFrame {
             txtSenha.setText(cfg.getPropriedade("ftp_senha"));
             txtDestino.setText(cfg.getPropriedade("ftp_caminho"));
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -273,9 +281,9 @@ public class FrmFtp extends javax.swing.JFrame {
             cfg.setPropriedade("ftp_caminho", txtDestino.getText());
             setVisible(false);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(FrmFtp.class.getName()).log(Level.SEVERE, null, ex);
+            logger.erro(ex.getMessage());
         }
     }//GEN-LAST:event_btSalvaConfigActionPerformed
 
