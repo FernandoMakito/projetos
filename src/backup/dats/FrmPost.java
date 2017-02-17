@@ -27,6 +27,7 @@ public class FrmPost extends javax.swing.JFrame {
      * Creates new form FrmPost
      */
     Log logger;
+
     public FrmPost() {
         initComponents();
     }
@@ -55,6 +56,10 @@ public class FrmPost extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtSenha = new javax.swing.JPasswordField();
         btTesta = new javax.swing.JButton();
+        txtDatabaseEdoc = new javax.swing.JTextField();
+        btTestaEdoc = new javax.swing.JButton();
+        ckEdoc = new javax.swing.JCheckBox();
+        ckMakito = new javax.swing.JCheckBox();
         btSalvaConfig = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -84,6 +89,12 @@ public class FrmPost extends javax.swing.JFrame {
 
         jLabel4.setText("Database");
 
+        txtDatabase.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDatabaseKeyTyped(evt);
+            }
+        });
+
         jLabel5.setText("Porta");
 
         txtPorta.setText("5432");
@@ -97,9 +108,49 @@ public class FrmPost extends javax.swing.JFrame {
         txtSenha.setText("postgres");
 
         btTesta.setText("Testar");
+        btTesta.setEnabled(false);
         btTesta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btTestaActionPerformed(evt);
+            }
+        });
+
+        txtDatabaseEdoc.setText("ManagerEDoc");
+        txtDatabaseEdoc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDatabaseEdocKeyTyped(evt);
+            }
+        });
+
+        btTestaEdoc.setText("Testar");
+        btTestaEdoc.setEnabled(false);
+        btTestaEdoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btTestaEdocActionPerformed(evt);
+            }
+        });
+
+        ckEdoc.setText("Backup E-doc Local");
+        ckEdoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckEdocMouseClicked(evt);
+            }
+        });
+        ckEdoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckEdocActionPerformed(evt);
+            }
+        });
+
+        ckMakito.setText("Backup Makito");
+        ckMakito.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckMakitoMouseClicked(evt);
+            }
+        });
+        ckMakito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckMakitoActionPerformed(evt);
             }
         });
 
@@ -109,69 +160,94 @@ public class FrmPost extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(txtCaminhoBin, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btLoadExecutaAntes))
-                    .addComponent(jLabel1)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
                                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
-                                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(txtCaminhoBin, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLoadExecutaAntes))
+                            .addComponent(jLabel1)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(txtServidor))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(ckMakito, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
-                                    .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel6)
-                                .addComponent(txtServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btTesta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btTesta, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(ckEdoc)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDatabaseEdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btTestaEdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel1)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCaminhoBin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btLoadExecutaAntes))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btTesta)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtServidor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtPorta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2))
+                            .addComponent(jLabel3))
                         .addGap(26, 26, 26)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btTesta)
+                    .addComponent(ckMakito))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDatabaseEdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ckEdoc)
+                    .addComponent(btTestaEdoc))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         btSalvaConfig.setBackground(new java.awt.Color(1, 109, 187));
@@ -188,19 +264,21 @@ public class FrmPost extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btSalvaConfig, javax.swing.GroupLayout.Alignment.TRAILING)))
+                .addComponent(btSalvaConfig)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSalvaConfig)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -230,6 +308,9 @@ public class FrmPost extends javax.swing.JFrame {
             cfg.setPropriedade("usuario_post", txtUsuario.getText());
             cfg.setPropriedade("senha_post", String.valueOf(txtSenha.getPassword()));
             cfg.setPropriedade("banco_post", txtDatabase.getText());
+            cfg.setPropriedade("makitoPost_backup", String.valueOf(ckMakito.isSelected()));
+            cfg.setPropriedade("edoc_backup", String.valueOf(ckEdoc.isSelected()));
+            cfg.setPropriedade("banco_edoc", txtDatabaseEdoc.getText());
             setVisible(false);
         } catch (UnsupportedEncodingException ex) {
             logger.erro(ex.getMessage());
@@ -249,6 +330,11 @@ public class FrmPost extends javax.swing.JFrame {
             txtUsuario.setText(cfg.getPropriedade("usuario_post"));
             txtSenha.setText(cfg.getPropriedade("senha_post"));
             txtDatabase.setText(cfg.getPropriedade("banco_post"));
+            txtDatabaseEdoc.setText(cfg.getPropriedade("banco_edoc"));
+            ckEdoc.setSelected(Boolean.valueOf(cfg.getPropriedade("edoc_backup")));
+            ckMakito.setSelected(Boolean.valueOf(cfg.getPropriedade("makitoPost_backup")));
+            btTesta.setEnabled(ckMakito.isSelected() && !txtDatabase.getText().equals(""));
+            btTestaEdoc.setEnabled(ckEdoc.isSelected() && !txtDatabaseEdoc.getText().equals(""));
         } catch (UnsupportedEncodingException ex) {
             logger.erro(ex.getMessage());
         } catch (IOException ex) {
@@ -257,15 +343,55 @@ public class FrmPost extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void btTestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTestaActionPerformed
-        confereConexao();
-
+        confereConexao("SLCFIL", false);
     }//GEN-LAST:event_btTestaActionPerformed
 
-    private void confereConexao() {
+    private void ckEdocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckEdocMouseClicked
+        // TODO add your handling code here:
+        btTestaEdoc.setEnabled(ckEdoc.isSelected() && !txtDatabaseEdoc.getText().equals(""));
+    }//GEN-LAST:event_ckEdocMouseClicked
+
+    private void ckEdocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckEdocActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ckEdocActionPerformed
+
+    private void txtDatabaseKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDatabaseKeyTyped
+        // TODO add your handling code here:
+        btTesta.setEnabled(!txtDatabase.getText().equals(""));
+
+    }//GEN-LAST:event_txtDatabaseKeyTyped
+
+    private void btTestaEdocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTestaEdocActionPerformed
+       
+        confereConexao("*", true);
+    }//GEN-LAST:event_btTestaEdocActionPerformed
+
+    private void ckMakitoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckMakitoMouseClicked
+        // TODO add your handling code here:
+        btTesta.setEnabled(ckMakito.isSelected() && !txtDatabase.getText().equals(""));
+    }//GEN-LAST:event_ckMakitoMouseClicked
+
+    private void ckMakitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMakitoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ckMakitoActionPerformed
+
+    private void txtDatabaseEdocKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDatabaseEdocKeyTyped
+        // TODO add your handling code here:
+         btTestaEdoc.setEnabled(!txtDatabaseEdoc.getText().equals(""));
+    }//GEN-LAST:event_txtDatabaseEdocKeyTyped
+
+    private void confereConexao(String tabela, boolean edoc) {
+            String database, arquivoTeste;
+        arquivoTeste = System.getProperty("java.io.tmpdir")+"testePostgres.backup";
         if (new File(txtCaminhoBin.getText() + "\\pg_dump.exe").exists()) {
             try {
+                if (!edoc) {
+                    database = txtDatabase.getText();
+                } else {
+                    database = "ManagerEDoc";
+                }
                 List<String> comandos = new ArrayList<>();
-                logger.info("Testando backup do PostgreSQL, pasta_bin:"+ txtCaminhoBin.getText() +" servidor: "+txtServidor.getText()+":"+txtPorta.getText()+" usuario: "+txtUsuario.getText());
+                logger.info("Testando backup do PostgreSQL, pasta_bin:" + txtCaminhoBin.getText() + " servidor: " + txtServidor.getText() + ":" + txtPorta.getText() + " usuario: " + txtUsuario.getText());
                 comandos.add(txtCaminhoBin.getText() + "\\pg_dump.exe");
                 comandos.add("-i");
                 comandos.add("-h");
@@ -275,12 +401,12 @@ public class FrmPost extends javax.swing.JFrame {
                 comandos.add("-U");
                 comandos.add(txtUsuario.getText());
                 comandos.add("-t");
-                comandos.add("SLCFIL");
+                comandos.add(tabela);
                 comandos.add("-F");
                 comandos.add("tar");
                 comandos.add("-f");
-                comandos.add("C:\\testarPostgres.backup");
-                comandos.add(txtDatabase.getText());
+                comandos.add(arquivoTeste);
+                comandos.add(database);
                 ProcessBuilder builder = new ProcessBuilder(comandos);
                 builder.environment().put("PGPASSWORD", String.valueOf(txtSenha.getPassword()));
                 builder.redirectErrorStream(true);
@@ -292,9 +418,10 @@ public class FrmPost extends javax.swing.JFrame {
                     if (line == null) {
                         break;
                     }
-                    JOptionPane.showMessageDialog(null, "Ocorreu o seguinte erro: \n" + line + "\n");
+                    JOptionPane.showMessageDialog(null, database+" - "+tabela+" Ocorreu o seguinte erro: \n" + line + "\n");
+                       
                     //apaga arquivo de teste
-                    File teste = new File("C:\\testarPostgres.backup");
+                    File teste = new File(arquivoTeste);
                     if (teste.exists()) {
                         teste.delete();
                     }
@@ -305,13 +432,14 @@ public class FrmPost extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
             }
+              
             JOptionPane.showMessageDialog(null, "Tudo ok com a conexão PostgreSQL!");
-            logger.info("As configurações do PostgresSQL estão corretas.");
+            logger.info("As configurações do PostgresSQL estão corretas");
         } else {
-            JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o arquivo pg_dump.exe em:\n" + txtCaminhoBin.getText());
+            JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o arquivo pg_dump.exe em:\n" + txtCaminhoBin.getText());   
         }
         //apaga arquivo de teste
-        File teste = new File("C:\\testarPostgres.backup");
+        File teste = new File(arquivoTeste);
         if (teste.exists()) {
             teste.delete();
         }
@@ -352,6 +480,9 @@ public class FrmPost extends javax.swing.JFrame {
     private javax.swing.JButton btLoadExecutaAntes;
     private javax.swing.JButton btSalvaConfig;
     private javax.swing.JButton btTesta;
+    private javax.swing.JButton btTestaEdoc;
+    private javax.swing.JCheckBox ckEdoc;
+    private javax.swing.JCheckBox ckMakito;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -361,6 +492,7 @@ public class FrmPost extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField txtCaminhoBin;
     private javax.swing.JTextField txtDatabase;
+    private javax.swing.JTextField txtDatabaseEdoc;
     private javax.swing.JTextField txtPorta;
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtServidor;

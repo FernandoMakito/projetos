@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package backup.dats;
 
 import it.sauronsoftware.ftp4j.FTPAbortedException;
@@ -40,6 +35,8 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.lingala.zip4j.progress.ProgressMonitor;
 
 /**
@@ -57,7 +54,8 @@ public class FrmInicio extends javax.swing.JFrame {
     List<String> pastasIgnoradas;
     Timer timer = null;
     Boolean rapido = false;
-    Boolean postgres = false;
+    Boolean postgresMakito = false;
+    Boolean postgresEdoc = false;
     Boolean erroPostgres = false;
     Boolean backupFtp = false;
     Boolean desligaPC = false;
@@ -89,7 +87,9 @@ public class FrmInicio extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Makito Backup");
         setLocationByPlatform(true);
+        setPreferredSize(new java.awt.Dimension(400, 490));
         setResizable(false);
+        setSize(new java.awt.Dimension(400, 490));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -245,14 +245,15 @@ public class FrmInicio extends javax.swing.JFrame {
                                 .addComponent(btExtensoes)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btIgnoraPasta))
-                            .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(statusSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(statusSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,11 +276,11 @@ public class FrmInicio extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtQtdArquivos)
                         .addComponent(salvaBackup)))
-                .addGap(5, 5, 5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusSistema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         pack();
@@ -326,7 +327,6 @@ public class FrmInicio extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             logger = new Log();
-
             Configuracoes cfg = new Configuracoes();
             String origem = cfg.getPropriedade("pasta_origem");
             txtOrigem.setText(origem);
@@ -433,9 +433,18 @@ public class FrmInicio extends javax.swing.JFrame {
         }
     }
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-
         FrmConfig frm = new FrmConfig();
         frm.setVisible(true);
+        frm.addComponentListener(new ComponentAdapter() {
+            public void componentHidden(ComponentEvent e) {
+                try {
+                    ePostgres();
+                    getExtSelecionadas();
+                } catch (IOException ex) {
+                    logger.erro(ex.getMessage());
+                }
+            }
+        });
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void txtDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDestinoActionPerformed
@@ -516,7 +525,7 @@ public class FrmInicio extends javax.swing.JFrame {
             String pass = cfg.getPropriedade("ftp_senha");
             File arquivo = new File(txtDestino.getText());
             String uploadPath = cfg.getPropriedade("ftp_caminho");
-            logger.info("Enviando arquivo ao FTP, host: "+host+":"+porta+" usuário: "+ user+" pasta: "+uploadPath);
+            logger.info("Enviando arquivo ao FTP, host: " + host + ":" + porta + " usuário: " + user + " pasta: " + uploadPath);
             if (porta.equals("")) {
                 client.connect(host);
             } else {
@@ -525,7 +534,7 @@ public class FrmInicio extends javax.swing.JFrame {
             client.login(user, pass);
             client.changeDirectory(uploadPath);
             client.upload(arquivo);
-            client.disconnect(false);
+            client.disconnect(true);
             statusSistema.setText("Arquivo enviado ao FTP");
             logger.info("Arquivo enviado ao FTP");
         } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | NumberFormatException e) {
@@ -722,6 +731,11 @@ public class FrmInicio extends javax.swing.JFrame {
         if (postgresBk.exists()) {
             postgresBk.delete();
         }
+        //apaga arquivo postgres Edoc
+        File postgresBkEdoc = new File(txtOrigem.getText() + "\\PostgresEdoc" + dataBackup() + ".backup");
+        if (postgresBkEdoc.exists()) {
+            postgresBkEdoc.delete();
+        }
 
         File[] listOfFiles = folder.listFiles();
         ArrayList<String> pastaApagar = new ArrayList<>();
@@ -898,9 +912,11 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private boolean ePostgres() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
-        Boolean ep = cfg.getPropriedade("modo").equals("post");
-        postgres = ep;
-        return ep;
+        Boolean makito = cfg.getPropriedade("makitoPost_backup").equals("true");
+        postgresMakito = makito;
+        Boolean edoc = cfg.getPropriedade("edoc_backup").equals("true");
+        postgresEdoc = edoc;
+        return makito || edoc;
     }
 
     private boolean conferePostgres() throws IOException {
@@ -926,8 +942,12 @@ public class FrmInicio extends javax.swing.JFrame {
             cfg.setPropriedade("senha_post", JOptionPane.showInputDialog(this, "Qual a senha do PostgreSQL?"));
             tudoOk = false;
         }
-        if (cfg.getPropriedade("banco_post").equals("")) {
-            cfg.setPropriedade("banco_post", JOptionPane.showInputDialog(this, "Qual o nome do banco de dados PostgreSQL?"));
+        if (cfg.getPropriedade("makitoPost_backup").equals("true") && cfg.getPropriedade("banco_post").equals("")) {
+            cfg.setPropriedade("banco_post", JOptionPane.showInputDialog(this, "Qual o nome do banco de dados do Makito?"));
+            tudoOk = false;
+        }
+        if (cfg.getPropriedade("edoc_backup").equals("true") && cfg.getPropriedade("banco_edoc").equals("")) {
+            cfg.setPropriedade("banco_edoc", JOptionPane.showInputDialog(this, "Qual o nome do banco de dados do E-doc?"));
             tudoOk = false;
         }
         return tudoOk;
@@ -999,14 +1019,14 @@ public class FrmInicio extends javax.swing.JFrame {
         }
         txtQtdArquivos.setText(String.valueOf(qtdFiles) + " arquivos, cerca de " + humanReadableByteCount(tamanhoArquivos, true));
         File pasta = new File(txtOrigem.getText());
-        if (qtdFiles == 0 && !postgres) {
+        if (qtdFiles == 0 && !postgresMakito && !postgresEdoc) {
             if (pasta.isDirectory()) {
                 JOptionPane.showMessageDialog(this, "Nenhum arquivo encontrado nessa pasta, \nSelecione a pasta do sistema e as extensões desejadas");
             } else if (txtOrigem.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Selecione a pasta do sistema primeiramente");
             }
             salvaBackup.setEnabled(false);
-        } else if ((qtdFiles > 0 || postgres) && pasta.isDirectory()) {
+        } else if ((qtdFiles > 0 || (postgresMakito || postgresEdoc)) && pasta.isDirectory()) {
             salvaBackup.setEnabled(true);
         }
 
@@ -1025,11 +1045,27 @@ public class FrmInicio extends javax.swing.JFrame {
     private void getExtSelecionadas() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         String exts = cfg.getPropriedade("extensoes_ativas");
+        String frase = "";
         extSelecionadas = Arrays.asList(exts.split("/"));
         if (!exts.equals("")) {
-            txtExtSelecionandas.setText("<html>Extensões: <b>" + extSelecionadas.toString() + "</b></html>");
-        } else {
+            frase = "<html>Extensões: <b>" + extSelecionadas.toString() + "</b>";
+            if (postgresMakito && postgresEdoc) {
+                frase += "<a color='blue'> /PostgreSQL (Makito e E-doc)</a>";
+            } else if (postgresMakito && !postgresEdoc) {
+                frase += "<a color='blue'> /PostgreSQL (Makito)</a>";
+            } else if (!postgresMakito && postgresEdoc) {
+                frase += "<a color='blue'> /PostgreSQL (E-doc)</a>";
+            }
+            frase += "</html>";
+            txtExtSelecionandas.setText(frase);
+        } else if (!postgresEdoc && !postgresMakito) {
             txtExtSelecionandas.setText("Nenhuma extensão selecionada");
+        } else if (postgresEdoc && postgresMakito) {
+            txtExtSelecionandas.setText("<html><a color='blue'> PostgreSQL (Makito e E-doc)</a><html>");
+        } else if (postgresEdoc) {
+            txtExtSelecionandas.setText("<html><a color='blue'> PostgreSQL (E-doc)</a><html>");
+        } else {
+            txtExtSelecionandas.setText("<html><a color='blue'> PostgreSQL (Makito)</a></html>");
         }
         getPastasIgnoradas();
     }
@@ -1056,72 +1092,116 @@ public class FrmInicio extends javax.swing.JFrame {
             return "";
         }
     }
+    boolean finalizadoMakito = false, finalizadoEdoc = false,iniciouCopia = false;
 
-    private void backupPostgres() throws IOException, InterruptedException {
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    habilitaComandos(false);
-                    statusSistema.setText("Fazendo backup do PostgreSQL");
-                    logger.info("Fazendo backup do PostgreSQL");
-                    barraProgresso(true);
-                    Configuracoes cfg = new Configuracoes();
-                    List<String> comandos = new ArrayList<>();
-                    String caminho_post = cfg.getPropriedade("caminho_post");
-                    String servidor_post = cfg.getPropriedade("servidor_post");
-                    String porta_post = cfg.getPropriedade("porta_post");
-                    String usuario_post = cfg.getPropriedade("usuario_post");
-                    logger.info("Iniciando backup do PostgreSQL, pasta_bin:"+ caminho_post +" servidor: "+servidor_post+":"+porta_post+" usuario: "+usuario_post);
-                    comandos.add(caminho_post + "\\pg_dump.exe");
-                    comandos.add("-i");
-                    comandos.add("-h");
-                    comandos.add(servidor_post);
-                    comandos.add("-p");
-                    comandos.add(porta_post);
-                    comandos.add("-U");
-                    comandos.add(usuario_post);
-                    comandos.add("-F");
-                    comandos.add("tar");
-                    comandos.add("-f");
-                    comandos.add(txtOrigem.getText() + "\\PostgresMakito" + dataBackup() + ".backup");
-                    comandos.add(cfg.getPropriedade("banco_post"));
-                    ProcessBuilder builder = new ProcessBuilder(comandos);
-                    builder.environment().put("PGPASSWORD", cfg.getPropriedade("senha_post"));
-                    builder.redirectErrorStream(true);
-                    Process p = builder.start();
-                    BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                    String line;
-                    while (true) {
-                        line = r.readLine();
-                        if (line == null) {
-                            break;
-                        }
-                        int dialogResult = JOptionPane.showConfirmDialog(null, "Ocorreu o seguinte erro: \n" + line + "\nDeseja continuar o backup dos arquivos?", "Erro no Backup do PostgreSQL", JOptionPane.YES_NO_OPTION);
-                        logger.erro("Erro no backup Postgres: " + line);
-                        if (dialogResult == JOptionPane.NO_OPTION) {
-                            System.exit(0);
-                        } else {
-                            erroPostgres = true;
-                        }
+    private synchronized void backupPostgres() throws IOException, InterruptedException {
+        if (postgresMakito) {
+            Runnable r = new Runnable() {
+                public void run() {
+                    try {
+                        fazBackupPostgres("Makito");
+                        finalizadoMakito = true;
+                        chamaCopiaPostgres();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    if (!erroPostgres) {
-                        File postgresBk = new File(txtOrigem.getText() + "\\PostgresMakito" + dataBackup() + ".backup");
-                        DefaultTableModel model = (DefaultTableModel) tabelaArquivos.getModel();
-                        model.addRow(new Object[]{true, postgresBk.getName(), (postgresBk.length() / 1024)});
-                        atualizaQtdFiles();
-                        statusSistema.setText("Backup Postgres finalizado");
-                        logger.info("Backup Postgres finalizado");
+                }
+            };
+            new Thread(r).start();
+        } else {
+            finalizadoMakito = true;
+        }
+        if (postgresEdoc) {
+            Runnable r = new Runnable() {
+                public void run() {
+                    try {
+                        fazBackupPostgres("Edoc");
+                        finalizadoEdoc = true;
+                        chamaCopiaPostgres();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    barraProgresso(false);
-                    copiarArquivos();
-                } catch (IOException | HeadlessException e) {
-                    JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro no backup do PostgreSQL", JOptionPane.ERROR_MESSAGE);
-                    logger.erro("Erro no backup Postgres: " + e.getMessage());
+                }
+            };
+            new Thread(r).start();
+        } else {
+            finalizadoEdoc = true;
+        }
+    }
+    private void chamaCopiaPostgres(){
+        //System.out.println("Testando");
+        if (finalizadoEdoc && finalizadoMakito && !iniciouCopia) {
+            //System.out.println("copiando");
+            copiarArquivos();
+            barraProgresso(false);
+        }
+    }
+
+
+    public synchronized void fazBackupPostgres(final String tipo) throws InterruptedException {
+        try {
+            habilitaComandos(false);
+            statusSistema.setText("Fazendo backup do PostgreSQL - " + tipo);
+            logger.info("Fazendo backup do PostgreSQL - " + tipo);
+            barraProgresso(true);
+            Configuracoes cfg = new Configuracoes();
+            List<String> comandos = new ArrayList<>();
+            String caminho_post = cfg.getPropriedade("caminho_post");
+            String servidor_post = cfg.getPropriedade("servidor_post");
+            String porta_post = cfg.getPropriedade("porta_post");
+            String usuario_post = cfg.getPropriedade("usuario_post");
+            String banco;
+            if (tipo.equals("Makito")) {
+                banco = cfg.getPropriedade("banco_post");
+            } else {
+                banco = cfg.getPropriedade("banco_edoc");
+            }
+            logger.info("Iniciando backup do PostgreSQL -" + tipo + ", pasta_bin:" + caminho_post + " servidor: " + servidor_post + ":" + porta_post + " usuario: " + usuario_post);
+            comandos.add(caminho_post + "\\pg_dump.exe");
+            comandos.add("-i");
+            comandos.add("-h");
+            comandos.add(servidor_post);
+            comandos.add("-p");
+            comandos.add(porta_post);
+            comandos.add("-U");
+            comandos.add(usuario_post);
+            comandos.add("-F");
+            comandos.add("tar");
+            comandos.add("-f");
+            comandos.add(txtOrigem.getText() + "\\Postgres" + tipo + dataBackup() + ".backup");
+            comandos.add(banco);
+            ProcessBuilder builder = new ProcessBuilder(comandos);
+            builder.environment().put("PGPASSWORD", cfg.getPropriedade("senha_post"));
+            builder.redirectErrorStream(true);
+            Process p = builder.start();
+            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while (true) {
+                line = r.readLine();
+                if (line == null) {
+                    break;
+                }
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Ocorreu o seguinte erro: \n" + line + "\nDeseja continuar o backup dos arquivos?", "Erro no Backup do PostgreSQL", JOptionPane.YES_NO_OPTION);
+                logger.erro("Erro no backup Postgres - " + tipo + ": " + line);
+                if (dialogResult == JOptionPane.NO_OPTION) {
+                    System.exit(0);
+                } else {
+                    erroPostgres = true;
                 }
             }
-        });
-        t.start();
+            if (!erroPostgres) {
+                File postgresBk = new File(txtOrigem.getText() + "\\Postgres" + tipo + dataBackup() + ".backup");
+                DefaultTableModel model = (DefaultTableModel) tabelaArquivos.getModel();
+                model.addRow(new Object[]{true, postgresBk.getName(), (postgresBk.length() / 1024)});
+                atualizaQtdFiles();
+                statusSistema.setText("Backup Postgres " + tipo + " finalizado");
+                logger.info("Backup Postgres " + tipo + " finalizado");
+            }
 
+        } catch (IOException | HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro no backup do PostgreSQL - " + tipo, JOptionPane.ERROR_MESSAGE);
+            logger.erro("Erro no backup Postgres " + tipo + ": " + e.getMessage());
+        }
     }
 
     /**

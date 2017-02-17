@@ -88,8 +88,8 @@ public class Log {
     private void apagaArquivos() {
         for (File arquivo : todosArquivos) {
             long diff = new Date().getTime() - arquivo.lastModified();
-            System.out.println(arquivo.getAbsoluteFile() + " - " + String.valueOf(diff));
             if (diff > diasLog * 24 * 60 * 60 * 1000) {
+                this.info("Apagando Log antigo:"+ arquivo.getName());
                 arquivo.delete();
             }
         }

@@ -71,7 +71,7 @@
               <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
@@ -282,7 +282,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Banco de Dados"/>
+            <TitledBorder title="Backup PostgreSQL"/>
           </Border>
         </Property>
       </Properties>
@@ -292,10 +292,6 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="radioDat" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                  <Component id="radioPost" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="btConfiguraPost" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -303,38 +299,14 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="radioDat" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="radioPost" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btConfiguraPost" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="btConfiguraPost" alignment="1" min="-2" max="-2" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JRadioButton" name="radioDat">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grRadioModo"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Dat"/>
-          </Properties>
-          <Events>
-            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="radioDatStateChanged"/>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="radioDatActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="radioPost">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grRadioModo"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="PostgreSQL"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="btConfiguraPost">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dados PostgreSQL"/>
+            <Property name="text" type="java.lang.String" value="Dados PostgresSQL"/>
             <Property name="toolTipText" type="java.lang.String" value="Inclua os dados para conex&#xe3;o com o PostgreSQL"/>
           </Properties>
           <Events>
@@ -386,7 +358,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="ckFtp">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Fazer backup no FTP"/>
+            <Property name="text" type="java.lang.String" value="Backup no FTP"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckFtpMouseClicked"/>
@@ -447,7 +419,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="ckBkFacil">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Fazer backup autom&#xe1;ticamente"/>
+            <Property name="text" type="java.lang.String" value="Backup autom&#xe1;tico"/>
             <Property name="toolTipText" type="java.lang.String" value="Com esse modo ativo o backup ir&#xe1; iniciar autom&#xe1;ticamente ao executar o programa"/>
           </Properties>
           <Events>

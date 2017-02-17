@@ -5,6 +5,7 @@
  */
 package backup.dats;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -54,8 +55,6 @@ public class FrmConfig extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         btSalvaConfig = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        radioDat = new javax.swing.JRadioButton();
-        radioPost = new javax.swing.JRadioButton();
         btConfiguraPost = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         btDadosFtp = new javax.swing.JButton();
@@ -190,25 +189,9 @@ public class FrmConfig extends javax.swing.JFrame {
             }
         });
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Banco de Dados"));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Backup PostgreSQL"));
 
-        grRadioModo.add(radioDat);
-        radioDat.setText("Dat");
-        radioDat.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                radioDatStateChanged(evt);
-            }
-        });
-        radioDat.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radioDatActionPerformed(evt);
-            }
-        });
-
-        grRadioModo.add(radioPost);
-        radioPost.setText("PostgreSQL");
-
-        btConfiguraPost.setText("Dados PostgreSQL");
+        btConfiguraPost.setText("Dados PostgresSQL");
         btConfiguraPost.setToolTipText("Inclua os dados para conexão com o PostgreSQL");
         btConfiguraPost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -222,19 +205,12 @@ public class FrmConfig extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(radioDat)
-                .addGap(10, 10, 10)
-                .addComponent(radioPost)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btConfiguraPost)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(radioDat)
-                .addComponent(radioPost)
-                .addComponent(btConfiguraPost))
+            .addComponent(btConfiguraPost, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("FTP"));
@@ -248,7 +224,7 @@ public class FrmConfig extends javax.swing.JFrame {
             }
         });
 
-        ckFtp.setText("Fazer backup no FTP");
+        ckFtp.setText("Backup no FTP");
         ckFtp.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ckFtpMouseClicked(evt);
@@ -297,7 +273,7 @@ public class FrmConfig extends javax.swing.JFrame {
             }
         });
 
-        ckBkFacil.setText("Fazer backup automáticamente");
+        ckBkFacil.setText("Backup automático");
         ckBkFacil.setToolTipText("Com esse modo ativo o backup irá iniciar automáticamente ao executar o programa");
         ckBkFacil.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -367,7 +343,7 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addGap(5, 5, 5)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -393,7 +369,6 @@ public class FrmConfig extends javax.swing.JFrame {
             cfg.setPropriedade("executa_antes", txtExecutaAntes.getText());
             cfg.setPropriedade("executa_depois", txtExecutaDepois.getText());
             cfg.setPropriedade("compactacao", String.valueOf(getTipoCompactacao()));
-            cfg.setPropriedade("modo", setTipoDados());
             cfg.setPropriedade("backup_facil", String.valueOf(ckBkFacil.isSelected()));
             cfg.setPropriedade("desliga_pc", String.valueOf(ckDesligaPC.isSelected()));
             cfg.setPropriedade("ftp_backup", String.valueOf(ckFtp.isSelected()));
@@ -417,7 +392,6 @@ public class FrmConfig extends javax.swing.JFrame {
             txtExecutaAntes.setText(cfg.getPropriedade("executa_antes"));
             txtExecutaDepois.setText(cfg.getPropriedade("executa_depois"));
             setTipoCompactacao(cfg.getPropriedade("compactacao"));
-            getTipoDados(cfg.getPropriedade("modo"));
             ckBkFacil.setSelected(Boolean.valueOf(cfg.getPropriedade("backup_facil")));
             ckDesligaPC.setSelected(Boolean.valueOf(cfg.getPropriedade("desliga_pc")));
             ckFtp.setSelected(Boolean.valueOf(cfg.getPropriedade("ftp_backup")));
@@ -432,27 +406,12 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void btLoadExecutaAntesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoadExecutaAntesActionPerformed
-        // TODO add your handling code here:
         selecionaExecutavel("antes");
     }//GEN-LAST:event_btLoadExecutaAntesActionPerformed
 
     private void btLoadExecutaDepoisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoadExecutaDepoisActionPerformed
-        // TODO add your handling code here:
         selecionaExecutavel("depois");
     }//GEN-LAST:event_btLoadExecutaDepoisActionPerformed
-
-    private void radioDatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioDatActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_radioDatActionPerformed
-
-    private void radioDatStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radioDatStateChanged
-        // TODO add your handling code here:
-        if (radioDat.isSelected()) {
-            btConfiguraPost.setEnabled(false);
-        } else {
-            btConfiguraPost.setEnabled(true);
-        }
-    }//GEN-LAST:event_radioDatStateChanged
 
     private void btConfiguraPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfiguraPostActionPerformed
         // TODO add your handling code here:
@@ -497,11 +456,10 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_ckBkFacilMouseClicked
 
     private void jLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseReleased
-        ProcessBuilder pb = new ProcessBuilder("Notepad.exe", System.getProperty("java.io.tmpdir") + "MakitoBackup.log");
         try {
-            pb.start();
+            Desktop.getDesktop().open(new File("MakitoBackupLogs"));
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Não foi possivel abrir o Log \n Abra manualmente em: " + System.getProperty("java.io.tmpdir") + "MakitoBackup.log");
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jLabel1MouseReleased
     private void fecharForm() {
@@ -575,25 +533,7 @@ public class FrmConfig extends javax.swing.JFrame {
         }
     }
 
-    private String setTipoDados() {
-        if (radioDat.isSelected()) {
-            return "dat";
-        } else if (radioPost.isSelected()) {
-            return "post";
-        } else {
-            return "dat";
-        }
-    }
-
-    private void getTipoDados(String tipo) {
-        if ("post".equals(tipo)) {
-            radioPost.setSelected(true);
-        } else {
-            radioDat.setSelected(true);
-            btConfiguraPost.setEnabled(false);
-        }
-    }
-
+    
     private int getTipoCompactacao() {
         if (radioBaixa.isSelected()) {
             return 1;
@@ -682,9 +622,7 @@ public class FrmConfig extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JRadioButton radioAlta;
     private javax.swing.JRadioButton radioBaixa;
-    private javax.swing.JRadioButton radioDat;
     private javax.swing.JRadioButton radioNormal;
-    private javax.swing.JRadioButton radioPost;
     private javax.swing.JRadioButton radioUltra;
     private javax.swing.JTextField txtExecutaAntes;
     private javax.swing.JTextField txtExecutaDepois;

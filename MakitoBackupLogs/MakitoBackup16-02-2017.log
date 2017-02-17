@@ -1,0 +1,231 @@
+
+16/02/17 - 08:41:00 INFO: Criando makitoPost_backup valor padrao 'false'
+16/02/17 - 08:41:00 INFO: Propriedade não encontrada nas configurações -> makitoPost_backup
+16/02/17 - 08:41:00 INFO: Criando edoc_backup valor padrao 'false'
+16/02/17 - 08:41:00 INFO: Propriedade não encontrada nas configurações -> edoc_backup
+16/02/17 - 08:41:00 INFO: Criando banco_edoc valor padrao 'ManagerEDoc'
+16/02/17 - 08:41:00 INFO: Propriedade não encontrada nas configurações -> banco_edoc
+16/02/17 - 08:43:58 INFO: Testando backup do PostgreSQL, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 08:44:11 INFO: As configurações do PostgresSQL estão corretas
+16/02/17 - 08:44:12 INFO: Alterando edoc_backup de 'false' para 'true'
+16/02/17 - 09:10:02 INFO: Alterando compactacao de '7' para '9'
+16/02/17 - 09:10:25 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 09:10:25 INFO: Alterando extensoes_ativas de 'dat/fr3/con' para ''
+16/02/17 - 09:10:34 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 09:10:34 INFO: Alterando extensoes_ativas de '' para 'fr3/'
+16/02/17 - 09:10:55 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 09:10:55 INFO: Backup iniciado manualmente
+16/02/17 - 09:10:55 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 09:10:55 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 09:11:04 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 09:11:04 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 09:11:13 INFO: Copia de arquivos finalizada
+16/02/17 - 09:11:13 INFO: Criando arquivo compactado
+16/02/17 - 09:11:15 INFO: Arquivo compactado criado
+16/02/17 - 09:11:15 INFO: Apagando arquivos temporários
+16/02/17 - 09:11:15 INFO: Arquivos temporários apagados
+16/02/17 - 09:11:15 INFO: Backup concluido!
+16/02/17 - 09:11:15 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+16/02/17 - 09:11:15 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip'
+16/02/17 - 13:33:42 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 13:33:42 INFO: Alterando extensoes_ativas de 'fr3/' para ''
+16/02/17 - 14:32:52 INFO: Alterando makitoPost_backup de 'false' para 'true'
+16/02/17 - 14:34:44 INFO: Alterando banco_post de '' para '123'
+16/02/17 - 14:34:57 INFO: Alterando makitoPost_backup de 'true' para 'false'
+16/02/17 - 14:35:06 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 14:35:06 INFO: Alterando extensoes_ativas de '' para 'cfg/'
+16/02/17 - 14:35:10 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 14:35:10 INFO: Alterando extensoes_ativas de 'cfg/' para ''
+16/02/17 - 14:35:18 INFO: Alterando makitoPost_backup de 'false' para 'true'
+16/02/17 - 14:35:22 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 14:35:22 INFO: Alterando extensoes_ativas de '' para 'cfg/'
+16/02/17 - 14:35:24 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 14:35:24 INFO: Alterando extensoes_ativas de 'cfg/' para ''
+16/02/17 - 14:37:13 INFO: Alterando makitoPost_backup de 'true' para 'false'
+16/02/17 - 14:37:13 INFO: Alterando edoc_backup de 'true' para 'false'
+16/02/17 - 15:00:54 INFO: Alterando makitoPost_backup de 'false' para 'true'
+16/02/17 - 15:01:21 INFO: Alterando edoc_backup de 'false' para 'true'
+16/02/17 - 15:01:31 INFO: Alterando makitoPost_backup de 'true' para 'false'
+16/02/17 - 15:12:09 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 15:12:09 INFO: Alterando extensoes_ativas de '' para 'con/'
+16/02/17 - 15:12:13 INFO: Alterando makitoPost_backup de 'false' para 'true'
+16/02/17 - 15:25:48 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 15:25:48 INFO: Alterando extensoes_ativas de 'con/' para 'con/dll/cfg/exe/flx/dat/'
+16/02/17 - 15:25:52 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 15:25:52 INFO: Alterando extensoes_ativas de 'con/dll/cfg/exe/flx/dat/' para 'dat/fr3/hdr/flx/exe/cfg/dll/con/int/'
+16/02/17 - 15:41:42 INFO: Alterando edoc_backup de 'true' para 'false'
+16/02/17 - 15:41:51 INFO: Alterando edoc_backup de 'false' para 'true'
+16/02/17 - 15:56:43 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 15:56:43 INFO: Alterando extensoes_ativas de 'dat/fr3/hdr/flx/exe/cfg/dll/con/int/' para 'int/dll/exe/flx/hdr/fr3/dat/'
+16/02/17 - 15:56:46 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 15:56:46 INFO: Alterando extensoes_ativas de 'int/dll/exe/flx/hdr/fr3/dat/' para 'dat/fr3/hdr/flx/int/'
+16/02/17 - 16:04:03 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 16:04:03 INFO: Alterando extensoes_ativas de 'dat/fr3/hdr/flx/int/' para 'int/con/flx/hdr/fr3/dat/'
+16/02/17 - 16:04:07 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 16:04:07 INFO: Alterando extensoes_ativas de 'int/con/flx/hdr/fr3/dat/' para 'dat/fr3/hdr/flx/exe/con/int/'
+16/02/17 - 16:11:54 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 16:11:54 INFO: Alterando extensoes_ativas de 'dat/fr3/hdr/flx/exe/con/int/' para 'int/exe/flx/hdr/fr3/'
+16/02/17 - 16:12:00 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+16/02/17 - 16:12:00 INFO: Alterando extensoes_ativas de 'int/exe/flx/hdr/fr3/' para 'dat/fr3/hdr/flx/exe/dll/int/'
+16/02/17 - 16:12:08 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+16/02/17 - 16:12:08 INFO: Alterando extensoes_ativas de 'dat/fr3/hdr/flx/exe/dll/int/' para ''
+16/02/17 - 16:13:11 INFO: Alterando banco_post de '123' para ''
+16/02/17 - 16:13:19 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 16:13:19 INFO: Backup iniciado manualmente
+16/02/17 - 16:13:53 INFO: Alterando banco_post de '' para 'blancoaf'
+16/02/17 - 16:13:53 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 16:13:53 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 16:13:53 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 16:13:53 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 16:14:08 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 16:14:08 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-20172.zip
+16/02/17 - 16:14:08 INFO: Copia de arquivos finalizada
+16/02/17 - 16:14:08 INFO: Criando arquivo compactado
+16/02/17 - 16:14:09 INFO: Arquivo compactado criado
+16/02/17 - 16:14:09 INFO: Apagando arquivos temporários
+16/02/17 - 16:14:09 INFO: Arquivos temporários apagados
+16/02/17 - 16:14:10 INFO: Backup concluido!
+16/02/17 - 16:14:10 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-20172.zip'
+16/02/17 - 16:14:37 INFO: Backup Postgres Makito finalizado
+16/02/17 - 16:14:37 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-20172.zip
+16/02/17 - 16:39:51 ERRO: Erro ao copiar os arquivosD:\Makito\ver\594\board\PostgresEdoc16-02-2017.backup
+16/02/17 - 16:39:54 INFO: Copia de arquivos finalizada
+16/02/17 - 16:39:55 INFO: Criando arquivo compactado
+16/02/17 - 16:40:19 INFO: Arquivo compactado criado
+16/02/17 - 16:40:19 INFO: Apagando arquivos temporários
+16/02/17 - 16:40:19 INFO: Arquivos temporários apagados
+16/02/17 - 16:40:19 INFO: Backup concluido!
+16/02/17 - 16:40:47 INFO: Testando backup do PostgreSQL, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 16:40:49 INFO: As configurações do PostgresSQL estão corretas
+16/02/17 - 16:42:04 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 16:42:04 INFO: Backup iniciado manualmente
+16/02/17 - 16:42:04 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 16:42:04 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 16:42:04 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 16:42:04 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 16:42:07 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 16:42:08 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 16:42:08 INFO: Copia de arquivos finalizada
+16/02/17 - 16:42:08 INFO: Criando arquivo compactado
+16/02/17 - 16:42:08 INFO: Arquivo compactado criado
+16/02/17 - 16:42:08 INFO: Apagando arquivos temporários
+16/02/17 - 16:42:08 INFO: Arquivos temporários apagados
+16/02/17 - 16:42:08 INFO: Backup concluido!
+16/02/17 - 16:42:08 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-20172.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip'
+16/02/17 - 16:42:17 INFO: Backup Postgres Makito finalizado
+16/02/17 - 16:42:17 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 16:42:20 ERRO: Erro ao copiar os arquivosD:\Makito\ver\594\board\PostgresEdoc16-02-2017.backup
+16/02/17 - 16:42:21 INFO: Copia de arquivos finalizada
+16/02/17 - 16:42:21 INFO: Criando arquivo compactado
+16/02/17 - 16:43:56 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 16:43:56 INFO: Backup iniciado manualmente
+16/02/17 - 16:43:56 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 16:43:56 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 16:43:56 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 16:43:56 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 16:43:56 INFO: Copia de arquivos finalizada
+16/02/17 - 16:43:56 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 16:43:56 INFO: Criando arquivo compactado
+16/02/17 - 16:43:58 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 16:44:08 INFO: Backup Postgres Makito finalizado
+16/02/17 - 17:20:04 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:20:04 INFO: Backup iniciado manualmente
+16/02/17 - 17:20:04 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:20:04 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:20:04 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 17:20:04 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:20:04 INFO: Copia de arquivos finalizada
+16/02/17 - 17:20:04 INFO: Criando arquivo compactado
+16/02/17 - 17:20:04 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:20:07 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 17:20:16 INFO: Backup Postgres Makito finalizado
+16/02/17 - 17:43:59 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:43:59 INFO: Backup iniciado manualmente
+16/02/17 - 17:43:59 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:43:59 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 17:43:59 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:43:59 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:43:59 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:43:59 INFO: Copia de arquivos finalizada
+16/02/17 - 17:43:59 INFO: Criando arquivo compactado
+16/02/17 - 17:44:01 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 17:44:01 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:44:01 INFO: Copia de arquivos finalizada
+16/02/17 - 17:44:01 INFO: Criando arquivo compactado
+16/02/17 - 17:44:17 INFO: Backup Postgres Makito finalizado
+16/02/17 - 17:44:17 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:44:17 INFO: Copia de arquivos finalizada
+16/02/17 - 17:44:17 INFO: Criando arquivo compactado
+16/02/17 - 17:44:40 INFO: Arquivo compactado criado
+16/02/17 - 17:44:40 INFO: Apagando arquivos temporários
+16/02/17 - 17:44:40 INFO: Arquivos temporários apagados
+16/02/17 - 17:44:40 INFO: Backup concluido!
+16/02/17 - 17:46:42 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:46:42 INFO: Backup iniciado manualmente
+16/02/17 - 17:46:46 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:46:46 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:46:51 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 17:46:51 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:46:55 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 17:46:55 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip2.zip
+16/02/17 - 17:46:55 INFO: Copia de arquivos finalizada
+16/02/17 - 17:46:55 INFO: Criando arquivo compactado
+16/02/17 - 17:46:56 INFO: Arquivo compactado criado
+16/02/17 - 17:46:56 INFO: Apagando arquivos temporários
+16/02/17 - 17:46:56 INFO: Arquivos temporários apagados
+16/02/17 - 17:46:56 INFO: Backup concluido!
+16/02/17 - 17:46:56 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip2.zip'
+16/02/17 - 17:49:15 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:49:15 INFO: Backup iniciado manualmente
+16/02/17 - 17:49:15 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:49:15 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:49:27 INFO: Backup Postgres Makito finalizado
+16/02/17 - 17:53:15 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:53:15 INFO: Backup iniciado manualmente
+16/02/17 - 17:53:21 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:53:21 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:53:33 INFO: Backup Postgres Makito finalizado
+16/02/17 - 17:53:40 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 17:53:40 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:53:42 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 17:53:51 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:53:51 INFO: Copia de arquivos finalizada
+16/02/17 - 17:53:51 INFO: Criando arquivo compactado
+16/02/17 - 17:54:21 INFO: Arquivo compactado criado
+16/02/17 - 17:54:21 INFO: Apagando arquivos temporários
+16/02/17 - 17:54:21 INFO: Arquivos temporários apagados
+16/02/17 - 17:54:21 INFO: Backup concluido!
+16/02/17 - 17:54:21 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip2.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip'
+16/02/17 - 17:54:49 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:54:49 INFO: Backup iniciado manualmente
+16/02/17 - 17:54:49 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:54:49 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:55:00 INFO: Backup Postgres Makito finalizado
+16/02/17 - 17:55:00 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 17:55:00 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:55:02 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 17:55:02 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:55:19 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:55:19 INFO: Backup iniciado manualmente
+16/02/17 - 17:55:19 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:55:19 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 17:55:19 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:55:19 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:55:19 INFO: Copia de arquivos finalizada
+16/02/17 - 17:55:19 INFO: Criando arquivo compactado
+16/02/17 - 17:55:19 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:58:20 INFO: ------------------------------------------------------------------------------------------------------
+16/02/17 - 17:58:20 INFO: Backup iniciado manualmente
+16/02/17 - 17:58:20 INFO: Fazendo backup do PostgreSQL - Makito
+16/02/17 - 17:58:20 INFO: Iniciando backup do PostgreSQL -Makito, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:58:30 INFO: Backup Postgres Makito finalizado
+16/02/17 - 17:58:30 INFO: Fazendo backup do PostgreSQL - Edoc
+16/02/17 - 17:58:31 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+16/02/17 - 17:58:32 INFO: Backup Postgres Edoc finalizado
+16/02/17 - 17:58:32 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito16-02-2017.zip
+16/02/17 - 17:58:33 INFO: Copia de arquivos finalizada
+16/02/17 - 17:58:33 INFO: Criando arquivo compactado
+16/02/17 - 17:58:55 INFO: Arquivo compactado criado
+16/02/17 - 17:58:55 INFO: Apagando arquivos temporários
+16/02/17 - 17:58:55 INFO: Arquivos temporários apagados
+16/02/17 - 17:58:55 INFO: Backup concluido!
