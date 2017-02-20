@@ -41,19 +41,22 @@
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanel4" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btSalvaConfig" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
                   <Component id="jPanel6" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="ckDesligaPC" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanel4" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -63,13 +66,14 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+                  <Component id="jPanel4" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
@@ -85,7 +89,7 @@
                   <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btSalvaConfig" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -291,9 +295,8 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="btConfiguraPost" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -328,11 +331,10 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   <Component id="ckFtp" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btDadosFtp" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -348,7 +350,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btDadosFtp">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dados do FTP"/>
+            <Property name="text" type="java.lang.String" value="Dados"/>
             <Property name="toolTipText" type="java.lang.String" value="Inclua os dados de conex&#xe3;o com o servidor de FTP"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
@@ -358,7 +360,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="ckFtp">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Backup no FTP"/>
+            <Property name="text" type="java.lang.String" value="Backup FTP"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckFtpMouseClicked"/>
@@ -370,7 +372,7 @@
     <Component class="javax.swing.JCheckBox" name="ckDesligaPC">
       <Properties>
         <Property name="text" type="java.lang.String" value="Desligar o computador ao terminar"/>
-        <Property name="toolTipText" type="java.lang.String" value="Com esse modo ativo o backup ir&#xe1; iniciar autom&#xe1;ticamente ao executar o programa"/>
+        <Property name="toolTipText" type="java.lang.String" value="Desligar o computador quando terminar de fazer o backup"/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckDesligaPCMouseClicked"/>
@@ -389,10 +391,12 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                   <Component id="ckBkFacil" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="btAgendar" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="btNomeArquivo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -402,6 +406,7 @@
               <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                   <Component id="btAgendar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ckBkFacil" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btNomeArquivo" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -410,7 +415,7 @@
         <Component class="javax.swing.JButton" name="btAgendar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Agendar"/>
-            <Property name="toolTipText" type="java.lang.String" value="Inclua os dados de conex&#xe3;o com o servidor de FTP"/>
+            <Property name="toolTipText" type="java.lang.String" value="Configurar agendamento de backup"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
@@ -424,6 +429,16 @@
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckBkFacilMouseClicked"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btNomeArquivo">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Nome arquivo"/>
+            <Property name="toolTipText" type="java.lang.String" value="Definir nome do arquivo gerado no backup"/>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btNomeArquivoActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

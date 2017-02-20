@@ -60,6 +60,7 @@ public class FrmInicio extends javax.swing.JFrame {
     Boolean backupFtp = false;
     Boolean desligaPC = false;
     Log logger;
+    String nomeArquivoBackup;
 
     public FrmInicio() {
         initComponents();
@@ -328,9 +329,15 @@ public class FrmInicio extends javax.swing.JFrame {
         try {
             logger = new Log();
             Configuracoes cfg = new Configuracoes();
+            nomeArquivoBackup = cfg.getPropriedade("nome_arquivo") + dataBackup() + ".zip";
             String origem = cfg.getPropriedade("pasta_origem");
-            txtOrigem.setText(origem);
-            txtDestino.setText(cfg.getPropriedade("pasta_destino"));
+            if (new File(origem).isDirectory()) {
+                txtOrigem.setText(origem);
+            }
+            String destino = cfg.getPropriedade("pasta_destino");
+            if (new File(destino).getParent() != null) {
+                txtDestino.setText(destino);
+            }
             ePostgres();
             if (txtOrigem.getText().equals("")) {
                 String caminhoAtual = getAtualPath();
@@ -358,7 +365,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 String pastaDestino = new File(cfg.getPropriedade("pasta_destino")).getParent();
                 String exts = cfg.getPropriedade("extensoes_ativas");
                 File pasta = new File(pastaDestino);
-                if (pastaOrigem.isDirectory() && pasta.isDirectory() && !exts.equals("")) {
+                if (pastaOrigem.isDirectory() && pasta.isDirectory() && (!exts.equals("") || (postgresEdoc || postgresMakito))) {
                     rapido = true;
                     iniciaBackupRapido();
                 } else {
@@ -412,7 +419,7 @@ public class FrmInicio extends javax.swing.JFrame {
         try {
             logger.info("Backup iniciado automaticamente");
             String pastaSalva = new File(txtDestino.getText()).getParent();
-            String nome = "BackupMakito" + dataBackup() + ".zip";
+            String nome = nomeArquivoBackup;
             File novoArquivo = new File(pastaSalva + "\\" + nome);
             int i = 1;
             while (novoArquivo.exists()) {
@@ -881,7 +888,7 @@ public class FrmInicio extends javax.swing.JFrame {
         JFileChooser j = new JFileChooser(new File(pastaInicial).getParent());
         j.setDialogType(JFileChooser.SAVE_DIALOG);
         j.setDialogTitle("Salvar arquivo de backup");
-        String nome = "BackupMakito" + dataBackup() + ".zip";
+        String nome = nomeArquivoBackup;
         j.setSelectedFile(new File(nome));
         j.setFileFilter(new FileNameExtensionFilter("Arquivo ZIP", "ZIP"));
         Integer opt = j.showSaveDialog(this);
@@ -1092,13 +1099,14 @@ public class FrmInicio extends javax.swing.JFrame {
             return "";
         }
     }
-    boolean finalizadoMakito = false, finalizadoEdoc = false,iniciouCopia = false;
+    boolean finalizadoMakito = false, finalizadoEdoc = false, iniciouCopia = false;
 
     private synchronized void backupPostgres() throws IOException, InterruptedException {
         if (postgresMakito) {
             Runnable r = new Runnable() {
                 public void run() {
                     try {
+                        logger.info("Fazendo backup do PostgreSQL - Makito");
                         fazBackupPostgres("Makito");
                         finalizadoMakito = true;
                         chamaCopiaPostgres();
@@ -1115,6 +1123,7 @@ public class FrmInicio extends javax.swing.JFrame {
             Runnable r = new Runnable() {
                 public void run() {
                     try {
+                        logger.info("Fazendo backup do PostgreSQL - Edoc");
                         fazBackupPostgres("Edoc");
                         finalizadoEdoc = true;
                         chamaCopiaPostgres();
@@ -1128,7 +1137,8 @@ public class FrmInicio extends javax.swing.JFrame {
             finalizadoEdoc = true;
         }
     }
-    private void chamaCopiaPostgres(){
+
+    private void chamaCopiaPostgres() {
         //System.out.println("Testando");
         if (finalizadoEdoc && finalizadoMakito && !iniciouCopia) {
             //System.out.println("copiando");
@@ -1137,12 +1147,10 @@ public class FrmInicio extends javax.swing.JFrame {
         }
     }
 
-
     public synchronized void fazBackupPostgres(final String tipo) throws InterruptedException {
         try {
             habilitaComandos(false);
             statusSistema.setText("Fazendo backup do PostgreSQL - " + tipo);
-            logger.info("Fazendo backup do PostgreSQL - " + tipo);
             barraProgresso(true);
             Configuracoes cfg = new Configuracoes();
             List<String> comandos = new ArrayList<>();
@@ -1156,7 +1164,7 @@ public class FrmInicio extends javax.swing.JFrame {
             } else {
                 banco = cfg.getPropriedade("banco_edoc");
             }
-            logger.info("Iniciando backup do PostgreSQL -" + tipo + ", pasta_bin:" + caminho_post + " servidor: " + servidor_post + ":" + porta_post + " usuario: " + usuario_post);
+            logger.info("Iniciando backup do PostgreSQL - " + tipo + ", pasta_bin:" + caminho_post + " servidor: " + servidor_post + ":" + porta_post + " usuario: " + usuario_post);
             comandos.add(caminho_post + "\\pg_dump.exe");
             comandos.add("-i");
             comandos.add("-h");

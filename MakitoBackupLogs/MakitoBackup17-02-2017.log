@@ -3573,3 +3573,21 @@
 17/02/17 - 17:35:29 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito17-02-2017.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito17-023-2017.zip'
 17/02/17 - 17:40:18 INFO: Alterando makitoPost_backup de 'true' para 'false'
 17/02/17 - 17:40:18 INFO: Alterando edoc_backup de 'true' para 'false'
+17/02/17 - 17:52:35 INFO: Alterando edoc_backup de 'false' para 'true'
+17/02/17 - 17:52:36 INFO: Alterando backup_facil de 'false' para 'true'
+17/02/17 - 17:52:40 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+17/02/17 - 17:52:40 INFO: Alterando extensoes_ativas de 'dat/fr3/' para ''
+17/02/17 - 17:54:16 INFO: Backup iniciado automaticamente
+17/02/17 - 17:54:16 INFO: Fazendo backup do PostgreSQL - Edoc
+17/02/17 - 17:54:16 INFO: Iniciando backup do PostgreSQL -Edoc, pasta_bin:C:\Program Files (x86)\PostgreSQL\9.3\bin servidor: localhost:5432 usuario: postgres
+17/02/17 - 17:54:18 INFO: Backup Postgres Edoc finalizado
+17/02/17 - 17:54:18 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito17-02-2017_copia(1).zip
+17/02/17 - 17:54:18 INFO: Copia de arquivos finalizada
+17/02/17 - 17:54:18 INFO: Criando arquivo compactado
+17/02/17 - 17:54:19 INFO: Arquivo compactado criado
+17/02/17 - 17:54:19 INFO: Apagando arquivos temporários
+17/02/17 - 17:54:19 INFO: Arquivos temporários apagados
+17/02/17 - 17:54:19 INFO: Backup concluido!
+17/02/17 - 17:54:19 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito17-023-2017.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito17-02-2017_copia(1).zip'
+17/02/17 - 17:59:51 INFO: Criando nome_arquivo valor padrao 'BackupMakitoTeste'
+17/02/17 - 17:59:51 INFO: Propriedade não encontrada nas configurações -> nome_arquivo

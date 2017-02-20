@@ -1,0 +1,17 @@
+20/02/17 - 08:19:10 INFO: Criando nome_arquivo valor padrao 'BackupMakito'
+20/02/17 - 08:19:10 INFO: Propriedade não encontrada nas configurações -> nome_arquivo
+20/02/17 - 11:55:44 INFO: Alterando nome_arquivo de 'BackupMakito' para 'BackupMakitoTeste'
+20/02/17 - 11:56:03 INFO: Alterando nome_arquivo de 'BackupMakitoTeste' para 'TestandoNome'
+20/02/17 - 11:56:13 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+20/02/17 - 11:56:13 INFO: Alterando extensoes_ativas de '' para 'fr3/'
+20/02/17 - 11:56:17 INFO: Alterando edoc_backup de 'true' para 'false'
+20/02/17 - 11:56:31 INFO: Backup iniciado automaticamente
+20/02/17 - 11:56:31 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\TestandoNome20-02-2017.zip
+20/02/17 - 11:56:35 INFO: Copia de arquivos finalizada
+20/02/17 - 11:56:35 INFO: Criando arquivo compactado
+20/02/17 - 11:56:37 INFO: Arquivo compactado criado
+20/02/17 - 11:56:37 INFO: Apagando arquivos temporários
+20/02/17 - 11:56:37 INFO: Arquivos temporários apagados
+20/02/17 - 11:56:37 INFO: Backup concluido!
+20/02/17 - 11:56:37 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito17-02-2017_copia(1).zip' para 'C:\Users\fernando\Desktop\Backup\TestandoNome20-02-2017.zip'
+20/02/17 - 11:57:05 INFO: Alterando nome_arquivo de 'TestandoNome' para 'BackupMakito'
