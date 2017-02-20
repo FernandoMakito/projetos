@@ -135,6 +135,9 @@ public class FrmPost extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ckEdocMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ckEdocMouseReleased(evt);
+            }
         });
         ckEdoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,6 +149,9 @@ public class FrmPost extends javax.swing.JFrame {
         ckMakito.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ckMakitoMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ckMakitoMouseReleased(evt);
             }
         });
         ckMakito.addActionListener(new java.awt.event.ActionListener() {
@@ -235,7 +241,6 @@ public class FrmPost extends javax.swing.JFrame {
                                 .addComponent(jLabel2))
                             .addComponent(jLabel3))
                         .addGap(26, 26, 26)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -348,7 +353,7 @@ public class FrmPost extends javax.swing.JFrame {
 
     private void ckEdocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckEdocMouseClicked
         // TODO add your handling code here:
-        btTestaEdoc.setEnabled(ckEdoc.isSelected() && !txtDatabaseEdoc.getText().equals(""));
+       
     }//GEN-LAST:event_ckEdocMouseClicked
 
     private void ckEdocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckEdocActionPerformed
@@ -368,7 +373,7 @@ public class FrmPost extends javax.swing.JFrame {
 
     private void ckMakitoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckMakitoMouseClicked
         // TODO add your handling code here:
-        btTesta.setEnabled(ckMakito.isSelected() && !txtDatabase.getText().equals(""));
+
     }//GEN-LAST:event_ckMakitoMouseClicked
 
     private void ckMakitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMakitoActionPerformed
@@ -379,6 +384,15 @@ public class FrmPost extends javax.swing.JFrame {
         // TODO add your handling code here:
          btTestaEdoc.setEnabled(!txtDatabaseEdoc.getText().equals(""));
     }//GEN-LAST:event_txtDatabaseEdocKeyTyped
+
+    private void ckMakitoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckMakitoMouseReleased
+         btTesta.setEnabled(ckMakito.isSelected() && !txtDatabase.getText().equals(""));
+    }//GEN-LAST:event_ckMakitoMouseReleased
+
+    private void ckEdocMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckEdocMouseReleased
+        // TODO add your handling code here:
+         btTestaEdoc.setEnabled(ckEdoc.isSelected() && !txtDatabaseEdoc.getText().equals(""));
+    }//GEN-LAST:event_ckEdocMouseReleased
 
     private void confereConexao(String tabela, boolean edoc) {
             String database, arquivoTeste;

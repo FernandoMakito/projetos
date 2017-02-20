@@ -88,6 +88,7 @@ public class Configuracoes {
         propriedades.put("agendamento_dias", "MON,TUE,WED,THU,FRI,SAT");
         propriedades.put("agendamento_hora", "00:00");
         propriedades.put("agendamento_ativo", "false");
+        propriedades.put("pasta_temp", "propria");
 
     }
 

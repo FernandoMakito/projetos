@@ -224,7 +224,7 @@ public class FrmFtp extends javax.swing.JFrame {
         client.login(user, pass);
         client.changeDirectory(uploadPath);
         client.upload(arquivo);
-        client.disconnect(false);
+        client.disconnect(true);
         arquivo.delete();
 
     }

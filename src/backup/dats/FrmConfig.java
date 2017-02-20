@@ -65,6 +65,8 @@ public class FrmConfig extends javax.swing.JFrame {
         ckBkFacil = new javax.swing.JCheckBox();
         btNomeArquivo = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        btArquivosTemp = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurações do Backup");
@@ -98,7 +100,7 @@ public class FrmConfig extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addComponent(radioBaixa)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(radioNormal)
@@ -192,7 +194,7 @@ public class FrmConfig extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Backup PostgreSQL"));
 
-        btConfiguraPost.setText("Dados PostgresSQL");
+        btConfiguraPost.setText("Dados PostgreSQL");
         btConfiguraPost.setToolTipText("Inclua os dados para conexão com o PostgreSQL");
         btConfiguraPost.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -229,6 +231,9 @@ public class FrmConfig extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ckFtpMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ckFtpMouseReleased(evt);
+            }
         });
         ckFtp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -241,10 +246,10 @@ public class FrmConfig extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(ckFtp)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btDadosFtp))
+                .addComponent(btDadosFtp)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,6 +283,9 @@ public class FrmConfig extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ckBkFacilMouseClicked(evt);
             }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                ckBkFacilMouseReleased(evt);
+            }
         });
 
         btNomeArquivo.setText("Nome arquivo");
@@ -300,7 +308,7 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(btAgendar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btNomeArquivo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,6 +327,29 @@ public class FrmConfig extends javax.swing.JFrame {
             }
         });
 
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Arquivos Temporários"));
+
+        btArquivosTemp.setText("Diretório de arquivos temporários");
+        btArquivosTemp.setToolTipText("Definir onde serão copiados os arquivos temporários");
+        btArquivosTemp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btArquivosTempActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(btArquivosTemp)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btArquivosTemp, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -326,6 +357,7 @@ public class FrmConfig extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -355,6 +387,8 @@ public class FrmConfig extends javax.swing.JFrame {
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -368,7 +402,7 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(btSalvaConfig))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -463,11 +497,7 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_btAgendarActionPerformed
 
     private void ckBkFacilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseClicked
-        btAgendar.setEnabled(ckBkFacil.isSelected());
-        btNomeArquivo.setEnabled(ckBkFacil.isSelected());
-        if (ckBkFacil.isSelected()) {
-            verificaConfigBackup();
-        }
+        
     }//GEN-LAST:event_ckBkFacilMouseClicked
 
     private void jLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseReleased
@@ -482,6 +512,28 @@ public class FrmConfig extends javax.swing.JFrame {
         FrmNomeArquivo frm = new FrmNomeArquivo();
         frm.setVisible(true);
     }//GEN-LAST:event_btNomeArquivoActionPerformed
+
+    private void btArquivosTempActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btArquivosTempActionPerformed
+        // TODO add your handling code here:
+        FrmArquivosTemp frm = new FrmArquivosTemp();
+        frm.setVisible(true);
+    }//GEN-LAST:event_btArquivosTempActionPerformed
+
+    private void ckBkFacilMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseReleased
+        btAgendar.setEnabled(ckBkFacil.isSelected());
+        btNomeArquivo.setEnabled(ckBkFacil.isSelected());
+        if (ckBkFacil.isSelected()) {
+            verificaConfigBackup();
+        }
+    }//GEN-LAST:event_ckBkFacilMouseReleased
+
+    private void ckFtpMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckFtpMouseReleased
+        if (ckFtp.isSelected()) {
+            btDadosFtp.setEnabled(true);
+        } else {
+            btDadosFtp.setEnabled(false);
+        }
+    }//GEN-LAST:event_ckFtpMouseReleased
     private void fecharForm() {
         setVisible(false);
     }
@@ -622,6 +674,7 @@ public class FrmConfig extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAgendar;
+    private javax.swing.JButton btArquivosTemp;
     private javax.swing.JButton btConfiguraPost;
     private javax.swing.JButton btDadosFtp;
     private javax.swing.JButton btLoadExecutaAntes;
@@ -641,6 +694,7 @@ public class FrmConfig extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JRadioButton radioAlta;
     private javax.swing.JRadioButton radioBaixa;
     private javax.swing.JRadioButton radioNormal;

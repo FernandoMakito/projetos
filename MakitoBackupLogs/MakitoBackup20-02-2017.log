@@ -15,3 +15,35 @@
 20/02/17 - 11:56:37 INFO: Backup concluido!
 20/02/17 - 11:56:37 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito17-02-2017_copia(1).zip' para 'C:\Users\fernando\Desktop\Backup\TestandoNome20-02-2017.zip'
 20/02/17 - 11:57:05 INFO: Alterando nome_arquivo de 'TestandoNome' para 'BackupMakito'
+20/02/17 - 14:55:13 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 14:55:13 INFO: Backup iniciado manualmente
+20/02/17 - 14:55:36 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 14:55:36 INFO: Backup iniciado manualmente
+20/02/17 - 14:56:46 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 14:56:46 INFO: Backup iniciado manualmente
+20/02/17 - 15:00:32 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 15:00:32 INFO: Backup iniciado manualmente
+20/02/17 - 15:00:35 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito20-02-2017.zip
+20/02/17 - 15:00:38 INFO: Copia de arquivos finalizada
+20/02/17 - 15:00:38 INFO: Criando arquivo compactado
+20/02/17 - 15:00:40 INFO: Arquivo compactado criado
+20/02/17 - 15:00:40 INFO: Apagando arquivos temporários
+20/02/17 - 15:00:40 INFO: Arquivos temporários apagados
+20/02/17 - 15:00:40 INFO: Backup concluido!
+20/02/17 - 15:00:40 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\TestandoNome20-02-2017.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito20-02-2017.zip'
+20/02/17 - 15:01:21 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 15:01:21 INFO: Backup iniciado manualmente
+20/02/17 - 15:04:27 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 15:04:27 INFO: Backup iniciado manualmente
+20/02/17 - 15:04:27 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup\BackupMakito20-302-2017.zip
+20/02/17 - 15:04:30 INFO: Copia de arquivos finalizada
+20/02/17 - 15:04:30 INFO: Criando arquivo compactado
+20/02/17 - 15:04:31 INFO: Arquivo compactado criado
+20/02/17 - 15:04:31 INFO: Apagando arquivos temporários
+20/02/17 - 15:04:31 INFO: Arquivos temporários apagados
+20/02/17 - 15:04:31 INFO: Backup concluido!
+20/02/17 - 15:04:31 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito20-02-2017.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito20-302-2017.zip'
+20/02/17 - 15:46:55 INFO: Criando pasta_temp valor padrao 'propria'
+20/02/17 - 15:46:55 INFO: Propriedade não encontrada nas configurações -> pasta_temp
+20/02/17 - 16:10:11 INFO: Alterando pasta_temp de 'propria' para 'D:\'
+20/02/17 - 16:12:54 INFO: Alterando backup_facil de 'true' para 'false'

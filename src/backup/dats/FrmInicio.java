@@ -307,7 +307,6 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private void salvaBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvaBackupActionPerformed
         try {
-
             selecionaCaminhoDestino();
         } catch (IOException | InterruptedException ex) {
             logger.erro(ex.getMessage());
@@ -598,6 +597,15 @@ public class FrmInicio extends javax.swing.JFrame {
             executaInicio();
         } catch (IOException | InterruptedException e) {
             JOptionPane.showMessageDialog(this, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar no inicio", JOptionPane.ERROR_MESSAGE);
+        }
+        //verifica espaço livre, somando mas 30% de espaço para o arquivo compactado;
+        long espacoLivre = new File(new File(txtDestino.getText()).getParent()).getFreeSpace();
+        long espacoNecessario = (long) (tamanhoArquivos+(tamanhoArquivos*0.30));
+        if(espacoLivre <= espacoNecessario){
+            int dialogResult = JOptionPane.showConfirmDialog(null, "O espaço disponível é insuficiente, é necessário aproximadamente "+humanReadableByteCount(espacoNecessario, true)+", porém \n o espaço disponível em disco é de "+humanReadableByteCount(espacoLivre, true)+" \n Deseja continuar mesmo assim?", "Espaço em disco insuficiente", JOptionPane.YES_NO_OPTION);
+            if(dialogResult == JOptionPane.NO_OPTION){
+                System.exit(0);
+            }
         }
         new Thread(new Runnable() {
             public void run() {
