@@ -47,3 +47,49 @@
 20/02/17 - 15:46:55 INFO: Propriedade não encontrada nas configurações -> pasta_temp
 20/02/17 - 16:10:11 INFO: Alterando pasta_temp de 'propria' para 'D:\'
 20/02/17 - 16:12:54 INFO: Alterando backup_facil de 'true' para 'false'
+20/02/17 - 17:37:48 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+20/02/17 - 17:37:48 INFO: Alterando extensoes_ativas de 'fr3/' para 'fr3/dat/'
+20/02/17 - 17:37:59 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 17:37:59 INFO: Backup iniciado manualmente
+20/02/17 - 17:37:59 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->D:\
+20/02/17 - 17:38:33 INFO: Copia de arquivos finalizada
+20/02/17 - 17:38:33 INFO: Criando arquivo compactado
+20/02/17 - 17:39:19 INFO: Arquivo compactado criado
+20/02/17 - 17:39:19 INFO: Apagando arquivos temporários
+20/02/17 - 17:39:19 INFO: Arquivos temporários apagados
+20/02/17 - 17:39:19 INFO: Backup concluido!
+20/02/17 - 17:39:20 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\BackupMakito20-302-2017.zip' para 'C:\Users\fernando\Desktop\Backup\teste D.zip'
+20/02/17 - 17:43:14 INFO: Alterando pasta_temp de 'D:\' para 'propria'
+20/02/17 - 17:43:22 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 17:43:22 INFO: Backup iniciado manualmente
+20/02/17 - 17:43:22 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->C:\Users\fernando\Desktop\Backup arquivo final -->C:\Users\fernando\Desktop\Backup\teste propria.zip
+20/02/17 - 17:43:49 INFO: Copia de arquivos finalizada
+20/02/17 - 17:43:49 INFO: Criando arquivo compactado
+20/02/17 - 17:44:40 INFO: Arquivo compactado criado
+20/02/17 - 17:44:40 INFO: Apagando arquivos temporários
+20/02/17 - 17:44:40 INFO: Arquivos temporários apagados
+20/02/17 - 17:44:40 INFO: Backup concluido!
+20/02/17 - 17:44:40 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\teste D.zip' para 'C:\Users\fernando\Desktop\Backup\teste propria.zip'
+20/02/17 - 17:45:10 INFO: Alterando pasta_temp de 'propria' para 'C:\'
+20/02/17 - 17:45:21 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 17:45:21 INFO: Backup iniciado manualmente
+20/02/17 - 17:45:51 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 17:45:51 INFO: Backup iniciado manualmente
+20/02/17 - 17:47:35 INFO: Alterando pasta_temp de 'C:\' para 'D:\Makito\ver\594\board'
+20/02/17 - 17:47:53 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 17:47:53 INFO: Backup iniciado manualmente
+20/02/17 - 17:47:53 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->D:\Makito\ver\594\board arquivo final -->C:\Users\fernando\Desktop\Backup\Teste board.zip
+20/02/17 - 17:48:18 INFO: Copia de arquivos finalizada
+20/02/17 - 17:48:18 INFO: Criando arquivo compactado
+20/02/17 - 17:49:05 INFO: Arquivo compactado criado
+20/02/17 - 17:49:05 INFO: Apagando arquivos temporários
+20/02/17 - 17:49:05 INFO: Arquivos temporários apagados
+20/02/17 - 17:49:05 INFO: Backup concluido!
+20/02/17 - 17:49:05 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\teste propria.zip' para 'C:\Users\fernando\Desktop\Backup\Teste board.zip'
+20/02/17 - 17:57:00 INFO: Criando arquivos_ignorados valor padrao ''
+20/02/17 - 17:57:00 INFO: Propriedade não encontrada nas configurações -> arquivos_ignorados
+20/02/17 - 17:58:54 INFO: Alterando extensoes de 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/' para 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int/'
+20/02/17 - 17:58:54 INFO: Alterando extensoes_ativas de 'fr3/dat/' para 'fr3/'
+20/02/17 - 17:59:00 INFO: ------------------------------------------------------------------------------------------------------
+20/02/17 - 17:59:00 INFO: Backup iniciado manualmente
+20/02/17 - 17:59:00 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para -->D:\Makito\ver\594\board arquivo final -->C:\Users\fernando\Desktop\Backup\BackupMakito20as-02-2017.zip

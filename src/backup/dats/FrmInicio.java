@@ -51,6 +51,8 @@ public class FrmInicio extends javax.swing.JFrame {
     int qtdFiles;
     long tamanhoArquivos;
     List<String> extSelecionadas;
+    List<String> addIgnorados = new ArrayList<>();
+    List<String> arquivosIgnorados;
     List<String> pastasIgnoradas;
     Timer timer = null;
     Boolean rapido = false;
@@ -59,6 +61,7 @@ public class FrmInicio extends javax.swing.JFrame {
     Boolean erroPostgres = false;
     Boolean backupFtp = false;
     Boolean desligaPC = false;
+    String pastaTemp = "";
     Log logger;
     String nomeArquivoBackup;
 
@@ -599,11 +602,15 @@ public class FrmInicio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar no inicio", JOptionPane.ERROR_MESSAGE);
         }
         //verifica espaço livre, somando mas 30% de espaço para o arquivo compactado;
-        long espacoLivre = new File(new File(txtDestino.getText()).getParent()).getFreeSpace();
-        long espacoNecessario = (long) (tamanhoArquivos+(tamanhoArquivos*0.30));
-        if(espacoLivre <= espacoNecessario){
-            int dialogResult = JOptionPane.showConfirmDialog(null, "O espaço disponível é insuficiente, é necessário aproximadamente "+humanReadableByteCount(espacoNecessario, true)+", porém \n o espaço disponível em disco é de "+humanReadableByteCount(espacoLivre, true)+" \n Deseja continuar mesmo assim?", "Espaço em disco insuficiente", JOptionPane.YES_NO_OPTION);
-            if(dialogResult == JOptionPane.NO_OPTION){
+        String destino = txtDestino.getText();
+        if(!pastaTemp.equals("propria")){
+            destino = pastaTemp;
+        }
+        long espacoLivre = new File(new File(destino).getParent()).getFreeSpace();
+        long espacoNecessario = (long) (tamanhoArquivos + (tamanhoArquivos * 0.30));
+        if (espacoLivre <= espacoNecessario) {
+            int dialogResult = JOptionPane.showConfirmDialog(null, "O espaço disponível é insuficiente, é necessário aproximadamente " + humanReadableByteCount(espacoNecessario, true) + ", porém \n o espaço disponível em disco é de " + humanReadableByteCount(espacoLivre, true) + " \n Deseja continuar mesmo assim?", "Espaço em disco insuficiente", JOptionPane.YES_NO_OPTION);
+            if (dialogResult == JOptionPane.NO_OPTION) {
                 System.exit(0);
             }
         }
@@ -613,16 +620,21 @@ public class FrmInicio extends javax.swing.JFrame {
                 habilitaComandos(false);
                 //copiar arquivos
                 String pastaOrigem = txtOrigem.getText();
-                String pastaDestino = txtDestino.getText();
-                logger.info("Iniciando cópia de arquivos de -->" + pastaOrigem + " para -->" + pastaDestino);
-                File f = new File(pastaDestino);
-                pastaDestino = f.getParent();
+                String pastaDestino;
+                if (pastaTemp.equals("propria")) {
+                    pastaDestino = txtDestino.getText();
+                    File f = new File(pastaDestino);
+                    pastaDestino = f.getParent();
+                } else {
+                    pastaDestino = pastaTemp;
+                }
                 DefaultTableModel model = (DefaultTableModel) tabelaArquivos.getModel();
                 Boolean selec;
                 qtdFiles = model.getRowCount();
                 int filesCopiadas = 0;
                 progresso.setMaximum(qtdFiles);
                 progresso.setStringPainted(true);
+                logger.info("Iniciando cópia de arquivos de -->" + pastaOrigem + " para -->" + pastaDestino + " arquivo final -->"+ txtDestino.getText());
                 //cria pasta Temp
                 Boolean criar = (new File(pastaDestino + "\\" + "backupMakito")).mkdirs();
                 for (int i = 0; i < qtdFiles; i++) {
@@ -639,6 +651,8 @@ public class FrmInicio extends javax.swing.JFrame {
                             Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
                             statusSistema.setText("Copiando " + file + "  " + filesCopiadas + " de " + qtdFiles);
                             filesCopiadas++;
+                        }else{
+                            addIgnorados.add((String) model.getValueAt(i, 1));
                         }
                         progresso.setValue(i + 1);
                     } catch (IOException e) {
@@ -647,8 +661,8 @@ public class FrmInicio extends javax.swing.JFrame {
                         logger.erro("Erro ao copiar os arquivos" + e.getMessage());
                     }
                 }
-                statusSistema.setText("Copia de arquivos finalizada");
-                logger.info("Copia de arquivos finalizada");
+                statusSistema.setText("Cópia de arquivos finalizada");
+                logger.info("Cópia de arquivos finalizada");
                 progresso.setStringPainted(false);
                 try {
                     compactar(txtDestino.getText(), pastaDestino);
@@ -659,7 +673,6 @@ public class FrmInicio extends javax.swing.JFrame {
 
         }).start();
     }
-
     private void criaSubPastas(String destino, String arquivo) {
         String[] quebra = arquivo.split("/");
         File novaPasta = new File(destino + quebra[0].trim());
@@ -853,6 +866,12 @@ public class FrmInicio extends javax.swing.JFrame {
         Configuracoes cfg = new Configuracoes();
         cfg.setPropriedade("pasta_origem", txtOrigem.getText());
         cfg.setPropriedade("pasta_destino", txtDestino.getText());
+        String ignorados = "";
+        for (String arquivo : addIgnorados) {
+            ignorados  = arquivo + "<" + ignorados;
+        }
+        cfg.setPropriedade("arquivos_ignorados", ignorados);
+        
     }
 
     private void habilitaComandos(Boolean ativa) {
@@ -931,6 +950,8 @@ public class FrmInicio extends javax.swing.JFrame {
         postgresMakito = makito;
         Boolean edoc = cfg.getPropriedade("edoc_backup").equals("true");
         postgresEdoc = edoc;
+        //aproveita para verificar a pasta para copiar os arquivos temporários
+        pastaTemp = cfg.getPropriedade("pasta_temp");
         return makito || edoc;
     }
 
@@ -976,6 +997,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 statusSistema.setText("Buscando arquivos...");
                 barraProgresso(true);
                 File folder = new File(caminho);
+                String nomeArquivo;
                 tamanhoArquivos = 0;
                 try {
                     ePostgres();
@@ -989,13 +1011,14 @@ public class FrmInicio extends javax.swing.JFrame {
                     for (File arquivo : todosArquivos) {
                         if (arquivo.isFile()) {
                             if (filtraArquivos(arquivo.getName())) {
-                                model.addRow(new Object[]{true, arquivo.getName(), (arquivo.length() / 1024)});
+                                model.addRow(new Object[]{selecionaArquivos(arquivo.getName()), arquivo.getName(), (arquivo.length() / 1024)});
                             }
                         } else if (arquivo.isDirectory() && !pastasIgnoradas.contains(arquivo.getName().toLowerCase())) {
                             File[] novaPasta = arquivo.listFiles();
                             for (File arquivoInterno : novaPasta) {
                                 if (filtraArquivos(arquivoInterno.getName())) {
-                                    model.addRow(new Object[]{true, arquivo.getName() + " / " + arquivoInterno.getName(), (arquivoInterno.length() / 1024)});
+                                    nomeArquivo = arquivo.getName() + " / " + arquivoInterno.getName();
+                                    model.addRow(new Object[]{selecionaArquivos(nomeArquivo), nomeArquivo, (arquivoInterno.length() / 1024)});
                                 }
                             }
                         }
@@ -1089,6 +1112,13 @@ public class FrmInicio extends javax.swing.JFrame {
         Configuracoes cfg = new Configuracoes();
         String exts = cfg.getPropriedade("pastas_ignoradas");
         pastasIgnoradas = Arrays.asList(exts.toLowerCase().split(","));
+        getArquivosIgnorados();
+        
+    }
+    private void getArquivosIgnorados() throws UnsupportedEncodingException, IOException {
+        Configuracoes cfg = new Configuracoes();
+        String files = cfg.getPropriedade("arquivos_ignorados");
+        arquivosIgnorados = Arrays.asList(files.split("<"));
     }
 
     private boolean filtraArquivos(String nome) {
@@ -1098,6 +1128,9 @@ public class FrmInicio extends javax.swing.JFrame {
         } else {
             return false;
         }
+    }
+    private boolean selecionaArquivos(String nome) {
+        return !arquivosIgnorados.contains(nome);
     }
 
     private String getFileExtension(String name) {

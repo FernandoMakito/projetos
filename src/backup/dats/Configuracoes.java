@@ -89,6 +89,7 @@ public class Configuracoes {
         propriedades.put("agendamento_hora", "00:00");
         propriedades.put("agendamento_ativo", "false");
         propriedades.put("pasta_temp", "propria");
+        propriedades.put("arquivos_ignorados", "");
 
     }
 
