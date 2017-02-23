@@ -244,7 +244,6 @@ public class FrmAgendar extends javax.swing.JFrame {
 
     private void confereUser() {
         user = String.valueOf(JOptionPane.showInputDialog(this, "Qual o usuário do Windows?", System.getProperty("user.name")));
-        System.out.println(user);
         if (user.equals("") || user.equals("null")) {
             confereUser();
             return;

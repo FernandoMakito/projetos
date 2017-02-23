@@ -90,7 +90,9 @@ public class Configuracoes {
         propriedades.put("agendamento_ativo", "false");
         propriedades.put("pasta_temp", "propria");
         propriedades.put("arquivos_ignorados", "");
-
+        propriedades.put("manter_arquivos", "15");
+        propriedades.put("manter_arquivos_ftp", "999");
+        propriedades.put("apagar_arquivo_local", "false");
     }
 
     private String getPadrao(String propriedade) {

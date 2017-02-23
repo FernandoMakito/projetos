@@ -4,7 +4,9 @@ import it.sauronsoftware.ftp4j.FTPAbortedException;
 import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferException;
 import it.sauronsoftware.ftp4j.FTPException;
+import it.sauronsoftware.ftp4j.FTPFile;
 import it.sauronsoftware.ftp4j.FTPIllegalReplyException;
+import it.sauronsoftware.ftp4j.FTPListParseException;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -419,7 +421,7 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private void iniciaBackupAuto() throws InterruptedException {
         try {
-            logger.info("Backup iniciado automaticamente");
+            logger.info("Backup iniciado automaticamente  por " + System.getProperty("user.name"));
             String pastaSalva = new File(txtDestino.getText()).getParent();
             String nome = nomeArquivoBackup;
             File novoArquivo = new File(pastaSalva + "\\" + nome);
@@ -461,7 +463,6 @@ public class FrmInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDestinoActionPerformed
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
-
 
     }//GEN-LAST:event_jMenu1ActionPerformed
 
@@ -517,8 +518,9 @@ public class FrmInicio extends javax.swing.JFrame {
         return tudoOk;
     }
 
-    private void enviaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException {
+    private void enviaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException, FTPListParseException {
         barraProgresso(true);
+        progresso.setStringPainted(false);
         statusSistema.setText("Enviando arquivo ao FTP");
         logger.info("Enviando arquivo ao FTP");
         while (!verificaFtp()) {
@@ -534,6 +536,8 @@ public class FrmInicio extends javax.swing.JFrame {
             String pass = cfg.getPropriedade("ftp_senha");
             File arquivo = new File(txtDestino.getText());
             String uploadPath = cfg.getPropriedade("ftp_caminho");
+            Boolean apagarLocal = Boolean.valueOf(cfg.getPropriedade("apagar_arquivo_local"));
+            int diasManter = Integer.valueOf(cfg.getPropriedade("manter_arquivos_ftp"));
             logger.info("Enviando arquivo ao FTP, host: " + host + ":" + porta + " usuário: " + user + " pasta: " + uploadPath);
             if (porta.equals("")) {
                 client.connect(host);
@@ -543,16 +547,53 @@ public class FrmInicio extends javax.swing.JFrame {
             client.login(user, pass);
             client.changeDirectory(uploadPath);
             client.upload(arquivo);
+            //verificar upload
+            FTPFile[] arquivos = client.list("*.zip");
+            Boolean encontrouArquivo = false, tamanhoOk = false;
+
+            for (FTPFile arquivoFtp : arquivos) {
+                //conferencia para apagar
+                if (diasManter != 999) {
+                    long diff = new Date().getTime() - arquivoFtp.getModifiedDate().getTime();
+                    if (diff > diasManter * 24 * 60 * 60 * 1000) {
+                        logger.info("Apagando arquivo do servidor de FTP, pois tem mais de "+String.valueOf(diasManter)+" dias. -->"+ arquivoFtp.getName());
+                        client.deleteFile(arquivoFtp.getName());
+                    }
+                }
+                //conferencia se arquivo está
+                //System.out.println(arquivo.getName()+"=="+arquivoFtp.getName());
+                if (arquivo.getName().equals(arquivoFtp.getName())) {
+                    encontrouArquivo = true;
+                    //System.out.println(arquivo.length()+"=="+arquivoFtp.getSize());
+                    if (arquivo.length() == arquivoFtp.getSize()) {
+                        tamanhoOk = true;
+                    }
+                }
+            }
+            if(apagarLocal && encontrouArquivo && tamanhoOk){
+                logger.info("Apagando arquivo local depois do backup no FTP -->"+arquivo.getAbsolutePath());
+                arquivo.delete();
+            }
+            //System.out.println(encontrouArquivo+"=="+tamanhoOk);
             client.disconnect(true);
-            statusSistema.setText("Arquivo enviado ao FTP");
-            logger.info("Arquivo enviado ao FTP");
+            if (encontrouArquivo && tamanhoOk) {
+                statusSistema.setText("Arquivo enviado ao FTP com sucesso");
+                logger.info("Arquivo enviado ao FTP  com sucesso");
+            }else if(!encontrouArquivo){
+                statusSistema.setText("Operação com FTP concluída com falhas");
+                logger.info("O upload no FTP terminou, porém não foi possivel confirmar a existencia dele no servidor");
+            }else if(encontrouArquivo && !tamanhoOk){
+                statusSistema.setText("Operação com FTP concluída com falhas");
+                logger.info("O upload no FTP terminou, porém o tamanho do arquivo é diferente do local");
+            }
         } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | NumberFormatException e) {
             if (!rapido) {
                 JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
             }
-            logger.erro("Ao enviar o arquivo ao FTP: " + e.getMessage());
+            logger.erro("Erro ao enviar o arquivo ao FTP: " + e.getMessage());
         } finally {
             barraProgresso(false);
+            progresso.setStringPainted(true);
         }
     }
 
@@ -603,7 +644,7 @@ public class FrmInicio extends javax.swing.JFrame {
         }
         //verifica espaço livre, somando mas 30% de espaço para o arquivo compactado;
         String destino = txtDestino.getText();
-        if(!pastaTemp.equals("propria")){
+        if (!pastaTemp.equals("propria")) {
             destino = pastaTemp;
         }
         long espacoLivre = new File(new File(destino).getParent()).getFreeSpace();
@@ -634,7 +675,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 int filesCopiadas = 0;
                 progresso.setMaximum(qtdFiles);
                 progresso.setStringPainted(true);
-                logger.info("Iniciando cópia de arquivos de -->" + pastaOrigem + " para -->" + pastaDestino + " arquivo final -->"+ txtDestino.getText());
+                logger.info("Iniciando cópia de arquivos de -->" + pastaOrigem + " para a pasta temporária -->" + pastaDestino + "\\backup_makito | arquivo final -->" + txtDestino.getText());
                 //cria pasta Temp
                 Boolean criar = (new File(pastaDestino + "\\" + "backupMakito")).mkdirs();
                 for (int i = 0; i < qtdFiles; i++) {
@@ -651,7 +692,7 @@ public class FrmInicio extends javax.swing.JFrame {
                             Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
                             statusSistema.setText("Copiando " + file + "  " + filesCopiadas + " de " + qtdFiles);
                             filesCopiadas++;
-                        }else{
+                        } else {
                             addIgnorados.add((String) model.getValueAt(i, 1));
                         }
                         progresso.setValue(i + 1);
@@ -673,6 +714,7 @@ public class FrmInicio extends javax.swing.JFrame {
 
         }).start();
     }
+
     private void criaSubPastas(String destino, String arquivo) {
         String[] quebra = arquivo.split("/");
         File novaPasta = new File(destino + quebra[0].trim());
@@ -744,13 +786,15 @@ public class FrmInicio extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Ocorreu um erro desconhecido ao compactar", "Erro ao compactar", JOptionPane.ERROR_MESSAGE);
                 } catch (InterruptedException ex) {
                     logger.erro(ex.getMessage());
+                } catch (FTPListParseException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }.start();
 
     }
 
-    private void apagaPasta(File folder) throws IOException, UnsupportedEncodingException, InterruptedException {
+    private void apagaPasta(File folder) throws IOException, UnsupportedEncodingException, InterruptedException, FTPListParseException {
         statusSistema.setText("Apagando arquivos temporários");
         logger.info("Apagando arquivos temporários");
         barraProgresso(true);
@@ -779,7 +823,6 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         }
 
-        //boolean succes = (new File(folder.getAbsolutePath() + "//fastreport")).delete();
         //loop apagar subpastas
         for (String cadaPasta : pastaApagar) {
             boolean success = (new File(cadaPasta)).delete();
@@ -790,6 +833,9 @@ public class FrmInicio extends javax.swing.JFrame {
         logger.info("Arquivos temporários apagados");
         barraProgresso(false);
 
+        //verifica arquivos de backup antigos para apagar
+        apagaAntigos();
+        
         //faz backup em ftp
         if (backupFtp) {
             try {
@@ -821,6 +867,27 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         } else {
             desligaPC();
+        }
+    }
+
+    private void apagaAntigos() {
+        try {
+            Configuracoes cfg = new Configuracoes();
+            int diasManter = Integer.valueOf(cfg.getPropriedade("manter_arquivos"));
+            File[] todosArquivos = new File(new File(txtDestino.getText()).getParent()).listFiles();
+            for (File arquivo : todosArquivos) {
+                long diff = new Date().getTime() - arquivo.lastModified();
+                if (diff > diasManter * 24 * 60 * 60 * 1000) {
+                    if (getFileExtension(arquivo.getName()).toLowerCase().equals("zip")) {
+                        logger.info("Apagando backup antigo:" + arquivo.getName());
+                        arquivo.delete();
+                    }
+                }
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -868,10 +935,10 @@ public class FrmInicio extends javax.swing.JFrame {
         cfg.setPropriedade("pasta_destino", txtDestino.getText());
         String ignorados = "";
         for (String arquivo : addIgnorados) {
-            ignorados  = arquivo + "<" + ignorados;
+            ignorados = arquivo + "<" + ignorados;
         }
         cfg.setPropriedade("arquivos_ignorados", ignorados);
-        
+
     }
 
     private void habilitaComandos(Boolean ativa) {
@@ -928,7 +995,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 }
                 txtDestino.setText(arquivoSelecionado);
                 logger.info("------------------------------------------------------------------------------------------------------");
-                logger.info("Backup iniciado manualmente");
+                logger.info("Backup iniciado manualmente por " + System.getProperty("user.name"));
                 if (!ePostgres()) {
                     copiarArquivos();
                 } else {
@@ -1113,8 +1180,9 @@ public class FrmInicio extends javax.swing.JFrame {
         String exts = cfg.getPropriedade("pastas_ignoradas");
         pastasIgnoradas = Arrays.asList(exts.toLowerCase().split(","));
         getArquivosIgnorados();
-        
+
     }
+
     private void getArquivosIgnorados() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         String files = cfg.getPropriedade("arquivos_ignorados");
@@ -1129,6 +1197,7 @@ public class FrmInicio extends javax.swing.JFrame {
             return false;
         }
     }
+
     private boolean selecionaArquivos(String nome) {
         return !arquivosIgnorados.contains(nome);
     }
