@@ -1,0 +1,28 @@
+24/02/17 - 17:27:38 INFO: Criando arquivo de configurações
+24/02/17 - 17:27:38 INFO: Arquivo de configurações criado
+24/02/17 - 17:54:17 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+24/02/17 - 17:54:17 INFO: Alterando extensoes_ativas de 'dat/fr3/con' para 'fr3/'
+24/02/17 - 17:54:26 INFO: Alterando pasta_temp de 'propria' para 'D:\'
+24/02/17 - 17:54:33 INFO: Alterando manter_arquivos de '15' para '1'
+24/02/17 - 17:54:33 INFO: Alterando compactacao de '7' para '1'
+24/02/17 - 17:54:42 INFO: ------------------------------------------------------------------------------------------------------
+24/02/17 - 17:54:42 INFO: Backup iniciado manualmente por fernando
+24/02/17 - 17:57:49 INFO: Alterando pasta_temp de 'D:\' para 'propria'
+24/02/17 - 17:57:57 INFO: ------------------------------------------------------------------------------------------------------
+24/02/17 - 17:57:57 INFO: Backup iniciado manualmente por fernando
+24/02/17 - 17:57:57 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para a pasta temporária -->C:\Users\fernando\Desktop\Backup\backup_makito | arquivo final -->C:\Users\fernando\Desktop\Backup\BackupMakito24-02-2017.zip
+24/02/17 - 17:58:20 INFO: Cópia de arquivos finalizada
+24/02/17 - 17:58:20 INFO: Criando arquivo compactado
+24/02/17 - 17:58:21 INFO: Arquivo compactado criado
+24/02/17 - 17:58:21 INFO: Apagando arquivos temporários
+24/02/17 - 17:58:22 INFO: Arquivos temporários apagados
+24/02/17 - 17:58:22 INFO: Backup concluido!
+24/02/17 - 17:58:22 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+24/02/17 - 17:58:22 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\BackupMakito24-02-2017.zip'
+24/02/17 - 17:58:38 INFO: Alterando pasta_temp de 'propria' para 'D:\'
+24/02/17 - 17:58:44 INFO: ------------------------------------------------------------------------------------------------------
+24/02/17 - 17:58:44 INFO: Backup iniciado manualmente por fernando
+24/02/17 - 17:59:16 INFO: ------------------------------------------------------------------------------------------------------
+24/02/17 - 17:59:16 INFO: Backup iniciado manualmente por fernando
+24/02/17 - 18:00:52 INFO: ------------------------------------------------------------------------------------------------------
+24/02/17 - 18:00:52 INFO: Backup iniciado manualmente por fernando

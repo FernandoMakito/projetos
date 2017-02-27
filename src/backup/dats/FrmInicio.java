@@ -343,7 +343,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 txtDestino.setText(destino);
             }
             ePostgres();
-            if (txtOrigem.getText().equals("")) {
+            if (origem.equals("")) {
                 String caminhoAtual = getAtualPath();
                 if (caminhoAtual.toLowerCase().contains("sis_lj") || caminhoAtual.toLowerCase().contains("makito")) {
                     txtOrigem.setText(getAtualPath());
@@ -556,7 +556,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 if (diasManter != 999) {
                     long diff = new Date().getTime() - arquivoFtp.getModifiedDate().getTime();
                     if (diff > diasManter * 24 * 60 * 60 * 1000) {
-                        logger.info("Apagando arquivo do servidor de FTP, pois tem mais de "+String.valueOf(diasManter)+" dias. -->"+ arquivoFtp.getName());
+                        logger.info("Apagando arquivo do servidor de FTP, pois tem mais de " + String.valueOf(diasManter) + " dias. -->" + arquivoFtp.getName());
                         client.deleteFile(arquivoFtp.getName());
                     }
                 }
@@ -570,8 +570,8 @@ public class FrmInicio extends javax.swing.JFrame {
                     }
                 }
             }
-            if(apagarLocal && encontrouArquivo && tamanhoOk){
-                logger.info("Apagando arquivo local depois do backup no FTP -->"+arquivo.getAbsolutePath());
+            if (apagarLocal && encontrouArquivo && tamanhoOk) {
+                logger.info("Apagando arquivo local depois do backup no FTP -->" + arquivo.getAbsolutePath());
                 arquivo.delete();
             }
             //System.out.println(encontrouArquivo+"=="+tamanhoOk);
@@ -579,10 +579,10 @@ public class FrmInicio extends javax.swing.JFrame {
             if (encontrouArquivo && tamanhoOk) {
                 statusSistema.setText("Arquivo enviado ao FTP com sucesso");
                 logger.info("Arquivo enviado ao FTP  com sucesso");
-            }else if(!encontrouArquivo){
+            } else if (!encontrouArquivo) {
                 statusSistema.setText("Operação com FTP concluída com falhas");
                 logger.info("O upload no FTP terminou, porém não foi possivel confirmar a existencia dele no servidor");
-            }else if(encontrouArquivo && !tamanhoOk){
+            } else if (encontrouArquivo && !tamanhoOk) {
                 statusSistema.setText("Operação com FTP concluída com falhas");
                 logger.info("O upload no FTP terminou, porém o tamanho do arquivo é diferente do local");
             }
@@ -642,13 +642,18 @@ public class FrmInicio extends javax.swing.JFrame {
         } catch (IOException | InterruptedException e) {
             JOptionPane.showMessageDialog(this, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar no inicio", JOptionPane.ERROR_MESSAGE);
         }
-        //verifica espaço livre, somando mas 30% de espaço para o arquivo compactado;
+        //verifica espaço livre, somando mas 15% de espaço para o arquivo compactado;
         String destino = txtDestino.getText();
+        String local;
         if (!pastaTemp.equals("propria")) {
             destino = pastaTemp;
+            local = destino;
+        } else {
+            local = new File(destino).getParent();
         }
-        long espacoLivre = new File(new File(destino).getParent()).getFreeSpace();
-        long espacoNecessario = (long) (tamanhoArquivos + (tamanhoArquivos * 0.30));
+
+        long espacoLivre = new File(local).getFreeSpace();
+        long espacoNecessario = (long) (tamanhoArquivos + (tamanhoArquivos * 0.15));
         if (espacoLivre <= espacoNecessario) {
             int dialogResult = JOptionPane.showConfirmDialog(null, "O espaço disponível é insuficiente, é necessário aproximadamente " + humanReadableByteCount(espacoNecessario, true) + ", porém \n o espaço disponível em disco é de " + humanReadableByteCount(espacoLivre, true) + " \n Deseja continuar mesmo assim?", "Espaço em disco insuficiente", JOptionPane.YES_NO_OPTION);
             if (dialogResult == JOptionPane.NO_OPTION) {
@@ -711,7 +716,6 @@ public class FrmInicio extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + ex.getMessage(), "Erro ao compactar os arquivos", JOptionPane.ERROR_MESSAGE);
                 }
             }
-
         }).start();
     }
 
@@ -762,9 +766,13 @@ public class FrmInicio extends javax.swing.JFrame {
                     ProgressMonitor progressMonitor = zipFile.getProgressMonitor();
 
                     while (progressMonitor.getState() == ProgressMonitor.STATE_BUSY) {
-                        progresso.setValue(progressMonitor.getPercentDone());
-                        File arquivoAtual = new File(progressMonitor.getFileName());
-                        statusSistema.setText("Compactando " + arquivoAtual.getName());
+                        try {
+                            progresso.setValue(progressMonitor.getPercentDone());
+                            File arquivoAtual = new File(progressMonitor.getFileName());
+                            statusSistema.setText("Compactando " + arquivoAtual.getName());
+                        } catch (Exception e) {
+                            System.out.println("Errooooo");
+                        }
                     }
                     if (progressMonitor.getResult() == ProgressMonitor.RESULT_ERROR) {
                         // Any exception can be retrieved as below:
@@ -835,7 +843,7 @@ public class FrmInicio extends javax.swing.JFrame {
 
         //verifica arquivos de backup antigos para apagar
         apagaAntigos();
-        
+
         //faz backup em ftp
         if (backupFtp) {
             try {
