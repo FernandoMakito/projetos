@@ -47,9 +47,6 @@ import net.lingala.zip4j.progress.ProgressMonitor;
  */
 public class FrmInicio extends javax.swing.JFrame {
 
-    /**
-     * Creates new form frmInicio
-     */
     int qtdFiles;
     long tamanhoArquivos;
     List<String> extSelecionadas;
@@ -57,6 +54,7 @@ public class FrmInicio extends javax.swing.JFrame {
     List<String> arquivosIgnorados;
     List<String> pastasIgnoradas;
     Timer timer = null;
+    Boolean backupRapidoVerificado = false;
     Boolean rapido = false;
     Boolean postgresMakito = false;
     Boolean postgresEdoc = false;
@@ -187,7 +185,7 @@ public class FrmInicio extends javax.swing.JFrame {
         progresso.setFocusable(false);
 
         statusSistema.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        statusSistema.setText("   ");
+        statusSistema.setText("Aguarde, buscando arquivos");
         statusSistema.setMaximumSize(new java.awt.Dimension(380, 14));
         statusSistema.setMinimumSize(new java.awt.Dimension(380, 14));
 
@@ -306,7 +304,6 @@ public class FrmInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_btSelecionarActionPerformed
 
     private void tabelaArquivosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaArquivosMouseReleased
-
         atualizaQtdFiles();
     }//GEN-LAST:event_tabelaArquivosMouseReleased
 
@@ -353,8 +350,8 @@ public class FrmInicio extends javax.swing.JFrame {
                 }
             }
             getExtSelecionadas();
+            backupRapidoVerificado = false;
             listaArquivos();
-            verificarBkRapido();
         } catch (IOException ex) {
             logger.erro(ex.getMessage());
         }
@@ -1099,10 +1096,13 @@ public class FrmInicio extends javax.swing.JFrame {
                         }
                     }
                 }
-
                 atualizaQtdFiles();
-                statusSistema.setText("Selecione os arquivos do backup");
                 barraProgresso(false);
+                statusSistema.setText("Selecione os arquivos do backup");
+                if (!backupRapidoVerificado) {
+                    verificarBkRapido();
+                }
+                backupRapidoVerificado = true;
             }
         });
         t.start();
@@ -1198,7 +1198,7 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private boolean filtraArquivos(String nome) {
-        if (!nome.toLowerCase().contains("slccep")) {
+        if (!nome.toLowerCase().contains("slccep") || !nome.toLowerCase().contains("slibpt")) {
             String ext = getFileExtension(nome).toLowerCase();
             return extSelecionadas.contains(ext);
         } else {
