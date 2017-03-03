@@ -3,6 +3,7 @@ package backup.dats;
 import it.sauronsoftware.ftp4j.FTPAbortedException;
 import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferException;
+import it.sauronsoftware.ftp4j.FTPDataTransferListener;
 import it.sauronsoftware.ftp4j.FTPException;
 import it.sauronsoftware.ftp4j.FTPFile;
 import it.sauronsoftware.ftp4j.FTPIllegalReplyException;
@@ -514,10 +515,10 @@ public class FrmInicio extends javax.swing.JFrame {
         }
         return tudoOk;
     }
-
+    
     private void enviaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException, FTPListParseException {
-        barraProgresso(true);
-        progresso.setStringPainted(false);
+        //barraProgresso(true);
+        progresso.setStringPainted(true);
         statusSistema.setText("Enviando arquivo ao FTP");
         logger.info("Enviando arquivo ao FTP");
         while (!verificaFtp()) {
@@ -526,12 +527,14 @@ public class FrmInicio extends javax.swing.JFrame {
         final FTPClient client = new FTPClient();
         try {
             Configuracoes cfg = new Configuracoes();
-
             String host = cfg.getPropriedade("ftp_servidor");
             String porta = cfg.getPropriedade("ftp_porta");
             String user = cfg.getPropriedade("ftp_usuario");
             String pass = cfg.getPropriedade("ftp_senha");
             File arquivo = new File(txtDestino.getText());
+            progresso.setValue(0);
+            final int t = (int) arquivo.length();
+            progresso.setMaximum(t);
             String uploadPath = cfg.getPropriedade("ftp_caminho");
             Boolean apagarLocal = Boolean.valueOf(cfg.getPropriedade("apagar_arquivo_local"));
             int diasManter = Integer.valueOf(cfg.getPropriedade("manter_arquivos_ftp"));
@@ -543,7 +546,37 @@ public class FrmInicio extends javax.swing.JFrame {
             }
             client.login(user, pass);
             client.changeDirectory(uploadPath);
-            client.upload(arquivo);
+            client.upload(arquivo, new FTPDataTransferListener() {
+                int transfBytes=0;
+                
+                @Override
+                public void started() {
+                    //System.out.println("Iniciou");
+                }
+
+                @Override
+                public void transferred(int i) {
+                    transfBytes+=i;
+                    progresso.setValue(transfBytes);
+                    statusSistema.setText("Enviando arquivo ao FTP "+ humanReadableByteCount(transfBytes, true) + " de "+humanReadableByteCount(t, true));
+                }
+
+                @Override
+                public void completed() {
+                    //System.out.println("terminou");
+                }
+
+                @Override
+                public void aborted() {
+                    
+                }
+
+                @Override
+                public void failed() {
+                    
+                }
+
+            });
             //verificar upload
             FTPFile[] arquivos = client.list("*.zip");
             Boolean encontrouArquivo = false, tamanhoOk = false;
@@ -1098,7 +1131,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 }
                 atualizaQtdFiles();
                 barraProgresso(false);
-                statusSistema.setText("Selecione os arquivos do backup");
+                statusSistema.setText("Pronto para iniciar o backup");
                 if (!backupRapidoVerificado) {
                     verificarBkRapido();
                 }
