@@ -1,0 +1,67 @@
+07/03/17 - 11:18:36 INFO: Tarefa agendada, dias:MON,TUE,WED,THU,FRI,SAT horário: 00:00 usuário: 
+07/03/17 - 11:18:40 INFO: Alterando agendamento_ativo de 'false' para 'true'
+07/03/17 - 11:19:37 INFO: Alterando agendamento_ativo de 'true' para 'false'
+07/03/17 - 11:19:37 INFO: Tarefa agendada, dias:MON,TUE,WED,THU,FRI,SAT horário: 00:00 usuário: /RU fernando
+07/03/17 - 11:19:39 INFO: Alterando agendamento_ativo de 'false' para 'true'
+07/03/17 - 11:59:33 INFO: Criando arquivo de configurações
+07/03/17 - 11:59:33 INFO: Arquivo de configurações criado
+07/03/17 - 11:59:44 INFO: Alterando pasta_origem de '' para 'C:\Users\fernando\Documents\NetBeansProjects\Backup Dats'
+07/03/17 - 11:59:50 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 11:59:51 INFO: Alterando backup_facil de 'false' para 'true'
+07/03/17 - 13:42:39 INFO: Alterando backup_facil de 'true' para 'false'
+07/03/17 - 13:43:52 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 13:45:03 INFO: Alterando backup_facil de 'true' para 'false'
+07/03/17 - 13:45:39 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+07/03/17 - 13:45:55 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 13:54:21 INFO: Criando arquivo de configurações
+07/03/17 - 13:54:21 INFO: Arquivo de configurações criado
+07/03/17 - 13:54:35 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594'
+07/03/17 - 13:54:48 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 13:54:50 INFO: Alterando backup_facil de 'false' para 'true'
+07/03/17 - 14:10:25 INFO: Criando arquivo de configurações
+07/03/17 - 14:10:25 INFO: Arquivo de configurações criado
+07/03/17 - 14:10:47 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+07/03/17 - 14:11:07 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 14:11:08 INFO: Alterando backup_facil de 'false' para 'true'
+07/03/17 - 14:18:10 INFO: Alterando backup_facil de 'true' para 'false'
+07/03/17 - 14:18:26 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+07/03/17 - 14:18:36 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 14:18:37 INFO: Alterando backup_facil de 'false' para 'true'
+07/03/17 - 14:18:52 INFO: Alterando extensoes de 'dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int' para 'int/con/txt/dll/cfg/exe/rpt/flx/tag/k8/k7/k6/k5/k4/k3/k2/k1/hdr/fr3/dat/'
+07/03/17 - 14:18:52 INFO: Alterando extensoes_ativas de 'dat/fr3/con' para 'con/dat/'
+07/03/17 - 14:19:29 INFO: Criando arquivo de configurações
+07/03/17 - 14:19:29 INFO: Arquivo de configurações criado
+07/03/17 - 14:21:42 INFO: Criando arquivo de configurações
+07/03/17 - 14:21:42 INFO: Arquivo de configurações criado
+07/03/17 - 14:24:45 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Documents\NetBeansProjects\Backup Dats\auto.zip'
+07/03/17 - 14:33:09 INFO: Criando arquivo de configurações
+07/03/17 - 14:33:09 INFO: Arquivo de configurações criado
+07/03/17 - 14:33:30 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+07/03/17 - 14:36:05 INFO: Criando arquivo de configurações
+07/03/17 - 14:36:05 INFO: Arquivo de configurações criado
+07/03/17 - 14:36:18 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594'
+07/03/17 - 14:36:44 INFO: Criando arquivo de configurações
+07/03/17 - 14:36:44 INFO: Arquivo de configurações criado
+07/03/17 - 14:36:51 INFO: Alterando pasta_origem de '' para 'C:\Users\fernando\Documents\NetBeansProjects\Backup Dats'
+07/03/17 - 14:48:06 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 14:48:08 INFO: Alterando backup_facil de 'false' para 'true'
+07/03/17 - 14:49:10 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+07/03/17 - 14:49:16 INFO: Alterando pasta_destino de '' para 'D:\\auto.zip'
+07/03/17 - 14:51:26 INFO: Criando arquivo de configurações
+07/03/17 - 14:51:26 INFO: Arquivo de configurações criado
+07/03/17 - 14:51:44 INFO: Alterando pasta_origem de '' para 'D:\Makito\ver\594\board'
+07/03/17 - 14:51:56 INFO: Alterando pasta_destino de '' para 'C:\Users\fernando\Desktop\Backup\auto.zip'
+07/03/17 - 14:52:09 INFO: Alterando backup_facil de 'false' para 'true'
+07/03/17 - 15:04:40 INFO: ------------------------------------------------------------------------------------------------------
+07/03/17 - 15:04:40 INFO: Backup iniciado automaticamente por fernando
+07/03/17 - 15:04:40 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para a pasta temporária -->C:\Users\fernando\Desktop\Backup\backup_makito | arquivo final -->C:\Users\fernando\Desktop\Backup\BackupMakito07-03-2017.zip
+07/03/17 - 15:05:20 INFO: Cópia de arquivos finalizada
+07/03/17 - 15:05:20 INFO: Criando arquivo compactado
+07/03/17 - 15:05:44 INFO: Arquivo compactado criado
+07/03/17 - 15:05:44 INFO: Apagando arquivos temporários
+07/03/17 - 15:05:46 INFO: Arquivos temporários apagados
+07/03/17 - 15:05:46 INFO: Alterando pasta_destino de 'C:\Users\fernando\Desktop\Backup\auto.zip' para 'C:\Users\fernando\Desktop\Backup\BackupMakito07-03-2017.zip'
+07/03/17 - 15:05:46 INFO: Backup concluido!
+07/03/17 - 15:06:33 INFO: ------------------------------------------------------------------------------------------------------
+07/03/17 - 15:06:33 INFO: Backup iniciado automaticamente por fernando
+07/03/17 - 15:06:33 INFO: Iniciando cópia de arquivos de -->D:\Makito\ver\594\board para a pasta temporária -->C:\Users\fernando\Desktop\Backup\backup_makito | arquivo final -->C:\Users\fernando\Desktop\Backup\BackupMakito07-03-2017_copia(1).zip

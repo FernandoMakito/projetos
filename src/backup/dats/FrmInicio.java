@@ -382,18 +382,25 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private void iniciaBackupRapido() {
-
+        final String pastaDestino = new File(txtDestino.getText()).getParent();
         Object[] options1 = {"Cancelar"};
         final JPanel panel = new JPanel();
-        final JLabel lbl = new JLabel("Iniciando backup rápido em 5 segundos");
+        final JLabel lbl = new JLabel("<html>Iniciando backup rápido em <b>5 segundos..</b> <br><br> O arquivo será salvo em: <u>"+pastaDestino+"</u></html>");
         panel.add(lbl);
         timer = new Timer(1000, new ActionListener() {
             int segundos = 5;
-
+            String pontos = "..";
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (segundos > 0) {
-                    lbl.setText("Iniciando backup rápido em " + String.valueOf(segundos) + " segundos");
+                   switch(segundos){
+                       case 4: pontos = ".";break;
+                       case 3: pontos = "...";break;
+                       case 2: pontos = "..";break;
+                       case 1: pontos = ".";break;
+                   } 
+                   
+                    lbl.setText("<html>Iniciando backup rápido em <b>" + String.valueOf(segundos) + " segundos"+pontos+"</b> <br><br> O arquivo será salvo em: <u>"+pastaDestino+"</u></html>");
                     segundos--;
                 } else {
                     timer.stop();
@@ -408,9 +415,9 @@ public class FrmInicio extends javax.swing.JFrame {
         });
         timer.start();
         int result = JOptionPane.showOptionDialog(null, panel, "Backup Rápido",
-                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options1, null);
-
+        
         if (result == JOptionPane.YES_OPTION) {
             timer.stop();
             rapido = false;
@@ -419,7 +426,8 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private void iniciaBackupAuto() throws InterruptedException {
         try {
-            logger.info("Backup iniciado automaticamente  por " + System.getProperty("user.name"));
+            logger.info("------------------------------------------------------------------------------------------------------");
+            logger.info("Backup iniciado automaticamente por " + System.getProperty("user.name"));
             String pastaSalva = new File(txtDestino.getText()).getParent();
             String nome = nomeArquivoBackup;
             File novoArquivo = new File(pastaSalva + "\\" + nome);
@@ -465,7 +473,6 @@ public class FrmInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void btExtensoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExtensoesActionPerformed
-
         FrmExtensoes frm = new FrmExtensoes();
         frm.setVisible(true);
         frm.addComponentListener(new ComponentAdapter() {
@@ -515,12 +522,11 @@ public class FrmInicio extends javax.swing.JFrame {
         }
         return tudoOk;
     }
-    
+
     private void enviaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException, FTPListParseException {
         //barraProgresso(true);
         progresso.setStringPainted(true);
         statusSistema.setText("Enviando arquivo ao FTP");
-        logger.info("Enviando arquivo ao FTP");
         while (!verificaFtp()) {
             verificaFtp();
         }
@@ -538,7 +544,8 @@ public class FrmInicio extends javax.swing.JFrame {
             String uploadPath = cfg.getPropriedade("ftp_caminho");
             Boolean apagarLocal = Boolean.valueOf(cfg.getPropriedade("apagar_arquivo_local"));
             int diasManter = Integer.valueOf(cfg.getPropriedade("manter_arquivos_ftp"));
-            logger.info("Enviando arquivo ao FTP, host: " + host + ":" + porta + " usuário: " + user + " pasta: " + uploadPath);
+            logger.info("Enviando arquivo ao FTP, host: " + host + ":" + porta + " /usuário: " + user + " /pasta: " + uploadPath);
+            client.setPassive(true);
             if (porta.equals("")) {
                 client.connect(host);
             } else {
@@ -546,34 +553,40 @@ public class FrmInicio extends javax.swing.JFrame {
             }
             client.login(user, pass);
             client.changeDirectory(uploadPath);
+            //verifica se permite compressão
+//            if(client.isCompressionSupported()){
+//                System.out.println("Permite compressão");
+//                client.setCompressionEnabled(true);
+//            }
             client.upload(arquivo, new FTPDataTransferListener() {
-                int transfBytes=0;
-                
+                int transfBytes = 0;
+
                 @Override
                 public void started() {
                     //System.out.println("Iniciou");
+                    logger.info("Começou a enviar o arquivo para o FTP");
                 }
 
                 @Override
                 public void transferred(int i) {
-                    transfBytes+=i;
+                    transfBytes += i;
                     progresso.setValue(transfBytes);
-                    statusSistema.setText("Enviando arquivo ao FTP "+ humanReadableByteCount(transfBytes, true) + " de "+humanReadableByteCount(t, true));
+                    statusSistema.setText("Enviando arquivo ao FTP ( " + humanReadableByteCount(transfBytes, true) + " de " + humanReadableByteCount(t, true) + " )");
                 }
 
                 @Override
                 public void completed() {
-                    //System.out.println("terminou");
+                    logger.info("Envio ao FTP concluido, verificando integridade do arquivo...");
                 }
 
                 @Override
                 public void aborted() {
-                    
+                    logger.erro("O envio ao FTP foi cancelado");
                 }
 
                 @Override
                 public void failed() {
-                    
+                    logger.erro("O envio ao FTP falhou");
                 }
 
             });
@@ -608,7 +621,7 @@ public class FrmInicio extends javax.swing.JFrame {
             client.disconnect(true);
             if (encontrouArquivo && tamanhoOk) {
                 statusSistema.setText("Arquivo enviado ao FTP com sucesso");
-                logger.info("Arquivo enviado ao FTP  com sucesso");
+                logger.info("Arquivo enviado ao FTP com sucesso");
             } else if (!encontrouArquivo) {
                 statusSistema.setText("Operação com FTP concluída com falhas");
                 logger.info("O upload no FTP terminou, porém não foi possivel confirmar a existencia dele no servidor");
@@ -890,8 +903,8 @@ public class FrmInicio extends javax.swing.JFrame {
         }
 
         statusSistema.setText("Backup concluido!");
-        logger.info("Backup concluido!");
         salvaConfig();
+        logger.info("Backup concluido!");
         progresso.setMaximum(1);
         progresso.setValue(1);
         if (!desligaPC) {
@@ -1191,6 +1204,17 @@ public class FrmInicio extends javax.swing.JFrame {
     private void getExtSelecionadas() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         String exts = cfg.getPropriedade("extensoes_ativas");
+        String pastaSistema = cfg.getPropriedade("pasta_origem");
+        if (new File(pastaSistema).isDirectory()) {
+            if (!new File(txtOrigem.getText()).isDirectory()) {
+                txtOrigem.setText(pastaSistema);
+                listaArquivos();
+            }
+        }
+        String pastaDestino = cfg.getPropriedade("pasta_destino");
+        if(!txtDestino.getText().equals(pastaDestino)){
+            txtDestino.setText(pastaDestino);
+        }
         String frase = "";
         extSelecionadas = Arrays.asList(exts.split("/"));
         if (!exts.equals("")) {
@@ -1231,7 +1255,7 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private boolean filtraArquivos(String nome) {
-        if (!nome.toLowerCase().contains("slccep") || !nome.toLowerCase().contains("slibpt")) {
+        if (!nome.toLowerCase().contains("slccep") && !nome.toLowerCase().contains("slibpt")) {
             String ext = getFileExtension(nome).toLowerCase();
             return extSelecionadas.contains(ext);
         } else {

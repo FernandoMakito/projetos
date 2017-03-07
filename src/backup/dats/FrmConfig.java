@@ -262,7 +262,7 @@ public class FrmConfig extends javax.swing.JFrame {
                 .addComponent(ckFtp))
         );
 
-        ckDesligaPC.setText("Desligar o computador ao terminar");
+        ckDesligaPC.setText("Desligar o computador ao terminar o backup");
         ckDesligaPC.setToolTipText("Desligar o computador quando terminar de fazer o backup");
         ckDesligaPC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -580,23 +580,23 @@ public class FrmConfig extends javax.swing.JFrame {
             String pastaOrigem = cfg.getPropriedade("pasta_origem");
             String pastaDestino = cfg.getPropriedade("pasta_destino");
             if (pastaOrigem.equals("")) {
-                JOptionPane.showMessageDialog(null, "Para ativar o backup automatico é necessário informar a pasta do sistema!");
+                JOptionPane.showMessageDialog(null, "<html>Informe a <b>pasta do sistema<b></html>");
                 pastaOrigem = selecionaPasta();
                 if (new File(pastaOrigem).isDirectory()) {
                     cfg.setPropriedade("pasta_origem", pastaOrigem);
                 } else {
-                    JOptionPane.showMessageDialog(null, "A pasta de origem não é um diretório válido");
+                    JOptionPane.showMessageDialog(null, "Selecione uma pasta válida");
                     ckBkFacil.setSelected(false);
                 }
             }
 
             if (pastaDestino.equals("")) {
-                JOptionPane.showMessageDialog(null, "Para ativar o backup automatico é necessário informar a pasta de destino do backup");
+                JOptionPane.showMessageDialog(null, "<html>Informe a <b>pasta de destino</b> do backup</html>");
                 pastaDestino = selecionaPasta();
                 if (new File(pastaDestino).isDirectory()) {
                     cfg.setPropriedade("pasta_destino", pastaDestino + "\\auto.zip");
                 } else {
-                    JOptionPane.showMessageDialog(null, "A pasta de destino não é um diretório válido");
+                    JOptionPane.showMessageDialog(null, "Selecione uma pasta válida");
                     ckBkFacil.setSelected(false);
                 }
             }

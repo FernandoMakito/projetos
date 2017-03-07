@@ -15,8 +15,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -31,7 +29,7 @@ public class FrmAgendar extends javax.swing.JFrame {
     public FrmAgendar() {
         initComponents();
     }
-    String user, senha;
+    String user = "", senha = "";
     Log logger;
 
     /**
@@ -56,6 +54,8 @@ public class FrmAgendar extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btSalvaConfig = new javax.swing.JButton();
         btApagarTask = new javax.swing.JButton();
+        ckUsuario = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
@@ -101,7 +101,7 @@ public class FrmAgendar extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ckSegunda)
@@ -121,7 +121,7 @@ public class FrmAgendar extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -140,8 +140,7 @@ public class FrmAgendar extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ckSabado)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ckDomingo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(ckDomingo))
         );
 
         btSalvaConfig.setBackground(new java.awt.Color(1, 109, 187));
@@ -160,6 +159,10 @@ public class FrmAgendar extends javax.swing.JFrame {
             }
         });
 
+        ckUsuario.setText("Executar mesmo estando desconectado");
+
+        jLabel3.setText("(Requer informar usuário e senha)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -167,18 +170,31 @@ public class FrmAgendar extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btApagarTask)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btSalvaConfig)))
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btApagarTask)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btSalvaConfig))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ckUsuario)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ckUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btSalvaConfig)
@@ -203,15 +219,17 @@ public class FrmAgendar extends javax.swing.JFrame {
             }
             selecionaDias(dias);
         } catch (UnsupportedEncodingException ex) {
-           logger.erro(ex.getMessage());
+            logger.erro(ex.getMessage());
         } catch (IOException ex) {
-           logger.erro(ex.getMessage());
+            logger.erro(ex.getMessage());
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void btSalvaConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvaConfigActionPerformed
         try {
-            confereUser();
+            if (ckUsuario.isSelected()) {
+                confereUser();
+            }
             Configuracoes cfg = new Configuracoes();
             if (criarTask()) {
                 cfg.setPropriedade("agendamento_ativo", "true");
@@ -238,7 +256,7 @@ public class FrmAgendar extends javax.swing.JFrame {
             cfg.setPropriedade("agendamento_ativo", "false");
             fecharForm();
         } catch (IOException | InterruptedException ex) {
-           logger.erro(ex.getMessage());
+            logger.erro(ex.getMessage());
         }
     }
 
@@ -308,7 +326,7 @@ public class FrmAgendar extends javax.swing.JFrame {
             String comando = "SchTasks /Create /SC WEEKLY /D " + dias + " /TN BackupMakito /TR \"\\\"" + nomeArquivo + "\"\\\" /ST " + cmbHorario.getSelectedItem().toString() + " " + cmdUsuario + " " + cmdSenha + " -f";
             System.out.println(comando);
             executaComandos(comando);
-            String log = "Tarefa agendada, dias:"+ dias + " horário: "+cmbHorario.getSelectedItem().toString() + " usuário: "+ cmdUsuario;
+            String log = "Tarefa agendada, dias:" + dias + " horário: " + cmbHorario.getSelectedItem().toString() + " usuário: " + cmdUsuario;
             queryTask(log);
             return true;
         } else {
@@ -423,9 +441,11 @@ public class FrmAgendar extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckSegunda;
     private javax.swing.JCheckBox ckSexta;
     private javax.swing.JCheckBox ckTerca;
+    private javax.swing.JCheckBox ckUsuario;
     private javax.swing.JComboBox<String> cmbHorario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

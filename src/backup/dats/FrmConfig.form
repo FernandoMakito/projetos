@@ -382,7 +382,7 @@
     </Container>
     <Component class="javax.swing.JCheckBox" name="ckDesligaPC">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Desligar o computador ao terminar"/>
+        <Property name="text" type="java.lang.String" value="Desligar o computador ao terminar o backup"/>
         <Property name="toolTipText" type="java.lang.String" value="Desligar o computador quando terminar de fazer o backup"/>
       </Properties>
       <Events>
