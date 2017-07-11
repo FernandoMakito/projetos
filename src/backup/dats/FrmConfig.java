@@ -6,11 +6,13 @@
 package backup.dats;
 
 import java.awt.Desktop;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level; 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -26,6 +28,7 @@ public class FrmConfig extends javax.swing.JFrame {
      * Creates new form FrmConfig
      */
     Log logger;
+
     public FrmConfig() {
         initComponents();
     }
@@ -291,6 +294,11 @@ public class FrmConfig extends javax.swing.JFrame {
                 ckBkFacilMouseReleased(evt);
             }
         });
+        ckBkFacil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckBkFacilActionPerformed(evt);
+            }
+        });
 
         btNomeArquivo.setText("Nome arquivo");
         btNomeArquivo.setToolTipText("Definir nome do arquivo gerado no backup");
@@ -454,7 +462,11 @@ public class FrmConfig extends javax.swing.JFrame {
             cfg.setPropriedade("backup_facil", String.valueOf(ckBkFacil.isSelected()));
             cfg.setPropriedade("desliga_pc", String.valueOf(ckDesligaPC.isSelected()));
             cfg.setPropriedade("ftp_backup", String.valueOf(ckFtp.isSelected()));
-            fecharForm();
+            if (Integer.valueOf(txtDiasManter.getText()) < 1) {
+                JOptionPane.showMessageDialog(this, "A quantidade de dias para manter o backup deve ser maior que 0","Erro ao salvar", JOptionPane.ERROR_MESSAGE);
+            }else{
+                fecharForm();
+            }
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             logger.erro(ex.getMessage());
         } catch (IOException ex) {
@@ -533,7 +545,7 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_btAgendarActionPerformed
 
     private void ckBkFacilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseClicked
-        
+
     }//GEN-LAST:event_ckBkFacilMouseClicked
 
     private void jLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseReleased
@@ -570,6 +582,10 @@ public class FrmConfig extends javax.swing.JFrame {
             btDadosFtp.setEnabled(false);
         }
     }//GEN-LAST:event_ckFtpMouseReleased
+
+    private void ckBkFacilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckBkFacilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ckBkFacilActionPerformed
     private void fecharForm() {
         setVisible(false);
     }
@@ -580,31 +596,51 @@ public class FrmConfig extends javax.swing.JFrame {
             String pastaOrigem = cfg.getPropriedade("pasta_origem");
             String pastaDestino = cfg.getPropriedade("pasta_destino");
             if (pastaOrigem.equals("")) {
-                JOptionPane.showMessageDialog(null, "<html>Informe a <b>pasta do sistema<b></html>");
-                pastaOrigem = selecionaPasta();
-                if (new File(pastaOrigem).isDirectory()) {
-                    cfg.setPropriedade("pasta_origem", pastaOrigem);
+                String pathAtual = new File(".").getCanonicalPath();
+                int dialogResult = JOptionPane.showConfirmDialog(null, "<html>A pasta atual é <b>" + pathAtual + "</b><br>Está é a pasta do sistema?</html>", "Definir pasta do sistema", JOptionPane.YES_NO_OPTION);
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    cfg.setPropriedade("pasta_origem", pathAtual);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Selecione uma pasta válida");
-                    ckBkFacil.setSelected(false);
+                    JOptionPane.showMessageDialog(null, "<html>Informe qual é a <b>pasta do sistema</b></html>");
+                    pastaOrigem = selecionaPasta();
+                    if (new File(pastaOrigem).isDirectory()) {
+                        cfg.setPropriedade("pasta_origem", pastaOrigem);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Selecione uma pasta válida");
+                        ckBkFacil.setSelected(false);
+                    }
                 }
             }
 
             if (pastaDestino.equals("")) {
-                JOptionPane.showMessageDialog(null, "<html>Informe a <b>pasta de destino</b> do backup</html>");
-                pastaDestino = selecionaPasta();
-                if (new File(pastaDestino).isDirectory()) {
-                    cfg.setPropriedade("pasta_destino", pastaDestino + "\\auto.zip");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Selecione uma pasta válida");
-                    ckBkFacil.setSelected(false);
-                }
+                JOptionPane.showMessageDialog(null, "<html>Informe onde o backup será salvo</html>");
+                selecionaDestinos();
             }
         } catch (UnsupportedEncodingException ex) {
             logger.erro(ex.getMessage());
         } catch (IOException ex) {
             logger.erro(ex.getMessage());
         }
+    }
+
+    private void selecionaDestinos() {
+        FrmDestinos frm = new FrmDestinos();
+        frm.setVisible(true);
+        frm.addComponentListener(new ComponentAdapter() {
+            public void componentHidden(ComponentEvent e) {
+                try {
+                    Configuracoes cfg = new Configuracoes();
+                    if (cfg.getPropriedade("pasta_destino").equals("")) {
+                        JOptionPane.showMessageDialog(null, "<html>Selecione ao menos um local de destino</html>");
+                        selecionaDestinos();
+                    }
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 
     private String selecionaPasta() {
@@ -641,7 +677,6 @@ public class FrmConfig extends javax.swing.JFrame {
         }
     }
 
-    
     private int getTipoCompactacao() {
         if (radioBaixa.isSelected()) {
             return 1;

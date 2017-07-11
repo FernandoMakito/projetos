@@ -31,7 +31,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -54,6 +53,7 @@ public class FrmInicio extends javax.swing.JFrame {
     List<String> addIgnorados = new ArrayList<>();
     List<String> arquivosIgnorados;
     List<String> pastasIgnoradas;
+    List<String> destinosBackup = new ArrayList<>();
     Timer timer = null;
     Boolean backupRapidoVerificado = false;
     Boolean rapido = false;
@@ -74,8 +74,6 @@ public class FrmInicio extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btSelecionar = new javax.swing.JButton();
-        txtOrigem = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelaArquivos = new javax.swing.JTable();
         txtQtdArquivos = new javax.swing.JLabel();
@@ -83,8 +81,13 @@ public class FrmInicio extends javax.swing.JFrame {
         txtDestino = new javax.swing.JTextField();
         progresso = new javax.swing.JProgressBar();
         statusSistema = new javax.swing.JLabel();
-        btExtensoes = new javax.swing.JButton();
         txtExtSelecionandas = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        btSelecionar = new javax.swing.JButton();
+        txtOrigem = new javax.swing.JTextField();
+        jPanel6 = new javax.swing.JPanel();
+        btSelecionaDestino = new javax.swing.JButton();
+        btExtensoes = new javax.swing.JButton();
         btIgnoraPasta = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -92,33 +95,12 @@ public class FrmInicio extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Makito Backup");
         setLocationByPlatform(true);
-        setPreferredSize(new java.awt.Dimension(400, 490));
+        setPreferredSize(new java.awt.Dimension(400, 530));
         setResizable(false);
         setSize(new java.awt.Dimension(400, 490));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
-            }
-        });
-
-        btSelecionar.setBackground(new java.awt.Color(1, 109, 187));
-        btSelecionar.setForeground(new java.awt.Color(255, 255, 255));
-        btSelecionar.setText("Selecionar");
-        btSelecionar.setToolTipText("Selecione a pasta onde o sistema está instalado");
-        btSelecionar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btSelecionarActionPerformed(evt);
-            }
-        });
-
-        txtOrigem.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtOrigem.setText("Pasta do Sistema");
-        txtOrigem.setAutoscrolls(false);
-        txtOrigem.setMaximumSize(new java.awt.Dimension(88, 20));
-        txtOrigem.setName("txtCaminhoOrigem"); // NOI18N
-        txtOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtOrigemKeyReleased(evt);
             }
         });
 
@@ -148,6 +130,7 @@ public class FrmInicio extends javax.swing.JFrame {
         });
         tabelaArquivos.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         tabelaArquivos.setMaximumSize(new java.awt.Dimension(80, 0));
+        tabelaArquivos.setRowHeight(15);
         tabelaArquivos.getTableHeader().setReorderingAllowed(false);
         tabelaArquivos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -190,15 +173,73 @@ public class FrmInicio extends javax.swing.JFrame {
         statusSistema.setMaximumSize(new java.awt.Dimension(380, 14));
         statusSistema.setMinimumSize(new java.awt.Dimension(380, 14));
 
-        btExtensoes.setText("Selecionar Extensões");
+        txtExtSelecionandas.setText("Não há extensões selecionadas");
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Pasta Origem (Sistema)"));
+
+        btSelecionar.setBackground(new java.awt.Color(1, 109, 187));
+        btSelecionar.setForeground(new java.awt.Color(255, 255, 255));
+        btSelecionar.setText("...");
+        btSelecionar.setToolTipText("Selecione a pasta onde o sistema está instalado");
+        btSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelecionarActionPerformed(evt);
+            }
+        });
+
+        txtOrigem.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtOrigem.setText("Pasta do Sistema");
+        txtOrigem.setAutoscrolls(false);
+        txtOrigem.setMaximumSize(new java.awt.Dimension(19, 20));
+        txtOrigem.setName("txtCaminhoOrigem"); // NOI18N
+        txtOrigem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtOrigemActionPerformed(evt);
+            }
+        });
+        txtOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtOrigemKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addComponent(txtOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btSelecionar)
+                .addComponent(txtOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Configurar"));
+
+        btSelecionaDestino.setBackground(new java.awt.Color(1, 109, 187));
+        btSelecionaDestino.setForeground(new java.awt.Color(255, 255, 255));
+        btSelecionaDestino.setText("Pastas destino");
+        btSelecionaDestino.setToolTipText("Definir onde o backup seja salvo");
+        btSelecionaDestino.setName("btSelecionaDestino"); // NOI18N
+        btSelecionaDestino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelecionaDestinoActionPerformed(evt);
+            }
+        });
+
+        btExtensoes.setText("Extensões");
         btExtensoes.setToolTipText("Escolha as extensões que deseja incluir no backup");
         btExtensoes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btExtensoesActionPerformed(evt);
             }
         });
-
-        txtExtSelecionandas.setText("Não há extensões selecionadas");
 
         btIgnoraPasta.setText("Ignorar SubPastas");
         btIgnoraPasta.setToolTipText("Escolha as pastas que NÂO deseja incluir no backup");
@@ -207,6 +248,25 @@ public class FrmInicio extends javax.swing.JFrame {
                 btIgnoraPastaActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addComponent(btExtensoes)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btIgnoraPasta)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btSelecionaDestino))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btSelecionaDestino)
+                .addComponent(btExtensoes)
+                .addComponent(btIgnoraPasta))
+        );
 
         jMenu1.setText("Avançado");
         jMenu1.setToolTipText("Clique para configurar opções do backup");
@@ -231,51 +291,45 @@ public class FrmInicio extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addComponent(txtDestino)
-                        .addGap(111, 111, 111))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtQtdArquivos, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(salvaBackup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(progresso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btExtensoes)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btIgnoraPasta))
-                            .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(statusSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(progresso, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtExtSelecionandas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 4, Short.MAX_VALUE)
+                                .addComponent(statusSistema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(54, 54, 54)
+                                        .addComponent(txtDestino)
+                                        .addGap(34, 34, 34))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtQtdArquivos, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(salvaBackup)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btSelecionar)
-                    .addComponent(txtOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btExtensoes)
-                    .addComponent(btIgnoraPasta))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addComponent(txtExtSelecionandas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -285,8 +339,10 @@ public class FrmInicio extends javax.swing.JFrame {
                 .addComponent(progresso, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusSistema, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        salvaBackup.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -295,11 +351,19 @@ public class FrmInicio extends javax.swing.JFrame {
     private void btSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarActionPerformed
         String caminho = selecionaPasta();
         if (!"".equals(caminho)) {
-            txtOrigem.setText(caminho);
             try {
-                listaArquivos();
+                txtOrigem.setText(caminho);
+                Configuracoes cfg = new Configuracoes();
+                cfg.setPropriedade("pasta_origem", caminho);
+                try {
+                    listaArquivos();
+                } catch (IOException ex) {
+                    logger.erro(ex.getMessage());
+                }
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                logger.erro(ex.getMessage());
+                Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btSelecionarActionPerformed
@@ -362,16 +426,21 @@ public class FrmInicio extends javax.swing.JFrame {
     private void verificarBkRapido() {
         try {
             Configuracoes cfg = new Configuracoes();
-            if (cfg.getPropriedade("backup_facil").equals("true")) {
+            defineCaminhoBackup();
+            if (cfg.getPropriedade("backup_facil").equals("true") && !txtDestino.getText().equals("")) {
                 File pastaOrigem = new File(cfg.getPropriedade("pasta_origem"));
-                String pastaDestino = new File(cfg.getPropriedade("pasta_destino")).getParent();
+                String pastaDestino = new File(txtDestino.getText()).getParent();
                 String exts = cfg.getPropriedade("extensoes_ativas");
                 File pasta = new File(pastaDestino);
                 if (pastaOrigem.isDirectory() && pasta.isDirectory() && (!exts.equals("") || (postgresEdoc || postgresMakito))) {
                     rapido = true;
                     iniciaBackupRapido();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Não foi possivel iniciar o backup automaticamente\n realize um backup manual primeiramente");
+                    if (!pastaOrigem.isDirectory()) {
+                        JOptionPane.showMessageDialog(null, "Não foi possivel iniciar o backup automaticamente\n Não foi possível encontrar a pasta do sistema");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Não foi possivel iniciar o backup automaticamente\n realize um backup manual primeiramente");
+                    }
                 }
             }
         } catch (UnsupportedEncodingException ex) {
@@ -382,25 +451,33 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private void iniciaBackupRapido() {
-        final String pastaDestino = new File(txtDestino.getText()).getParent();
         Object[] options1 = {"Cancelar"};
         final JPanel panel = new JPanel();
-        final JLabel lbl = new JLabel("<html>Iniciando backup rápido em <b>5 segundos..</b> <br><br> O arquivo será salvo em: <u>"+pastaDestino+"</u></html>");
+        final JLabel lbl = new JLabel("<html>Iniciando backup rápido em <b>5 segundos..</b> <br><br> O arquivo será salvo em: <u><b><br>" + destinosBackup.toString().replace(",", ",<br>") + "</b></u></html>");
         panel.add(lbl);
         timer = new Timer(1000, new ActionListener() {
             int segundos = 5;
             String pontos = "..";
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (segundos > 0) {
-                   switch(segundos){
-                       case 4: pontos = ".";break;
-                       case 3: pontos = "...";break;
-                       case 2: pontos = "..";break;
-                       case 1: pontos = ".";break;
-                   } 
-                   
-                    lbl.setText("<html>Iniciando backup rápido em <b>" + String.valueOf(segundos) + " segundos"+pontos+"</b> <br><br> O arquivo será salvo em: <u>"+pastaDestino+"</u></html>");
+                    switch (segundos) {
+                        case 4:
+                            pontos = ".";
+                            break;
+                        case 3:
+                            pontos = "...";
+                            break;
+                        case 2:
+                            pontos = "..";
+                            break;
+                        case 1:
+                            pontos = ".";
+                            break;
+                    }
+
+                    lbl.setText("<html>Iniciando backup rápido em <b>" + String.valueOf(segundos) + " segundos" + pontos + "</b> <br><br> O arquivo será salvo em: <u><b><br>" + destinosBackup.toString().replace(",", ",<br>") + "</b></u></html>");
                     segundos--;
                 } else {
                     timer.stop();
@@ -417,7 +494,7 @@ public class FrmInicio extends javax.swing.JFrame {
         int result = JOptionPane.showOptionDialog(null, panel, "Backup Rápido",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
                 null, options1, null);
-        
+
         if (result == JOptionPane.YES_OPTION) {
             timer.stop();
             rapido = false;
@@ -428,15 +505,6 @@ public class FrmInicio extends javax.swing.JFrame {
         try {
             logger.info("------------------------------------------------------------------------------------------------------");
             logger.info("Backup iniciado automaticamente por " + System.getProperty("user.name"));
-            String pastaSalva = new File(txtDestino.getText()).getParent();
-            String nome = nomeArquivoBackup;
-            File novoArquivo = new File(pastaSalva + "\\" + nome);
-            int i = 1;
-            while (novoArquivo.exists()) {
-                novoArquivo = new File(pastaSalva + "\\" + nome.replace(".zip", "_copia(" + String.valueOf(i) + ").zip"));
-                i++;
-            }
-            txtDestino.setText(novoArquivo.getAbsolutePath());
             if (!ePostgres()) {
                 copiarArquivos();
             } else {
@@ -501,6 +569,15 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_btIgnoraPastaActionPerformed
+
+    private void txtOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOrigemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtOrigemActionPerformed
+
+    private void btSelecionaDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionaDestinoActionPerformed
+        FrmDestinos frm = new FrmDestinos();
+        frm.setVisible(true);
+    }//GEN-LAST:event_btSelecionaDestinoActionPerformed
     private boolean verificaFtp() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         boolean tudoOk = true;
@@ -537,6 +614,7 @@ public class FrmInicio extends javax.swing.JFrame {
             String porta = cfg.getPropriedade("ftp_porta");
             String user = cfg.getPropriedade("ftp_usuario");
             String pass = cfg.getPropriedade("ftp_senha");
+            String nomeArquivo = cfg.getPropriedade("nome_arquivo");
             File arquivo = new File(txtDestino.getText());
             progresso.setValue(0);
             final int t = (int) arquivo.length();
@@ -599,8 +677,10 @@ public class FrmInicio extends javax.swing.JFrame {
                 if (diasManter != 999) {
                     long diff = new Date().getTime() - arquivoFtp.getModifiedDate().getTime();
                     if (diff > diasManter * 24 * 60 * 60 * 1000) {
-                        logger.info("Apagando arquivo do servidor de FTP, pois tem mais de " + String.valueOf(diasManter) + " dias. -->" + arquivoFtp.getName());
-                        client.deleteFile(arquivoFtp.getName());
+                        if (arquivoFtp.getName().contains(nomeArquivo)) {
+                            logger.info("Apagando arquivo do servidor de FTP, pois tem mais de " + String.valueOf(diasManter) + " dias. -->" + arquivoFtp.getName());
+                            client.deleteFile(arquivoFtp.getName());
+                        }
                     }
                 }
                 //conferencia se arquivo está
@@ -672,10 +752,10 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private String dataBackup() {
-        DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat sdf = new SimpleDateFormat("dd-MM-yy");
         Date date = new Date();
         String data = sdf.format(date);
-        return data;
+        return "_" + data;
     }
 
     private void copiarArquivos() {
@@ -685,8 +765,11 @@ public class FrmInicio extends javax.swing.JFrame {
         } catch (IOException | InterruptedException e) {
             JOptionPane.showMessageDialog(this, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar no inicio", JOptionPane.ERROR_MESSAGE);
         }
-        //verifica espaço livre, somando mas 15% de espaço para o arquivo compactado;
+        //verifica espaço livre, somando mais 15% de espaço para o arquivo compactado;
         String destino = txtDestino.getText();
+        if (destino.equals("")) {
+            return;
+        }
         String local;
         if (!pastaTemp.equals("propria")) {
             destino = pastaTemp;
@@ -711,9 +794,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 String pastaOrigem = txtOrigem.getText();
                 String pastaDestino;
                 if (pastaTemp.equals("propria")) {
-                    pastaDestino = txtDestino.getText();
-                    File f = new File(pastaDestino);
-                    pastaDestino = f.getParent();
+                    pastaDestino = new File(pastaOrigem).getParent();
                 } else {
                     pastaDestino = pastaTemp;
                 }
@@ -887,51 +968,92 @@ public class FrmInicio extends javax.swing.JFrame {
         //verifica arquivos de backup antigos para apagar
         apagaAntigos();
 
-        //faz backup em ftp
-        if (backupFtp) {
-            try {
-                enviaFTP();
-            } catch (IllegalStateException | FTPIllegalReplyException | FTPException | FileNotFoundException | FTPDataTransferException | FTPAbortedException ex) {
-                JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + ex.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        habilitaComandos(true);
-        try {
-            executaDepois();
-        } catch (IOException | InterruptedException e) {
-            JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao execeutar depois do backup", JOptionPane.ERROR_MESSAGE);
-        }
+        //Copiar para todos os destinos
+        copiaParaDestinos();
 
-        statusSistema.setText("Backup concluido!");
-        salvaConfig();
-        logger.info("Backup concluido!");
-        progresso.setMaximum(1);
-        progresso.setValue(1);
-        if (!desligaPC) {
-            String mensagem = "Backup finalizado!";
-            if (!rapido) {
-                //mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
-                JOptionPane.showMessageDialog(this, mensagem);
+    }
+
+    private void copiaParaDestinos() {
+        barraProgresso(true);
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    File arquivoBackup = new File(txtDestino.getText());
+                    for (String arquivo : destinosBackup) {
+                        File destinoAtual = new File(arquivo.replace("[", "").replace("]", "") + "\\" + nomeArquivoBackup);
+                        if (!destinoAtual.exists()) {
+                            logger.info("Copiando arquivo de " + arquivoBackup.toPath() + " para " + destinoAtual.toPath());
+                            statusSistema.setText("Copiando para " + destinoAtual.getParent());
+                            Files.copy(arquivoBackup.toPath(), destinoAtual.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            logger.info("Cópia concluída");
+                        }
+                    }
+                    barraProgresso(false);
+                    finalizaBackup();
+                } catch (UnsupportedEncodingException ex) {
+                    logger.erro("Erro ao copiar arquivo: " + ex.getMessage());
+                } catch (IOException ex) {
+                    logger.erro("Erro ao copiar arquivo: " + ex.getMessage());
+                }
             }
-            if (rapido) {
-                System.exit(0);
+        }).start();
+    }
+
+    private void finalizaBackup() {
+        try {
+            //faz backup em ftp
+            if (backupFtp) {
+                try {
+                    enviaFTP();
+                } catch (IllegalStateException | FTPIllegalReplyException | FTPException | FileNotFoundException | FTPDataTransferException | FTPAbortedException ex) {
+                    JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + ex.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
+                } catch (FTPListParseException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        } else {
-            desligaPC();
+            habilitaComandos(true);
+            try {
+                executaDepois();
+            } catch (IOException | InterruptedException e) {
+                JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao execeutar depois do backup", JOptionPane.ERROR_MESSAGE);
+            }
+
+            statusSistema.setText("Backup concluido!");
+            salvaConfig();
+            logger.info("Backup concluido!");
+            progresso.setMaximum(1);
+            progresso.setValue(1);
+            if (!desligaPC) {
+                String mensagem = "<html>O Backup foi finalizado! Salvo em:<u><b><br>" + destinosBackup.toString().replace(",", ",<br>") + "</b></u></html>";
+                if (!rapido) {
+                    //mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
+                    JOptionPane.showMessageDialog(this, mensagem);
+                }
+                if (rapido) {
+                    System.exit(0);
+                }
+            } else {
+                desligaPC();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void apagaAntigos() {
         try {
             Configuracoes cfg = new Configuracoes();
+            String nomeArquivo = cfg.getPropriedade("nome_arquivo");
             int diasManter = Integer.valueOf(cfg.getPropriedade("manter_arquivos"));
-            File[] todosArquivos = new File(new File(txtDestino.getText()).getParent()).listFiles();
-            for (File arquivo : todosArquivos) {
-                long diff = new Date().getTime() - arquivo.lastModified();
-                if (diff > diasManter * 24 * 60 * 60 * 1000) {
-                    if (getFileExtension(arquivo.getName()).toLowerCase().equals("zip")) {
-                        logger.info("Apagando backup antigo:" + arquivo.getName());
-                        arquivo.delete();
+            for (String destino : destinosBackup) {
+                File[] todosArquivos = new File(destino.replace("[", "").replace("]", "")).listFiles();
+                for (File arquivo : todosArquivos) {
+                    long diff = new Date().getTime() - arquivo.lastModified();
+                    if (diff > diasManter * 24 * 60 * 60 * 1000) {
+                        if (getFileExtension(arquivo.getName()).toLowerCase().equals("zip") && arquivo.getName().contains(nomeArquivo)) {
+                            logger.info("Apagando backup antigo:" + arquivo.getName());
+                            arquivo.delete();
+                        }
                     }
                 }
             }
@@ -983,7 +1105,6 @@ public class FrmInicio extends javax.swing.JFrame {
     private void salvaConfig() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
         cfg.setPropriedade("pasta_origem", txtOrigem.getText());
-        cfg.setPropriedade("pasta_destino", txtDestino.getText());
         String ignorados = "";
         for (String arquivo : addIgnorados) {
             ignorados = arquivo + "<" + ignorados;
@@ -1001,6 +1122,7 @@ public class FrmInicio extends javax.swing.JFrame {
         btIgnoraPasta.setEnabled(ativa);
         jMenu1.setEnabled(ativa);
         tabelaArquivos.setEnabled(ativa);
+        btSelecionaDestino.setEnabled(ativa);
     }
 
     private String selecionaPasta() {
@@ -1023,42 +1145,127 @@ public class FrmInicio extends javax.swing.JFrame {
         }
     }
 
-    private void selecionaCaminhoDestino() throws IOException, InterruptedException {
-        String pastaInicial;
-        if (txtDestino.getText().equals("")) {
-            pastaInicial = ".";
-        } else {
-            pastaInicial = txtDestino.getText();
-        }
-        JFileChooser j = new JFileChooser(new File(pastaInicial).getParent());
-        j.setDialogType(JFileChooser.SAVE_DIALOG);
-        j.setDialogTitle("Salvar arquivo de backup");
-        String nome = nomeArquivoBackup;
-        j.setSelectedFile(new File(nome));
-        j.setFileFilter(new FileNameExtensionFilter("Arquivo ZIP", "ZIP"));
-        Integer opt = j.showSaveDialog(this);
-        if (opt == 0) {
-            File selec = new File(j.getSelectedFile().getAbsolutePath());
-            if (!selec.exists()) {
-                String arquivoSelecionado = j.getSelectedFile().getAbsolutePath();
-                if (!"zip".equals(getFileExtension(arquivoSelecionado).toLowerCase())) {
-                    arquivoSelecionado = arquivoSelecionado + ".zip";
+    private void selecionarDestino() {
+        FrmDestinos frm = new FrmDestinos();
+        frm.setVisible(true);
+        frm.addComponentListener(new ComponentAdapter() {
+            public void componentHidden(ComponentEvent e) {
+                try {
+                    selecionaCaminhoDestino();
+                } catch (IOException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                txtDestino.setText(arquivoSelecionado);
-                logger.info("------------------------------------------------------------------------------------------------------");
-                logger.info("Backup iniciado manualmente por " + System.getProperty("user.name"));
-                if (!ePostgres()) {
-                    copiarArquivos();
-                } else {
-                    while (!conferePostgres()) {
-                        conferePostgres();
+            }
+        });
+    }
+
+    private void defineCaminhoBackup() {
+        try {
+            Configuracoes cfg = new Configuracoes();
+            String destinos = cfg.getPropriedade("pasta_destino");
+            String origem = cfg.getPropriedade("pasta_origem");
+            String nomeArquivo = cfg.getPropriedade("nome_arquivo") + dataBackup() + ".zip";
+            if (!destinos.contains("[") && !destinos.equals("")) {
+                destinos = "[" + new File(destinos).getParent() + "],";
+            }
+            if (destinos.equals("")) {
+                if (!origem.equals("")) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Não há nenhum destino de backup selecionado<br> Deseja informar agora?</html>", "Destino do backup", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        selecionarDestino();
                     }
-                    backupPostgres();
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Já existe um arquivo com esse nome nessa pasta \n Renomeie e salve novamente!");
-                selecionaCaminhoDestino();
+                String[] destino = destinos.split(",");
+                String inicioNome = "";
+
+                //procura por disco local
+                for (int i = 0; i < destino.length; i++) {
+                    destino[i] = destino[i].replace("[", "").replace("]", "");
+                    if ((destino[i].contains("C:") || destino[i].contains("D:")) && new File(destino[i]).exists()) {
+                        inicioNome = destino[i];
+                        break;
+                    }
+                }
+                //se não encontrou disco local faz onde der
+                if (inicioNome.equals("")) {
+                    for (int i = 0; i < destino.length; i++) {
+                        destino[i] = destino[i].replace("[", "").replace("]", "");
+                        if (new File(destino[i]).exists()) {
+                            inicioNome = destino[i];
+                            break;
+                        }
+                    }
+                }
+                //se nenhum caminho for válido então mostra um erro
+                if (inicioNome.equals("")) {
+                    if (!rapido) {
+                        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Backup abortado, não foi encontrado nenhum caminho válido, Deseja informar os destinos?</html>", "Caminho do backup não existe", JOptionPane.YES_NO_OPTION);
+                        if (dialogResult == JOptionPane.NO_OPTION) {
+                            logger.erro("Backup abortado, não foi encontrado nenhum caminho válido.");
+                            System.exit(0);
+                        } else {
+                            selecionarDestino();
+                        }
+                    } else {
+                        logger.erro("Backup abortado, não foi encontrado nenhum caminho válido.");
+                        System.exit(0);
+                    }
+
+                }
+
+                //loop para verificar se todos os destinos existem
+                destinosBackup.clear();
+                File pastaDestino;
+                for (int i = 0; i < destino.length; i++) {
+                    pastaDestino = new File(destino[i].replace("[", "").replace("]", ""));
+                    if (!rapido && !pastaDestino.exists()) {
+                        //mostra mensagem, grava log
+                        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>O caminho <b>" + pastaDestino.toPath() + "</b><br> não foi encontrado, Deseja continuar o backup?</html>", "Caminho do backup não existe", JOptionPane.YES_NO_OPTION);
+                        logger.erro("O caminho " + pastaDestino.toPath() + " não existe, por isso não foi incluido no backup");
+                        if (dialogResult == JOptionPane.NO_OPTION) {
+                            System.exit(0);
+                        }
+                    } else if (rapido && !pastaDestino.exists()) {
+                        //grava log
+                        logger.erro("O caminho " + pastaDestino.toPath() + " não existe, por isso não foi incluido no backup");
+                    } else if (pastaDestino.exists()) {
+                        destinosBackup.add(pastaDestino.toString());
+                    }
+                }
+                File novoArquivo = new File(inicioNome + "\\" + nomeArquivo);
+                String nome = nomeArquivo;
+                int i = 2;
+                while (novoArquivo.exists()) {
+                    nome = nomeArquivo.replace(".zip", "(" + String.valueOf(i) + ").zip");
+                    novoArquivo = new File(inicioNome + "\\" + nomeArquivo.replace(".zip", "(" + String.valueOf(i) + ").zip"));
+                    i++;
+                }
+                nomeArquivoBackup = nome;
+                txtDestino.setText(novoArquivo.getAbsolutePath());
             }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private void selecionaCaminhoDestino() throws IOException, InterruptedException {
+
+        defineCaminhoBackup();
+        logger.info("------------------------------------------------------------------------------------------------------");
+        logger.info("Backup iniciado manualmente por " + System.getProperty("user.name"));
+        if (!ePostgres()) {
+            copiarArquivos();
+        } else {
+            while (!conferePostgres()) {
+                conferePostgres();
+            }
+            backupPostgres();
         }
     }
 
@@ -1212,7 +1419,7 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         }
         String pastaDestino = cfg.getPropriedade("pasta_destino");
-        if(!txtDestino.getText().equals(pastaDestino)){
+        if (!txtDestino.getText().equals(pastaDestino)) {
             txtDestino.setText(pastaDestino);
         }
         String frase = "";
@@ -1426,9 +1633,12 @@ public class FrmInicio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btExtensoes;
     private javax.swing.JButton btIgnoraPasta;
+    private javax.swing.JButton btSelecionaDestino;
     private javax.swing.JButton btSelecionar;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JProgressBar progresso;
     private javax.swing.JButton salvaBackup;

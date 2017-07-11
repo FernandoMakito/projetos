@@ -75,7 +75,7 @@ public class Configuracoes {
         propriedades.put("senha_post", "postgres");
         propriedades.put("backup_facil", "false");
         propriedades.put("desliga_pc", "false");
-        propriedades.put("pastas_ignoradas", "tempor,FastEstrutura,FirefoxPortable,GoogleChromePortable,Log,LogEcf,LogTerminais,MkoLog,MONITOR,NFELOG,recebido,relcry,DownloadTmp,MakitoBackupLogs");
+        propriedades.put("pastas_ignoradas", "tempor,FastEstrutura,FirefoxPortable,GoogleChromePortable,Log,LogEcf,LogTerminais,MkoLog,MONITOR,NFELOG,recebido,relcry,DownloadTmp,MakitoBackupLogs,backupMakito");
         propriedades.put("ftp_backup", "false");
         propriedades.put("makitoPost_backup", "false");
         propriedades.put("edoc_backup", "false");

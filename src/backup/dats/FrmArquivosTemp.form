@@ -27,7 +27,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel2" pref="327" max="32767" attributes="0"/>
@@ -36,6 +36,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btSelecionar" min="-2" pref="93" max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="btSalvar" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -43,9 +47,9 @@
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="btSalvar" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
+                      <Component id="lblCaminhoAtual" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -60,6 +64,8 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="ckPropia" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="lblCaminhoAtual" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="txtCaminho" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btSelecionar" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -68,7 +74,7 @@
               <Component id="jLabel2" min="-2" pref="70" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btSalvar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -101,7 +107,7 @@
     <Component class="javax.swing.JCheckBox" name="ckPropia">
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
-        <Property name="text" type="java.lang.String" value="Copiar os arquivos na pasta de destino"/>
+        <Property name="text" type="java.lang.String" value="Usar esta pasta:"/>
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="ckPropiaMouseClicked"/>
@@ -128,6 +134,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&lt;html&gt;O sistema primeiramente cria uma pasta com os arquivos &lt;br&gt;copiados da pasta do sistema, depois ele os compacta &lt;br&gt;e os exclui. Mas se n&#xe3;o houver espa&#xe7;o disponivel &lt;br&gt;o backup pode falhar&lt;/html&gt;"/>
         <Property name="verticalAlignment" type="int" value="1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblCaminhoAtual">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value=" "/>
       </Properties>
     </Component>
   </SubComponents>

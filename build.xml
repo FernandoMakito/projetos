@@ -72,7 +72,7 @@
     -->
     <target name="package-for-store" depends="jar">
     <property name="store.jar.name" value="Backup_Dats"/>
-    <property name="store.dir" value="C:\Users\fernando\Desktop\Programas Java\Programa de Backup"/>
+    <property name="store.dir" value="C:\Users\fernando\Desktop\Meus Programas\Programa de Backup"/>
     <property name="store.jar" value="${store.dir}/${store.jar.name}.jar"/>
     <echo message="Packaging ${application.title} into a single JAR at ${store.jar}"/>
 <!--    <delete dir="${store.dir}"/>-->

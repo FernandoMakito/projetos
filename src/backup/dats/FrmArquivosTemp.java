@@ -41,6 +41,7 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
         ckPropia = new javax.swing.JCheckBox();
         btSelecionar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        lblCaminhoAtual = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
@@ -64,7 +65,7 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
         });
 
         ckPropia.setSelected(true);
-        ckPropia.setText("Copiar os arquivos na pasta de destino");
+        ckPropia.setText("Usar esta pasta:");
         ckPropia.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 ckPropiaMouseClicked(evt);
@@ -88,6 +89,9 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
         jLabel2.setText("<html>O sistema primeiramente cria uma pasta com os arquivos <br>copiados da pasta do sistema, depois ele os compacta <br>e os exclui. Mas se não houver espaço disponivel <br>o backup pode falhar</html>");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        lblCaminhoAtual.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblCaminhoAtual.setText(" ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,14 +104,17 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
                         .addComponent(txtCaminho)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btSalvar))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(ckPropia))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btSalvar)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblCaminhoAtual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -118,6 +125,8 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ckPropia)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCaminhoAtual)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCaminho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btSelecionar))
@@ -125,7 +134,7 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSalvar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -136,12 +145,20 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
             // TODO add your handling code here:
             Configuracoes cfg = new Configuracoes();
             String pastaTemp = cfg.getPropriedade("pasta_temp");
+            String origem = cfg.getPropriedade("pasta_origem");
+            String pathSalvar = new File(new File(".").getCanonicalPath()).getParent();
+            if(origem.equals("")){
+                lblCaminhoAtual.setText(pathSalvar);
+            }else{
+                lblCaminhoAtual.setText(new File(origem).getParent());
+            }
             if (!pastaTemp.equals("propria")) {
                 if (new File(pastaTemp).isDirectory()) {
                     txtCaminho.setText(pastaTemp);
                     ckPropia.setSelected(false);
                     txtCaminho.setEnabled(true);
                     btSelecionar.setEnabled(true);
+                    lblCaminhoAtual.setEnabled(false);
                 }
             }
         } catch (UnsupportedEncodingException ex) {
@@ -185,6 +202,7 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
     private void ckPropiaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckPropiaMouseReleased
         txtCaminho.setEnabled(!ckPropia.isSelected());
         btSelecionar.setEnabled(!ckPropia.isSelected());
+        lblCaminhoAtual.setEnabled(ckPropia.isSelected());
     }//GEN-LAST:event_ckPropiaMouseReleased
     private String selecionaPasta() {
         JFileChooser j = new JFileChooser(new File("."));
@@ -244,6 +262,7 @@ public class FrmArquivosTemp extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckPropia;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblCaminhoAtual;
     private javax.swing.JTextField txtCaminho;
     // End of variables declaration//GEN-END:variables
 }
