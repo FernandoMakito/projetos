@@ -7,6 +7,7 @@ package backup.dats;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -63,6 +64,7 @@ public class FrmPost extends javax.swing.JFrame {
         btSalvaConfig = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Conexão ao PostgreSQL");
         setLocationByPlatform(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -71,8 +73,6 @@ public class FrmPost extends javax.swing.JFrame {
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados PostgreSQL"));
-
-        txtCaminhoBin.setText("C:\\Program Files (x86)\\PostgreSQL\\9.3\\bin");
 
         btLoadExecutaAntes.setText("Selecionar");
         btLoadExecutaAntes.addActionListener(new java.awt.event.ActionListener() {
@@ -340,6 +340,9 @@ public class FrmPost extends javax.swing.JFrame {
             ckMakito.setSelected(Boolean.valueOf(cfg.getPropriedade("makitoPost_backup")));
             btTesta.setEnabled(ckMakito.isSelected() && !txtDatabase.getText().equals(""));
             btTestaEdoc.setEnabled(ckEdoc.isSelected() && !txtDatabaseEdoc.getText().equals(""));
+            if (!ckMakito.isSelected()) {
+                lerSlbase();
+            }
         } catch (UnsupportedEncodingException ex) {
             logger.erro(ex.getMessage());
         } catch (IOException ex) {
@@ -347,13 +350,52 @@ public class FrmPost extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void lerSlbase() throws IOException {
+        String arquivo = getPastaSistema() + "\\SLBASE.DAT";
+        if (new File(arquivo).exists()) {
+            int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Usar configurações do <b>SLBASE.DAT</b>?</html>", "Arquivo SLBASE encontrado", JOptionPane.YES_NO_OPTION);
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+                    int i = 0;
+                    for (String line; (line = br.readLine()) != null;) {
+                        switch(i){
+                            case 0: txtServidor.setText(line);break;
+                            case 1: txtUsuario.setText(line);break;
+                            case 2: txtSenha.setText(line);break;
+                            case 3: txtDatabase.setText(line);break;
+                            case 4: txtPorta.setText(line);break;
+                        }
+                        i++;
+                    }
+                    ckMakito.setSelected(true);
+                    btTesta.setEnabled(true);
+                }
+            }
+        }
+    }
+    
+    private String getPastaSistema() {
+        String pastaOrigem = "";
+        try {
+            Configuracoes cfg = new Configuracoes();
+            pastaOrigem = cfg.getPropriedade("pasta_origem");
+            if (pastaOrigem.equals("")) {
+                pastaOrigem = new File(".").getCanonicalPath();
+            }
+        } catch (UnsupportedEncodingException ex) {
+            logger.erro(ex.getMessage());
+        } catch (IOException ex) {
+            logger.erro(ex.getMessage());
+        }
+        return pastaOrigem;
+    }
     private void btTestaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTestaActionPerformed
         confereConexao("SLCFIL", false);
     }//GEN-LAST:event_btTestaActionPerformed
 
     private void ckEdocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckEdocMouseClicked
         // TODO add your handling code here:
-       
+
     }//GEN-LAST:event_ckEdocMouseClicked
 
     private void ckEdocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckEdocActionPerformed
@@ -367,7 +409,7 @@ public class FrmPost extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDatabaseKeyTyped
 
     private void btTestaEdocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btTestaEdocActionPerformed
-       
+
         confereConexao("*", true);
     }//GEN-LAST:event_btTestaEdocActionPerformed
 
@@ -382,21 +424,21 @@ public class FrmPost extends javax.swing.JFrame {
 
     private void txtDatabaseEdocKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDatabaseEdocKeyTyped
         // TODO add your handling code here:
-         btTestaEdoc.setEnabled(!txtDatabaseEdoc.getText().equals(""));
+        btTestaEdoc.setEnabled(!txtDatabaseEdoc.getText().equals(""));
     }//GEN-LAST:event_txtDatabaseEdocKeyTyped
 
     private void ckMakitoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckMakitoMouseReleased
-         btTesta.setEnabled(ckMakito.isSelected() && !txtDatabase.getText().equals(""));
+        btTesta.setEnabled(ckMakito.isSelected() && !txtDatabase.getText().equals(""));
     }//GEN-LAST:event_ckMakitoMouseReleased
 
     private void ckEdocMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckEdocMouseReleased
         // TODO add your handling code here:
-         btTestaEdoc.setEnabled(ckEdoc.isSelected() && !txtDatabaseEdoc.getText().equals(""));
+        btTestaEdoc.setEnabled(ckEdoc.isSelected() && !txtDatabaseEdoc.getText().equals(""));
     }//GEN-LAST:event_ckEdocMouseReleased
 
     private void confereConexao(String tabela, boolean edoc) {
-            String database, arquivoTeste;
-        arquivoTeste = System.getProperty("java.io.tmpdir")+"testePostgres.backup";
+        String database, arquivoTeste;
+        arquivoTeste = System.getProperty("java.io.tmpdir") + "testePostgres.backup";
         if (new File(txtCaminhoBin.getText() + "\\pg_dump.exe").exists()) {
             try {
                 if (!edoc) {
@@ -432,8 +474,8 @@ public class FrmPost extends javax.swing.JFrame {
                     if (line == null) {
                         break;
                     }
-                    JOptionPane.showMessageDialog(null, database+" - "+tabela+" Ocorreu o seguinte erro: \n" + line + "\n");
-                       
+                    JOptionPane.showMessageDialog(null, database + " - " + tabela + " Ocorreu o seguinte erro: \n" + line + "\n");
+
                     //apaga arquivo de teste
                     File teste = new File(arquivoTeste);
                     if (teste.exists()) {
@@ -446,11 +488,11 @@ public class FrmPost extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
             }
-              
+
             JOptionPane.showMessageDialog(null, "Tudo ok com a conexão PostgreSQL!");
             logger.info("As configurações do PostgresSQL estão corretas");
         } else {
-            JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o arquivo pg_dump.exe em:\n" + txtCaminhoBin.getText());   
+            JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o arquivo pg_dump.exe em:\n" + txtCaminhoBin.getText());
         }
         //apaga arquivo de teste
         File teste = new File(arquivoTeste);

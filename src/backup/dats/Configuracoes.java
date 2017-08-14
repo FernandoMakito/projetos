@@ -5,10 +5,12 @@
  */
 package backup.dats;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -49,17 +51,17 @@ public class Configuracoes {
     }
 
     private void confereCampos() throws IOException {
-            for (String key : propriedades.keySet()) {
-                if (getPropriedade(key) == null) {
-                    logger.info("Propriedade não encontrada nas configurações -> " + key);
-                    String valorPadrao =  propriedades.get(key);
-                    setPropriedade(key, valorPadrao);
-                }
+        for (String key : propriedades.keySet()) {
+            if (getPropriedade(key) == null) {
+                logger.info("Propriedade não encontrada nas configurações -> " + key);
+                String valorPadrao = propriedades.get(key);
+                setPropriedade(key, valorPadrao);
             }
+        }
     }
 
-    private void setPadrao() {
-        propriedades.put("nome_arquivo", "BackupMakito");
+    private void setPadrao() throws IOException {
+        propriedades.put("nome_arquivo", getSiglaCliente());
         propriedades.put("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int");
         propriedades.put("extensoes_ativas", "dat/fr3/con");
         propriedades.put("pasta_origem", "");
@@ -67,7 +69,7 @@ public class Configuracoes {
         propriedades.put("compactacao", "7");
         propriedades.put("executa_antes", "");
         propriedades.put("executa_depois", "");
-        propriedades.put("caminho_post", "C:\\Program Files (x86)\\PostgreSQL\\9.3\\bin");
+        propriedades.put("caminho_post", caminhoPastaBinPostgres());
         propriedades.put("banco_post", "");
         propriedades.put("porta_post", "5432");
         propriedades.put("servidor_post", "localhost");
@@ -93,6 +95,9 @@ public class Configuracoes {
         propriedades.put("manter_arquivos", "15");
         propriedades.put("manter_arquivos_ftp", "999");
         propriedades.put("apagar_arquivo_local", "false");
+        propriedades.put("dt_ultimo_backup", "2001-01-01");
+        propriedades.put("hr_ultimo_backup", "00:00");
+        propriedades.put("tamanho_arquivo", "1");
     }
 
     private String getPadrao(String propriedade) {
@@ -104,7 +109,28 @@ public class Configuracoes {
         }
         return "";
     }
-
+    private String caminhoPastaBinPostgres(){
+        String[] caminhosPossiveis = new String[]{
+            "C:\\Program Files (x86)\\PostgreSQL\\",
+            "C:\\Program Files\\PostgreSQL\\",
+            "C:\\PostgreSQL\\",
+            "D:\\Program Files (x86)\\PostgreSQL\\",
+            "D:\\Program Files\\PostgreSQL\\",
+            "D:\\PostgreSQL\\"
+        };
+        String retorno = "Selecione a pasta";
+        for(int i = 0; i < caminhosPossiveis.length; i++){
+            if(new File(caminhosPossiveis[i]).exists()){
+                File [] subPastas = new File(caminhosPossiveis[i]).listFiles();
+                for(File pasta : subPastas){
+                    if(pasta.getName().contains(".")){
+                        retorno = caminhosPossiveis[i] + pasta.getName() + "\\bin";
+                    }
+                }
+            }
+        }
+        return retorno;
+    }
     private Properties abreArquivo() throws FileNotFoundException, IOException {
         Properties props = new Properties();
         FileInputStream file = new FileInputStream(arquivoConfig);
@@ -133,11 +159,31 @@ public class Configuracoes {
     public String getPropriedade(String propriedade) throws IOException {
         Properties prop = abreArquivo();
         String resultado = prop.getProperty(propriedade);
-        if(resultado == null){
+        if (resultado == null) {
             setPropriedade(propriedade, getPadrao(propriedade));
             resultado = prop.getProperty(propriedade);
         }
         return resultado;
+    }
+
+    private String getSiglaCliente() throws FileNotFoundException, FileNotFoundException, IOException {
+        String arquivo = "MakitoFtp.txt";
+        String sigla = "";
+        if (new File(arquivo).exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+                int i = 0;
+                for (String line; (line = br.readLine()) != null;) {
+                    if (i == 1) {
+                        sigla = line;
+                    }
+                    i++;
+                }
+            }
+            return "Makito(" + sigla + ")";
+        } else {
+            return "BackupMakito";
+        }
+
     }
 
 }

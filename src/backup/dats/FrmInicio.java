@@ -37,8 +37,11 @@ import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.Zip4jConstants;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import net.lingala.zip4j.progress.ProgressMonitor;
 
 /**
@@ -62,6 +65,7 @@ public class FrmInicio extends javax.swing.JFrame {
     Boolean erroPostgres = false;
     Boolean backupFtp = false;
     Boolean desligaPC = false;
+    Boolean tamanhoOk = false;
     String pastaTemp = "";
     Log logger;
     String nomeArquivoBackup;
@@ -93,7 +97,7 @@ public class FrmInicio extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Makito Backup");
+        setTitle("Makito Backup 2.1");
         setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(400, 530));
         setResizable(false);
@@ -355,6 +359,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 txtOrigem.setText(caminho);
                 Configuracoes cfg = new Configuracoes();
                 cfg.setPropriedade("pasta_origem", caminho);
+                conferirSlBase(caminho);
                 try {
                     listaArquivos();
                 } catch (IOException ex) {
@@ -367,7 +372,56 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btSelecionarActionPerformed
+    private void conferirSlBase(String caminho) {
+        try {
+            //verificar SLBASE
+            Configuracoes cfg = new Configuracoes();
+            String arquivo = caminho + "\\SLBASE.DAT";
+            if (new File(arquivo).exists() && cfg.getPropriedade("makitoPost_backup").equals("false") && cfg.getPropriedade("backup_facil").equals("false")) {
+                int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Ambiente <b>PostgreSQL</b> detectado.<br> Deseja configurar a conexão agora?</html>", "Configurar PostgreSQL", JOptionPane.YES_NO_OPTION);
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    //configurar
+                    FrmPost frm = new FrmPost();
+                    frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+                    frm.setVisible(true);
+                    frm.addComponentListener(new ComponentAdapter() {
+                        public void componentHidden(ComponentEvent e) {
+                            try {
+                                ePostgres();
+                                getExtSelecionadas();
+                            } catch (IOException ex) {
+                                logger.erro(ex.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
+    private String getSiglaCliente() throws FileNotFoundException, FileNotFoundException, IOException {
+        String arquivo = "MakitoFtp.txt";
+        String sigla = "";
+        if (new File(arquivo).exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+                int i = 0;
+                for (String line; (line = br.readLine()) != null;) {
+                    if (i == 1) {
+                        sigla = line;
+                    }
+                    i++;
+                }
+            }
+            return "Makito(" + sigla + ")";
+        } else {
+            return "BackupMakito";
+        }
+
+    }
     private void tabelaArquivosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaArquivosMouseReleased
         atualizaQtdFiles();
     }//GEN-LAST:event_tabelaArquivosMouseReleased
@@ -395,10 +449,15 @@ public class FrmInicio extends javax.swing.JFrame {
         try {
             logger = new Log();
             Configuracoes cfg = new Configuracoes();
+            //altera nome do arquivo se for BackupMakito
+            if (cfg.getPropriedade("nome_arquivo").equals("BackupMakito")) {
+                cfg.setPropriedade("nome_arquivo", getSiglaCliente());
+            }
             nomeArquivoBackup = cfg.getPropriedade("nome_arquivo") + dataBackup() + ".zip";
             String origem = cfg.getPropriedade("pasta_origem");
             if (new File(origem).isDirectory()) {
                 txtOrigem.setText(origem);
+                conferirSlBase(origem);
             }
             String destino = cfg.getPropriedade("pasta_destino");
             if (new File(destino).getParent() != null) {
@@ -409,6 +468,7 @@ public class FrmInicio extends javax.swing.JFrame {
                 String caminhoAtual = getAtualPath();
                 if (caminhoAtual.toLowerCase().contains("sis_lj") || caminhoAtual.toLowerCase().contains("makito")) {
                     txtOrigem.setText(getAtualPath());
+                    conferirSlBase(caminhoAtual);
                 } else {
                     txtOrigem.setText("Pasta do sistema");
                     txtOrigem.selectAll();
@@ -451,7 +511,7 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private void iniciaBackupRapido() {
-        Object[] options1 = {"Cancelar"};
+        Object[] options1 = {"Interromper"};
         final JPanel panel = new JPanel();
         final JLabel lbl = new JLabel("<html>Iniciando backup rápido em <b>5 segundos..</b> <br><br> O arquivo será salvo em: <u><b><br>" + destinosBackup.toString().replace(",", ",<br>") + "</b></u></html>");
         panel.add(lbl);
@@ -518,18 +578,23 @@ public class FrmInicio extends javax.swing.JFrame {
         }
     }
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-        FrmConfig frm = new FrmConfig();
-        frm.setVisible(true);
-        frm.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                try {
-                    ePostgres();
-                    getExtSelecionadas();
-                } catch (IOException ex) {
-                    logger.erro(ex.getMessage());
+        try {
+            FrmConfig frm = new FrmConfig();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+            frm.addComponentListener(new ComponentAdapter() {
+                public void componentHidden(ComponentEvent e) {
+                    try {
+                        ePostgres();
+                        getExtSelecionadas();
+                    } catch (IOException ex) {
+                        logger.erro(ex.getMessage());
+                    }
                 }
-            }
-        });
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void txtDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDestinoActionPerformed
@@ -541,33 +606,43 @@ public class FrmInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void btExtensoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExtensoesActionPerformed
-        FrmExtensoes frm = new FrmExtensoes();
-        frm.setVisible(true);
-        frm.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                try {
-                    getExtSelecionadas();
-                    listaArquivos();
-                } catch (IOException ex) {
-                    logger.erro(ex.getMessage());
+        try {
+            FrmExtensoes frm = new FrmExtensoes();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+            frm.addComponentListener(new ComponentAdapter() {
+                public void componentHidden(ComponentEvent e) {
+                    try {
+                        getExtSelecionadas();
+                        listaArquivos();
+                    } catch (IOException ex) {
+                        logger.erro(ex.getMessage());
+                    }
                 }
-            }
-        });
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btExtensoesActionPerformed
 
     private void btIgnoraPastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIgnoraPastaActionPerformed
-        FrmSubPastas frm = new FrmSubPastas();
-        frm.setVisible(true);
-        frm.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                try {
-                    getExtSelecionadas();
-                    listaArquivos();
-                } catch (IOException ex) {
-                    logger.erro(ex.getMessage());
+        try {
+            FrmSubPastas frm = new FrmSubPastas();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+            frm.addComponentListener(new ComponentAdapter() {
+                public void componentHidden(ComponentEvent e) {
+                    try {
+                        getExtSelecionadas();
+                        listaArquivos();
+                    } catch (IOException ex) {
+                        logger.erro(ex.getMessage());
+                    }
                 }
-            }
-        });
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btIgnoraPastaActionPerformed
 
     private void txtOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOrigemActionPerformed
@@ -575,8 +650,13 @@ public class FrmInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_txtOrigemActionPerformed
 
     private void btSelecionaDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionaDestinoActionPerformed
-        FrmDestinos frm = new FrmDestinos();
-        frm.setVisible(true);
+        try {
+            FrmDestinos frm = new FrmDestinos();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btSelecionaDestinoActionPerformed
     private boolean verificaFtp() throws UnsupportedEncodingException, IOException {
         Configuracoes cfg = new Configuracoes();
@@ -712,6 +792,8 @@ public class FrmInicio extends javax.swing.JFrame {
         } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | NumberFormatException e) {
             if (!rapido) {
                 JOptionPane.showMessageDialog(this, "Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", JOptionPane.ERROR_MESSAGE);
+            } else {
+                mensagemTemporaria("Ocorreu um erro ao enviar o arquivo ao FTP \n" + e.getMessage(), "Erro ao enviar arquivo", 10, JOptionPane.ERROR_MESSAGE);
             }
             logger.erro("Erro ao enviar o arquivo ao FTP: " + e.getMessage());
         } finally {
@@ -756,6 +838,20 @@ public class FrmInicio extends javax.swing.JFrame {
         Date date = new Date();
         String data = sdf.format(date);
         return "_" + data;
+    }
+
+    private String getDataBackup() {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String data = sdf.format(date);
+        return data;
+    }
+
+    private String getHoraBackup() {
+        DateFormat sdf = new SimpleDateFormat("HH:mm");
+        Date date = new Date();
+        String hora = sdf.format(date);
+        return hora;
     }
 
     private void copiarArquivos() {
@@ -827,7 +923,11 @@ public class FrmInicio extends javax.swing.JFrame {
                         progresso.setValue(i + 1);
                     } catch (IOException e) {
                         statusSistema.setText("Ops, ocorreu algum erro ao copiar");
-                        JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao copiar os arquivos", JOptionPane.ERROR_MESSAGE);
+                        if (rapido) {
+                            mensagemTemporaria("Ocorreu um erro \n" + e.getMessage(), "Erro ao copiar os arquivos", 10, JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao copiar os arquivos", JOptionPane.ERROR_MESSAGE);
+                        }
                         logger.erro("Erro ao copiar os arquivos" + e.getMessage());
                     }
                 }
@@ -979,6 +1079,7 @@ public class FrmInicio extends javax.swing.JFrame {
             public void run() {
                 try {
                     File arquivoBackup = new File(txtDestino.getText());
+                    verificaTamanho(arquivoBackup);
                     for (String arquivo : destinosBackup) {
                         File destinoAtual = new File(arquivo.replace("[", "").replace("]", "") + "\\" + nomeArquivoBackup);
                         if (!destinoAtual.exists()) {
@@ -989,6 +1090,7 @@ public class FrmInicio extends javax.swing.JFrame {
                         }
                     }
                     barraProgresso(false);
+                    copiaSalvaArj();
                     finalizaBackup();
                 } catch (UnsupportedEncodingException ex) {
                     logger.erro("Erro ao copiar arquivo: " + ex.getMessage());
@@ -997,6 +1099,40 @@ public class FrmInicio extends javax.swing.JFrame {
                 }
             }
         }).start();
+    }
+
+    private void copiaSalvaArj() throws IOException {
+        File arquivoBackup = new File(txtDestino.getText());
+        logger.info("Copiando arquivo de " + txtDestino.getText() + " para " + txtOrigem.getText() + "\\SALVA.ARJ");
+        statusSistema.setText("Copiando para arquivo SALVA.ARJ");
+        Files.copy(arquivoBackup.toPath(), new File(txtOrigem.getText() + "\\SALVA.ARJ").toPath(), StandardCopyOption.REPLACE_EXISTING);
+        logger.info("Cópia concluída");
+    }
+    long tamanhoAtualBackup;
+    long ultimoTamanhoBackup;
+
+    private void verificaTamanho(File arquivo) {
+        try {
+            Configuracoes cfg = new Configuracoes();
+            tamanhoAtualBackup = arquivo.length();
+            ultimoTamanhoBackup = Long.parseLong(cfg.getPropriedade("tamanho_arquivo"));
+
+            logger.info("Verificando tamanho do arquivo de backup");
+            if (tamanhoAtualBackup >= (ultimoTamanhoBackup - (ultimoTamanhoBackup * 0.05))) {
+                //ok, tamanho aceitável
+                cfg.setPropriedade("tamanho_arquivo", String.valueOf(tamanhoAtualBackup));
+                logger.info("Tamanho do arquivo está ok, anterior " + (ultimoTamanhoBackup / 1024) + "KB, tamanho atual " + (tamanhoAtualBackup / 1024) + "KB");
+                tamanhoOk = true;
+            } else {
+                tamanhoOk = false;
+                logger.erro("Tamanho do arquivo está menor, anterior " + (ultimoTamanhoBackup / 1024) + "KB, tamanho atual " + (tamanhoAtualBackup / 1024) + "KB");
+            }
+
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void finalizaBackup() {
@@ -1015,28 +1151,133 @@ public class FrmInicio extends javax.swing.JFrame {
             try {
                 executaDepois();
             } catch (IOException | InterruptedException e) {
-                JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao execeutar depois do backup", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ocorreu um erro \n" + e.getMessage(), "Erro ao executar depois do backup", JOptionPane.ERROR_MESSAGE);
             }
 
-            statusSistema.setText("Backup concluido!");
+            statusSistema.setText("Backup concluído!");
             salvaConfig();
-            logger.info("Backup concluido!");
+            logger.info("Backup concluído!");
             progresso.setMaximum(1);
             progresso.setValue(1);
+            if (!tamanhoOk) {
+                mensagemTamanhoBackup();
+            }
+            String mensagem = "<html>O Backup foi finalizado! Salvo em:<u><b><br>" + destinosBackup.toString().replace(",", ",<br>") + "</b></u></html>";
             if (!desligaPC) {
-                String mensagem = "<html>O Backup foi finalizado! Salvo em:<u><b><br>" + destinosBackup.toString().replace(",", ",<br>") + "</b></u></html>";
                 if (!rapido) {
-                    //mensagem = "Backup automático finalizado, arquivo salvo em:\n " + txtDestino.getText();
                     JOptionPane.showMessageDialog(this, mensagem);
                 }
                 if (rapido) {
+                    mensagemTemporaria(mensagem, "Backup Finalizado", 10, 1);
                     System.exit(0);
                 }
             } else {
+                mensagemTemporaria(mensagem, "Backup Finalizado", 10, 1);
                 desligaPC();
             }
         } catch (IOException ex) {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void mensagemTamanhoBackup() {
+        String tabelaTamanhos = "<br><table border='1'><tr><td>Ultimo Backup</td><td>"
+                + "Backup Atual</td></tr><tr><td><b>"
+                + humanReadableByteCount(ultimoTamanhoBackup, true) + "</b></td><td><b>"
+                + humanReadableByteCount(tamanhoAtualBackup, true) + "</b></td></tr></table>";
+        String mensagemTamanhoErrado = "<html><div align='center'>Possivelmente o backup realizado está corrompido, <br>pois o tamanho do arquivo é incompatível com os backups anteriores.<br><b>Considere fechar o sistema e realizar novamente o backup.</br><br>" + tabelaTamanhos + "</div></html>";
+        String tituloTamanhoErrado = "Tamanho do backup incompátivel";
+
+        final JPanel panel = new JPanel();
+        final JLabel lbl = new JLabel(mensagemTamanhoErrado);
+        final JButton bt = new JButton("Confirmo que está correto (Não recomendado)");
+        final JButton bt2 = new JButton("Fechar");
+        final Object[] options1 = {bt, bt2};
+        panel.add(lbl);
+
+        bt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    timer.stop();
+                    JOptionPane.getRootFrame().dispose();
+                    Configuracoes cfg = new Configuracoes();
+                    cfg.setPropriedade("tamanho_arquivo", String.valueOf(tamanhoAtualBackup));
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        bt2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                timer.stop();
+                JOptionPane.getRootFrame().dispose();
+            }
+        });
+
+        timer = new Timer(1000, new ActionListener() {
+            int segundos = 21;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (segundos > 1) {
+                    segundos--;
+                    bt2.setText("Fechar (" + String.valueOf(segundos) + ")s");
+                } else {
+                    timer.stop();
+                    JOptionPane.getRootFrame().dispose();
+                }
+            }
+        });
+        if (!tamanhoOk && rapido) {
+            timer.start();
+        }
+
+        int result = JOptionPane.showOptionDialog(null, panel, tituloTamanhoErrado,
+                JOptionPane.YES_NO_CANCEL_OPTION, 2,
+                null, options1, null);
+        if (result == JOptionPane.YES_OPTION) {
+            timer.stop();
+        }
+
+    }
+
+    private void mensagemTemporaria(String texto, String titulo, final int tempo, int tipoMsg) {
+        final JPanel panel = new JPanel();
+        final JLabel lbl = new JLabel(texto);
+        final JButton bt = new JButton("Fechar (" + String.valueOf(tempo) + ")s");
+        final Object[] options1 = {bt};
+        panel.add(lbl);
+
+        bt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                timer.stop();
+                JOptionPane.getRootFrame().dispose();
+            }
+        });
+
+        timer = new Timer(1000, new ActionListener() {
+            int segundos = tempo;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (segundos > 1) {
+                    segundos--;
+                    bt.setText("Fechar (" + String.valueOf(segundos) + ")s");
+                } else {
+                    timer.stop();
+                    JOptionPane.getRootFrame().dispose();
+                }
+            }
+        });
+        timer.start();
+        int result = JOptionPane.showOptionDialog(null, panel, titulo,
+                JOptionPane.YES_NO_CANCEL_OPTION, tipoMsg,
+                null, options1, null);
+        if (result == JOptionPane.YES_OPTION) {
+            timer.stop();
         }
     }
 
@@ -1110,7 +1351,8 @@ public class FrmInicio extends javax.swing.JFrame {
             ignorados = arquivo + "<" + ignorados;
         }
         cfg.setPropriedade("arquivos_ignorados", ignorados);
-
+        cfg.setPropriedade("dt_ultimo_backup", getDataBackup());
+        cfg.setPropriedade("hr_ultimo_backup", getHoraBackup());
     }
 
     private void habilitaComandos(Boolean ativa) {
@@ -1146,19 +1388,24 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private void selecionarDestino() {
-        FrmDestinos frm = new FrmDestinos();
-        frm.setVisible(true);
-        frm.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                try {
-                    selecionaCaminhoDestino();
-                } catch (IOException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            FrmDestinos frm = new FrmDestinos();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+            frm.addComponentListener(new ComponentAdapter() {
+                public void componentHidden(ComponentEvent e) {
+                    try {
+                        selecionaCaminhoDestino();
+                    } catch (IOException ex) {
+                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-            }
-        });
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void defineCaminhoBackup() {
@@ -1166,7 +1413,9 @@ public class FrmInicio extends javax.swing.JFrame {
             Configuracoes cfg = new Configuracoes();
             String destinos = cfg.getPropriedade("pasta_destino");
             String origem = cfg.getPropriedade("pasta_origem");
+            String bkRapido = cfg.getPropriedade("backup_facil");
             String nomeArquivo = cfg.getPropriedade("nome_arquivo") + dataBackup() + ".zip";
+
             if (!destinos.contains("[") && !destinos.equals("")) {
                 destinos = "[" + new File(destinos).getParent() + "],";
             }
@@ -1178,73 +1427,101 @@ public class FrmInicio extends javax.swing.JFrame {
                     }
                 }
             } else {
-                String[] destino = destinos.split(",");
+
+                String[] quebra = destinos.split(",");
+                List<String> caminhos = new ArrayList<>();
+
+                caminhos.addAll(Arrays.asList(quebra));
                 String inicioNome = "";
 
-                //procura por disco local
-                for (int i = 0; i < destino.length; i++) {
-                    destino[i] = destino[i].replace("[", "").replace("]", "");
-                    if ((destino[i].contains("C:") || destino[i].contains("D:")) && new File(destino[i]).exists()) {
-                        inicioNome = destino[i];
+                //verifica se todos os caminhos existem
+                boolean mudouCaminho = false;
+                for (String destino : caminhos) {
+                    destino = destino.replace("[", "").replace("]", "");
+                    if (!new File(destino).exists()) {
+                        //procura pasta em outras letras, as vezes pendrive muda a letra
+                        char[] letrasPossiveis = "defghijklmnopqrstuvw".toUpperCase().toCharArray();
+                        for (int i = 0; letrasPossiveis.length > i; i++) {
+                            String novoCaminho = destino.replace(destino.substring(0, 2), String.valueOf(letrasPossiveis[i]) + ":");
+                            File novoTeste = new File(novoCaminho);
+                            if (novoTeste.exists()) {
+                                //sugerir mudar para o caminho
+                                int dialogResult = JOptionPane.showConfirmDialog(null, "<html>O caminho <b>" + destino + "</b> não foi encontrado, porém o caminho <b>" + novoCaminho + "</b> é válido, deseja alterar?</html>", "Alteração de destino", JOptionPane.YES_NO_OPTION);
+                                if (dialogResult == JOptionPane.YES_OPTION) {
+                                    cfg.setPropriedade("pasta_destino", cfg.getPropriedade("pasta_destino").replace(destino, novoCaminho));
+                                    mudouCaminho = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                //se mudou caminho, le novamente as configurações de destino
+                if (mudouCaminho) {
+                    quebra = cfg.getPropriedade("pasta_destino").split(",");
+                    caminhos.clear();
+                    caminhos.addAll(Arrays.asList(quebra));
+                }
+
+                //procura por disco local, para fazer mais rápido
+                for (String destino : caminhos) {
+                    destino = destino.replace("[", "").replace("]", "");
+                    if ((destino.contains("C:") || destino.contains("D:")) && new File(destino).exists()) {
+                        inicioNome = destino;
                         break;
                     }
                 }
                 //se não encontrou disco local faz onde der
                 if (inicioNome.equals("")) {
-                    for (int i = 0; i < destino.length; i++) {
-                        destino[i] = destino[i].replace("[", "").replace("]", "");
-                        if (new File(destino[i]).exists()) {
-                            inicioNome = destino[i];
+                    for (String destino : caminhos) {
+                        destino = destino.replace("[", "").replace("]", "");
+                        if (new File(destino).exists()) {
+                            inicioNome = destino;
                             break;
                         }
                     }
                 }
-                //se nenhum caminho for válido então mostra um erro
-                if (inicioNome.equals("")) {
-                    if (!rapido) {
-                        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Backup abortado, não foi encontrado nenhum caminho válido, Deseja informar os destinos?</html>", "Caminho do backup não existe", JOptionPane.YES_NO_OPTION);
-                        if (dialogResult == JOptionPane.NO_OPTION) {
-                            logger.erro("Backup abortado, não foi encontrado nenhum caminho válido.");
-                            System.exit(0);
-                        } else {
-                            selecionarDestino();
-                        }
-                    } else {
-                        logger.erro("Backup abortado, não foi encontrado nenhum caminho válido.");
-                        System.exit(0);
-                    }
+                //se não encontrou nenhum lugar válido faz na pasta do sistema.
+                boolean backupPastaSistema = false;
 
+                if (inicioNome.equals("") && bkRapido.equals("true")) {
+                    backupPastaSistema = true;
+                    caminhos.add(txtOrigem.getText());
+                    inicioNome = txtOrigem.getText();
                 }
 
                 //loop para verificar se todos os destinos existem
                 destinosBackup.clear();
                 File pastaDestino;
-                for (int i = 0; i < destino.length; i++) {
-                    pastaDestino = new File(destino[i].replace("[", "").replace("]", ""));
-                    if (!rapido && !pastaDestino.exists()) {
-                        //mostra mensagem, grava log
-                        int dialogResult = JOptionPane.showConfirmDialog(null, "<html>O caminho <b>" + pastaDestino.toPath() + "</b><br> não foi encontrado, Deseja continuar o backup?</html>", "Caminho do backup não existe", JOptionPane.YES_NO_OPTION);
-                        logger.erro("O caminho " + pastaDestino.toPath() + " não existe, por isso não foi incluido no backup");
-                        if (dialogResult == JOptionPane.NO_OPTION) {
-                            System.exit(0);
-                        }
-                    } else if (rapido && !pastaDestino.exists()) {
-                        //grava log
+                for (String destino : caminhos) {
+                    pastaDestino = new File(destino.replace("[", "").replace("]", ""));
+                    if (!pastaDestino.exists()) {
+                        mensagemTemporaria("<html>O caminho <b>" + pastaDestino.toPath() + "</b> não foi encontrado", "Caminho não encontrado", 10, JOptionPane.ERROR_MESSAGE);
                         logger.erro("O caminho " + pastaDestino.toPath() + " não existe, por isso não foi incluido no backup");
                     } else if (pastaDestino.exists()) {
                         destinosBackup.add(pastaDestino.toString());
                     }
                 }
-                File novoArquivo = new File(inicioNome + "\\" + nomeArquivo);
-                String nome = nomeArquivo;
-                int i = 2;
-                while (novoArquivo.exists()) {
-                    nome = nomeArquivo.replace(".zip", "(" + String.valueOf(i) + ").zip");
-                    novoArquivo = new File(inicioNome + "\\" + nomeArquivo.replace(".zip", "(" + String.valueOf(i) + ").zip"));
-                    i++;
+
+                if (backupPastaSistema) {
+                    mensagemTemporaria("<html>Nenhum destino válido foi encontrado para realizar o backup,<br> Portanto será realizado na pasta do sistema</html>", "Erro ao iniciar o backup", 10, JOptionPane.INFORMATION_MESSAGE);
+                    logger.erro("Nenhum destino válido foi encontrado, então o backup será realizado na pasta do sistema.");
                 }
-                nomeArquivoBackup = nome;
-                txtDestino.setText(novoArquivo.getAbsolutePath());
+                if (!inicioNome.equals("")) {
+                    File novoArquivo = new File(inicioNome + "\\" + nomeArquivo);
+                    String nome = nomeArquivo;
+                    int i = 2;
+                    while (novoArquivo.exists()) {
+                        nome = nomeArquivo.replace(".zip", "(" + String.valueOf(i) + ").zip");
+                        novoArquivo = new File(inicioNome + "\\" + nomeArquivo.replace(".zip", "(" + String.valueOf(i) + ").zip"));
+                        i++;
+                    }
+                    nomeArquivoBackup = nome;
+                    txtDestino.setText(novoArquivo.getAbsolutePath());
+                } else {
+                    mensagemTemporaria("<html>Nenhum destino válido, clique em <B>Pastas Destino</B> para definir um destino do backup.</html>", "Erro ao iniciar o backup", 6, JOptionPane.INFORMATION_MESSAGE);
+                    nomeArquivoBackup = "";
+                    txtDestino.setText("");
+                }
             }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
@@ -1484,39 +1761,41 @@ public class FrmInicio extends javax.swing.JFrame {
     boolean finalizadoMakito = false, finalizadoEdoc = false, iniciouCopia = false;
 
     private synchronized void backupPostgres() throws IOException, InterruptedException {
-        if (postgresMakito) {
-            Runnable r = new Runnable() {
-                public void run() {
-                    try {
-                        logger.info("Fazendo backup do PostgreSQL - Makito");
-                        fazBackupPostgres("Makito");
-                        finalizadoMakito = true;
-                        chamaCopiaPostgres();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        if (!txtDestino.getText().equals("")) {
+            if (postgresMakito) {
+                Runnable r = new Runnable() {
+                    public void run() {
+                        try {
+                            logger.info("Fazendo backup do PostgreSQL - Makito");
+                            fazBackupPostgres("Makito");
+                            finalizadoMakito = true;
+                            chamaCopiaPostgres();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                }
-            };
-            new Thread(r).start();
-        } else {
-            finalizadoMakito = true;
-        }
-        if (postgresEdoc) {
-            Runnable r = new Runnable() {
-                public void run() {
-                    try {
-                        logger.info("Fazendo backup do PostgreSQL - Edoc");
-                        fazBackupPostgres("Edoc");
-                        finalizadoEdoc = true;
-                        chamaCopiaPostgres();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                };
+                new Thread(r).start();
+            } else {
+                finalizadoMakito = true;
+            }
+            if (postgresEdoc) {
+                Runnable r = new Runnable() {
+                    public void run() {
+                        try {
+                            logger.info("Fazendo backup do PostgreSQL - Edoc");
+                            fazBackupPostgres("Edoc");
+                            finalizadoEdoc = true;
+                            chamaCopiaPostgres();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                }
-            };
-            new Thread(r).start();
-        } else {
-            finalizadoEdoc = true;
+                };
+                new Thread(r).start();
+            } else {
+                finalizadoEdoc = true;
+            }
         }
     }
 

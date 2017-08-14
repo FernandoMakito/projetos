@@ -23,6 +23,9 @@ public class BackupDats {
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         try {
+            for(String arg : args){
+                System.out.println(arg);
+            }
             // Set System L&F
             //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");

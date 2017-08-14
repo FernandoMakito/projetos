@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -72,8 +73,8 @@ public class FrmConfig extends javax.swing.JFrame {
         btArquivosTemp = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        txtDiasManter = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        txtDiasMantem = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configurações do Backup");
@@ -360,13 +361,13 @@ public class FrmConfig extends javax.swing.JFrame {
             .addComponent(btArquivosTemp, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Manter arquivos"));
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Apagar backups"));
 
-        jLabel2.setText("Manter arquivos locais por");
-
-        txtDiasManter.setText("15");
+        jLabel2.setText("Manter backups por");
 
         jLabel3.setText("dias");
+
+        txtDiasMantem.setModel(new javax.swing.SpinnerNumberModel(15, 1, 999, 1));
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -375,16 +376,17 @@ public class FrmConfig extends javax.swing.JFrame {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDiasManter, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtDiasMantem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addComponent(txtDiasManter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel3))
+                .addComponent(jLabel3)
+                .addComponent(txtDiasMantem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -455,18 +457,15 @@ public class FrmConfig extends javax.swing.JFrame {
             logger = new Log();
             // TODO add your handling code here:
             Configuracoes cfg = new Configuracoes();
-            cfg.setPropriedade("manter_arquivos", txtDiasManter.getText());
+            cfg.setPropriedade("manter_arquivos", txtDiasMantem.getValue().toString());
             cfg.setPropriedade("executa_antes", txtExecutaAntes.getText());
             cfg.setPropriedade("executa_depois", txtExecutaDepois.getText());
             cfg.setPropriedade("compactacao", String.valueOf(getTipoCompactacao()));
             cfg.setPropriedade("backup_facil", String.valueOf(ckBkFacil.isSelected()));
             cfg.setPropriedade("desliga_pc", String.valueOf(ckDesligaPC.isSelected()));
             cfg.setPropriedade("ftp_backup", String.valueOf(ckFtp.isSelected()));
-            if (Integer.valueOf(txtDiasManter.getText()) < 1) {
-                JOptionPane.showMessageDialog(this, "A quantidade de dias para manter o backup deve ser maior que 0","Erro ao salvar", JOptionPane.ERROR_MESSAGE);
-            }else{
-                fecharForm();
-            }
+            fecharForm();
+         
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             logger.erro(ex.getMessage());
         } catch (IOException ex) {
@@ -476,14 +475,13 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_btSalvaConfigActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         fecharForm();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
             Configuracoes cfg = new Configuracoes();
-            txtDiasManter.setText(cfg.getPropriedade("manter_arquivos"));
+            txtDiasMantem.setValue(Integer.valueOf(cfg.getPropriedade("manter_arquivos")));
             txtExecutaAntes.setText(cfg.getPropriedade("executa_antes"));
             txtExecutaDepois.setText(cfg.getPropriedade("executa_depois"));
             setTipoCompactacao(cfg.getPropriedade("compactacao"));
@@ -510,15 +508,25 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_btLoadExecutaDepoisActionPerformed
 
     private void btConfiguraPostActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfiguraPostActionPerformed
-        // TODO add your handling code here:
-        FrmPost frm = new FrmPost();
-        frm.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            FrmPost frm = new FrmPost();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btConfiguraPostActionPerformed
 
     private void btDadosFtpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDadosFtpActionPerformed
-        // TODO add your handling code here:
-        FrmFtp frm = new FrmFtp();
-        frm.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            FrmFtp frm = new FrmFtp();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btDadosFtpActionPerformed
 
     private void ckFtpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckFtpMouseClicked
@@ -539,9 +547,14 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_ckDesligaPCMouseClicked
 
     private void btAgendarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAgendarActionPerformed
-        // TODO add your handling code here:
-        FrmAgendar frm = new FrmAgendar();
-        frm.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            FrmAgendar frm = new FrmAgendar();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btAgendarActionPerformed
 
     private void ckBkFacilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseClicked
@@ -557,14 +570,24 @@ public class FrmConfig extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel1MouseReleased
 
     private void btNomeArquivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btNomeArquivoActionPerformed
-        FrmNomeArquivo frm = new FrmNomeArquivo();
-        frm.setVisible(true);
+        try {
+            FrmNomeArquivo frm = new FrmNomeArquivo();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btNomeArquivoActionPerformed
 
     private void btArquivosTempActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btArquivosTempActionPerformed
-        // TODO add your handling code here:
-        FrmArquivosTemp frm = new FrmArquivosTemp();
-        frm.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            FrmArquivosTemp frm = new FrmArquivosTemp();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btArquivosTempActionPerformed
 
     private void ckBkFacilMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckBkFacilMouseReleased
@@ -624,23 +647,28 @@ public class FrmConfig extends javax.swing.JFrame {
     }
 
     private void selecionaDestinos() {
-        FrmDestinos frm = new FrmDestinos();
-        frm.setVisible(true);
-        frm.addComponentListener(new ComponentAdapter() {
-            public void componentHidden(ComponentEvent e) {
-                try {
-                    Configuracoes cfg = new Configuracoes();
-                    if (cfg.getPropriedade("pasta_destino").equals("")) {
-                        JOptionPane.showMessageDialog(null, "<html>Selecione ao menos um local de destino</html>");
-                        selecionaDestinos();
+        try {
+            FrmDestinos frm = new FrmDestinos();
+            frm.setIconImage(ImageIO.read(BackupDats.class.getResource("res/icon.png")));
+            frm.setVisible(true);
+            frm.addComponentListener(new ComponentAdapter() {
+                public void componentHidden(ComponentEvent e) {
+                    try {
+                        Configuracoes cfg = new Configuracoes();
+                        if (cfg.getPropriedade("pasta_destino").equals("")) {
+                            JOptionPane.showMessageDialog(null, "<html>Selecione ao menos um local de destino</html>");
+                            selecionaDestinos();
+                        }
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-        });
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(FrmConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private String selecionaPasta() {
@@ -773,7 +801,7 @@ public class FrmConfig extends javax.swing.JFrame {
     private javax.swing.JRadioButton radioBaixa;
     private javax.swing.JRadioButton radioNormal;
     private javax.swing.JRadioButton radioUltra;
-    private javax.swing.JTextField txtDiasManter;
+    private javax.swing.JSpinner txtDiasMantem;
     private javax.swing.JTextField txtExecutaAntes;
     private javax.swing.JTextField txtExecutaDepois;
     // End of variables declaration//GEN-END:variables
