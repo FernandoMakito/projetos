@@ -377,7 +377,7 @@ public class FrmInicio extends javax.swing.JFrame {
             //verificar SLBASE
             Configuracoes cfg = new Configuracoes();
             String arquivo = caminho + "\\SLBASE.DAT";
-            if (new File(arquivo).exists() && cfg.getPropriedade("makitoPost_backup").equals("false") && cfg.getPropriedade("backup_facil").equals("false")) {
+            if (new File(arquivo).exists() && cfg.getPropriedade("makitoPost_backup").equals("false") && cfg.getPropriedade("backup_facil").equals("false") && cfg.getPropriedade("backupPorParametros").equals("false")) {
                 int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Ambiente <b>PostgreSQL</b> detectado.<br> Deseja configurar a conexão agora?</html>", "Configurar PostgreSQL", JOptionPane.YES_NO_OPTION);
                 if (dialogResult == JOptionPane.YES_OPTION) {
                     //configurar
@@ -395,12 +395,65 @@ public class FrmInicio extends javax.swing.JFrame {
                         }
                     });
                 }
+            }else if(new File(arquivo).exists() && cfg.getPropriedade("makitoPost_backup").equals("false") && cfg.getPropriedade("backupPorParametros").equals("true")){
+            //entra aqui se for backup pelo parametros e seta a configuração do postgres pelo slbase
+            gravaSlBase(arquivo);
+        }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void gravaSlBase(String arquivo){
+        try {
+            Configuracoes cfg = new Configuracoes();
+            try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
+                int i = 0;
+                for (String line; (line = br.readLine()) != null;) {
+                    switch(i){
+                        case 0: cfg.setPropriedade("servidor_post", line);break;
+                        case 1: cfg.setPropriedade("usuario_post", line);break;
+                        case 2: cfg.setPropriedade("senha_post", line);break;
+                        case 3: cfg.setPropriedade("banco_post", line);break;
+                        case 4: cfg.setPropriedade("porta_post", line);break;
+                    }
+                    i++;
+                }
+                cfg.setPropriedade("makitoPost_backup", "true");
+                cfg.setPropriedade("caminho_post", caminhoPastaBinPostgres());
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    private String caminhoPastaBinPostgres(){
+        String[] caminhosPossiveis = new String[]{
+            "C:\\Program Files (x86)\\PostgreSQL\\",
+            "C:\\Program Files\\PostgreSQL\\",
+            "C:\\PostgreSQL\\",
+            "D:\\Program Files (x86)\\PostgreSQL\\",
+            "D:\\Program Files\\PostgreSQL\\",
+            "D:\\PostgreSQL\\"
+        };
+        String retorno = "C:\\Program Files (x86)\\PostgreSQL\\9.3\\bin";
+        for(int i = 0; i < caminhosPossiveis.length; i++){
+            if(new File(caminhosPossiveis[i]).exists()){
+                File [] subPastas = new File(caminhosPossiveis[i]).listFiles();
+                for(File pasta : subPastas){
+                    if(pasta.getName().contains(".")){
+                        retorno = caminhosPossiveis[i] + pasta.getName() + "\\bin";
+                    }
+                }
+            }
+        }
+        return retorno;
     }
 
     private String getSiglaCliente() throws FileNotFoundException, FileNotFoundException, IOException {
@@ -1353,6 +1406,16 @@ public class FrmInicio extends javax.swing.JFrame {
         cfg.setPropriedade("arquivos_ignorados", ignorados);
         cfg.setPropriedade("dt_ultimo_backup", getDataBackup());
         cfg.setPropriedade("hr_ultimo_backup", getHoraBackup());
+
+        if (cfg.getPropriedade("backupPorParametros").equals("true")) {
+            cfg.setPropriedade("pasta_origem", cfg.getPropriedade("backupPorParametrosOrigem"));
+            cfg.setPropriedade("pasta_destino", cfg.getPropriedade("backupPorParametrosDestino"));
+            cfg.setPropriedade("backup_facil", cfg.getPropriedade("backupPorParametrosRapido"));
+            cfg.setPropriedade("backupPorParametrosOrigem", "");
+            cfg.setPropriedade("backupPorParametrosDestino", "");
+            cfg.setPropriedade("backupPorParametrosRapido", "");
+            cfg.setPropriedade("backupPorParametros", "false");
+        }
     }
 
     private void habilitaComandos(Boolean ativa) {

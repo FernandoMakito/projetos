@@ -98,6 +98,10 @@ public class Configuracoes {
         propriedades.put("dt_ultimo_backup", "2001-01-01");
         propriedades.put("hr_ultimo_backup", "00:00");
         propriedades.put("tamanho_arquivo", "1");
+        propriedades.put("backupPorParametros", "false");
+        propriedades.put("backupPorParametrosOrigem", "");
+        propriedades.put("backupPorParametrosDestino", "");
+        propriedades.put("backupPorParametrosRapido", "");
     }
 
     private String getPadrao(String propriedade) {

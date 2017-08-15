@@ -329,7 +329,11 @@ public class FrmPost extends javax.swing.JFrame {
         try {
             logger = new Log();
             Configuracoes cfg = new Configuracoes();
-            txtCaminhoBin.setText(cfg.getPropriedade("caminho_post"));
+            if (new File(cfg.getPropriedade("caminho_post")).exists()) {
+                txtCaminhoBin.setText(cfg.getPropriedade("caminho_post"));
+            }else{
+                txtCaminhoBin.setText(caminhoPastaBinPostgres());
+            }
             txtServidor.setText(cfg.getPropriedade("servidor_post"));
             txtPorta.setText(cfg.getPropriedade("porta_post"));
             txtUsuario.setText(cfg.getPropriedade("usuario_post"));
@@ -358,12 +362,22 @@ public class FrmPost extends javax.swing.JFrame {
                 try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
                     int i = 0;
                     for (String line; (line = br.readLine()) != null;) {
-                        switch(i){
-                            case 0: txtServidor.setText(line);break;
-                            case 1: txtUsuario.setText(line);break;
-                            case 2: txtSenha.setText(line);break;
-                            case 3: txtDatabase.setText(line);break;
-                            case 4: txtPorta.setText(line);break;
+                        switch (i) {
+                            case 0:
+                                txtServidor.setText(line);
+                                break;
+                            case 1:
+                                txtUsuario.setText(line);
+                                break;
+                            case 2:
+                                txtSenha.setText(line);
+                                break;
+                            case 3:
+                                txtDatabase.setText(line);
+                                break;
+                            case 4:
+                                txtPorta.setText(line);
+                                break;
                         }
                         i++;
                     }
@@ -373,7 +387,30 @@ public class FrmPost extends javax.swing.JFrame {
             }
         }
     }
-    
+
+    private String caminhoPastaBinPostgres() {
+        String[] caminhosPossiveis = new String[]{
+            "C:\\Program Files (x86)\\PostgreSQL\\",
+            "C:\\Program Files\\PostgreSQL\\",
+            "C:\\PostgreSQL\\",
+            "D:\\Program Files (x86)\\PostgreSQL\\",
+            "D:\\Program Files\\PostgreSQL\\",
+            "D:\\PostgreSQL\\"
+        };
+        String retorno = "Selecione a pasta";
+        for (int i = 0; i < caminhosPossiveis.length; i++) {
+            if (new File(caminhosPossiveis[i]).exists()) {
+                File[] subPastas = new File(caminhosPossiveis[i]).listFiles();
+                for (File pasta : subPastas) {
+                    if (pasta.getName().contains(".")) {
+                        retorno = caminhosPossiveis[i] + pasta.getName() + "\\bin";
+                    }
+                }
+            }
+        }
+        return retorno;
+    }
+
     private String getPastaSistema() {
         String pastaOrigem = "";
         try {
