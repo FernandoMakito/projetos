@@ -395,28 +395,39 @@ public class FrmInicio extends javax.swing.JFrame {
                         }
                     });
                 }
-            }else if(new File(arquivo).exists() && cfg.getPropriedade("makitoPost_backup").equals("false") && cfg.getPropriedade("backupPorParametros").equals("true")){
-            //entra aqui se for backup pelo parametros e seta a configuração do postgres pelo slbase
-            gravaSlBase(arquivo);
-        }
+            } else if (new File(arquivo).exists() && cfg.getPropriedade("makitoPost_backup").equals("false") && cfg.getPropriedade("backupPorParametros").equals("true")) {
+                //entra aqui se for backup pelo parametros e seta a configuração do postgres pelo slbase
+                gravaSlBase(arquivo);
+            }
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private void gravaSlBase(String arquivo){
+
+    private void gravaSlBase(String arquivo) {
         try {
             Configuracoes cfg = new Configuracoes();
             try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
                 int i = 0;
                 for (String line; (line = br.readLine()) != null;) {
-                    switch(i){
-                        case 0: cfg.setPropriedade("servidor_post", line);break;
-                        case 1: cfg.setPropriedade("usuario_post", line);break;
-                        case 2: cfg.setPropriedade("senha_post", line);break;
-                        case 3: cfg.setPropriedade("banco_post", line);break;
-                        case 4: cfg.setPropriedade("porta_post", line);break;
+                    switch (i) {
+                        case 0:
+                            cfg.setPropriedade("servidor_post", line);
+                            break;
+                        case 1:
+                            cfg.setPropriedade("usuario_post", line);
+                            break;
+                        case 2:
+                            cfg.setPropriedade("senha_post", line);
+                            break;
+                        case 3:
+                            cfg.setPropriedade("banco_post", line);
+                            break;
+                        case 4:
+                            cfg.setPropriedade("porta_post", line);
+                            break;
                     }
                     i++;
                 }
@@ -433,7 +444,8 @@ public class FrmInicio extends javax.swing.JFrame {
             Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    private String caminhoPastaBinPostgres(){
+
+    private String caminhoPastaBinPostgres() {
         String[] caminhosPossiveis = new String[]{
             "C:\\Program Files (x86)\\PostgreSQL\\",
             "C:\\Program Files\\PostgreSQL\\",
@@ -443,11 +455,11 @@ public class FrmInicio extends javax.swing.JFrame {
             "D:\\PostgreSQL\\"
         };
         String retorno = "C:\\Program Files (x86)\\PostgreSQL\\9.3\\bin";
-        for(int i = 0; i < caminhosPossiveis.length; i++){
-            if(new File(caminhosPossiveis[i]).exists()){
-                File [] subPastas = new File(caminhosPossiveis[i]).listFiles();
-                for(File pasta : subPastas){
-                    if(pasta.getName().contains(".")){
+        for (int i = 0; i < caminhosPossiveis.length; i++) {
+            if (new File(caminhosPossiveis[i]).exists()) {
+                File[] subPastas = new File(caminhosPossiveis[i]).listFiles();
+                for (File pasta : subPastas) {
+                    if (pasta.getName().contains(".")) {
                         retorno = caminhosPossiveis[i] + pasta.getName() + "\\bin";
                     }
                 }
@@ -530,6 +542,7 @@ public class FrmInicio extends javax.swing.JFrame {
             getExtSelecionadas();
             backupRapidoVerificado = false;
             listaArquivos();
+            
         } catch (IOException ex) {
             logger.erro(ex.getMessage());
         }
@@ -734,7 +747,6 @@ public class FrmInicio extends javax.swing.JFrame {
     }
 
     private void enviaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException, FTPListParseException {
-        //barraProgresso(true);
         progresso.setStringPainted(true);
         statusSistema.setText("Enviando arquivo ao FTP");
         while (!verificaFtp()) {
@@ -749,6 +761,7 @@ public class FrmInicio extends javax.swing.JFrame {
             String pass = cfg.getPropriedade("ftp_senha");
             String nomeArquivo = cfg.getPropriedade("nome_arquivo");
             File arquivo = new File(txtDestino.getText());
+            
             progresso.setValue(0);
             final int t = (int) arquivo.length();
             progresso.setMaximum(t);
@@ -764,46 +777,69 @@ public class FrmInicio extends javax.swing.JFrame {
             }
             client.login(user, pass);
             client.changeDirectory(uploadPath);
-            //verifica se permite compressão
-//            if(client.isCompressionSupported()){
-//                System.out.println("Permite compressão");
-//                client.setCompressionEnabled(true);
-//            }
-            client.upload(arquivo, new FTPDataTransferListener() {
-                int transfBytes = 0;
 
-                @Override
-                public void started() {
-                    //System.out.println("Iniciou");
-                    logger.info("Começou a enviar o arquivo para o FTP");
+            List<File> arquivosEnviar = new ArrayList<>();
+            arquivosEnviar.add(arquivo);
+
+            if (cfg.getPropriedade("dividirArquivo").equals("true")) {
+                try {
+                    //dividir arquivo em partes
+                    compactarEmPartes(arquivo.toPath().toString(), cfg.getPropriedade("tamanhoPartes"));
+                    arquivosEnviar.clear();
+                    while (arquivosDivididos.isEmpty()) {                        
+                        //statusSistema.setText("Dividindo arquivo em partes");
+                        System.out.println("Aguardando");
+                    }
+                    for (String parteArquivo : arquivosDivididos){
+                        arquivosEnviar.add(new File(parteArquivo));
+                    }
+                    //arquivosEnviar.addAll(arquivosDivididos);
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+            }
 
-                @Override
-                public void transferred(int i) {
-                    transfBytes += i;
-                    progresso.setValue(transfBytes);
-                    statusSistema.setText("Enviando arquivo ao FTP ( " + humanReadableByteCount(transfBytes, true) + " de " + humanReadableByteCount(t, true) + " )");
-                }
+            for (final File arquivoEnvio : arquivosEnviar) {
+                client.upload(arquivoEnvio, new FTPDataTransferListener() {
+                    int transfBytes = 0;
 
-                @Override
-                public void completed() {
-                    logger.info("Envio ao FTP concluido, verificando integridade do arquivo...");
-                }
+                    @Override
+                    public void started() {
+                        //System.out.println("Iniciou");
+                        logger.info("Começou a enviar o arquivo para o FTP");
+                    }
 
-                @Override
-                public void aborted() {
-                    logger.erro("O envio ao FTP foi cancelado");
-                }
+                    @Override
+                    public void transferred(int i) {
+                        transfBytes += i;
+                        progresso.setValue(transfBytes);
+                        statusSistema.setText("Enviando arquivo ao FTP ( " + humanReadableByteCount(transfBytes, true) + " de " + humanReadableByteCount(arquivoEnvio.length(), true) + " )");
+                    }
 
-                @Override
-                public void failed() {
-                    logger.erro("O envio ao FTP falhou");
-                }
+                    @Override
+                    public void completed() {
+                        logger.info("Envio ao FTP concluido, verificando integridade do arquivo...");
+                    }
 
-            });
+                    @Override
+                    public void aborted() {
+                        logger.erro("O envio ao FTP foi cancelado");
+                    }
+
+                    @Override
+                    public void failed() {
+                        logger.erro("O envio ao FTP falhou");
+                    }
+
+                });
+            }
+
             //verificar upload
             FTPFile[] arquivos = client.list("*.zip");
-            Boolean encontrouArquivo = false, tamanhoOk = false;
+            Boolean encontrouArquivo = false;
 
             for (FTPFile arquivoFtp : arquivos) {
                 //conferencia para apagar
@@ -817,30 +853,23 @@ public class FrmInicio extends javax.swing.JFrame {
                     }
                 }
                 //conferencia se arquivo está
-                //System.out.println(arquivo.getName()+"=="+arquivoFtp.getName());
+                System.out.println(arquivo.getName()+"=="+arquivoFtp.getName());
                 if (arquivo.getName().equals(arquivoFtp.getName())) {
                     encontrouArquivo = true;
-                    //System.out.println(arquivo.length()+"=="+arquivoFtp.getSize());
-                    if (arquivo.length() == arquivoFtp.getSize()) {
-                        tamanhoOk = true;
-                    }
                 }
             }
-            if (apagarLocal && encontrouArquivo && tamanhoOk) {
+            if (apagarLocal && encontrouArquivo) {
                 logger.info("Apagando arquivo local depois do backup no FTP -->" + arquivo.getAbsolutePath());
                 arquivo.delete();
             }
-            //System.out.println(encontrouArquivo+"=="+tamanhoOk);
+            
             client.disconnect(true);
-            if (encontrouArquivo && tamanhoOk) {
+            if (encontrouArquivo) {
                 statusSistema.setText("Arquivo enviado ao FTP com sucesso");
                 logger.info("Arquivo enviado ao FTP com sucesso");
-            } else if (!encontrouArquivo) {
+            } else {
                 statusSistema.setText("Operação com FTP concluída com falhas");
                 logger.info("O upload no FTP terminou, porém não foi possivel confirmar a existencia dele no servidor");
-            } else if (encontrouArquivo && !tamanhoOk) {
-                statusSistema.setText("Operação com FTP concluída com falhas");
-                logger.info("O upload no FTP terminou, porém o tamanho do arquivo é diferente do local");
             }
         } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | NumberFormatException e) {
             if (!rapido) {
@@ -1017,7 +1046,7 @@ public class FrmInicio extends javax.swing.JFrame {
         desligaPC = cfg.getPropriedade("desliga_pc").equals("true");
         return valorCompac;
     }
-
+    
     private void compactar(final String destination, final String source) throws IOException, UnsupportedEncodingException, InterruptedException {
         statusSistema.setText("Criando arquivo compactado");
         logger.info("Criando arquivo compactado");
@@ -1068,7 +1097,7 @@ public class FrmInicio extends javax.swing.JFrame {
                     }
                 } catch (ZipException e) {
                 } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Ocorreu um erro desconhecido ao compactar", "Erro ao compactar", JOptionPane.ERROR_MESSAGE);
+                    mensagemTemporaria("Ocorreu um erro desconhecido ao compactar", "Erro ao compactar", 30, JOptionPane.ERROR_MESSAGE);
                 } catch (InterruptedException ex) {
                     logger.erro(ex.getMessage());
                 } catch (FTPListParseException ex) {
@@ -1077,6 +1106,65 @@ public class FrmInicio extends javax.swing.JFrame {
             }
         }.start();
 
+    }
+    
+    ArrayList<String> arquivosDivididos = new ArrayList<>();
+    private void compactarEmPartes(final String source, final String tamPartes) throws IOException, UnsupportedEncodingException, InterruptedException {
+        statusSistema.setText("Dividindo backup em partes");
+        logger.info("Dividindo backup em partes");
+        progresso.setMaximum(100);
+        progresso.setStringPainted(true);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    // Initiate the ZipFile
+                    ZipFile zipFile = new ZipFile(source.replace(".zip", "(FTP).zip"));
+
+                    zipFile.setRunInThread(true);
+                    ZipParameters parameters = new ZipParameters();
+                    parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
+                    parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
+                    parameters.setCompressionLevel(tipoCompactacao());
+                    
+                    
+                    File bk = new File(source);
+
+                    zipFile.createZipFile(bk, parameters, true, ((Integer.valueOf(tamPartes)*1024)*1024));
+                    
+                    ProgressMonitor progressMonitor = zipFile.getProgressMonitor();
+
+                    while (progressMonitor.getState() == ProgressMonitor.STATE_BUSY) {
+                        try {
+                            progresso.setValue(progressMonitor.getPercentDone());
+                            File arquivoAtual = new File(progressMonitor.getFileName());
+                            statusSistema.setText("Compactando " + arquivoAtual.getName());
+                        } catch (Exception e) {
+                            System.out.println("Errooooo");
+                        }
+                    }
+                    if (progressMonitor.getResult() == ProgressMonitor.RESULT_ERROR) {
+                        // Any exception can be retrieved as below:
+                        if (progressMonitor.getException() != null) {
+                            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao compactar:\n" + progressMonitor.getException().toString(), "Erro ao compactar", JOptionPane.ERROR_MESSAGE);
+                            logger.erro("Ocorreu um erro ao dividir" + progressMonitor.getException().toString());
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Ocorreu um erro desconhecido ao dividir em partes", "Erro ao dividir", JOptionPane.ERROR_MESSAGE);
+                            logger.erro("Ocorreu um erro desconhecido ao dividir");
+                        }
+                    }else if(progressMonitor.getResult() == ProgressMonitor.RESULT_SUCCESS){
+                        ArrayList retList = zipFile.getSplitZipFiles();
+                        arquivosDivididos.addAll(retList);
+                        statusSistema.setText("Arquivo dividido com sucesso");
+                        logger.info("Arquivo dividido com sucesso");
+                    } 
+                } catch (ZipException e) {
+                } catch (IOException ex) {
+                    mensagemTemporaria("Ocorreu um erro desconhecido ao dividir arquivo", "Erro ao dividir", 30, JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }.start();
+            
     }
 
     private void apagaPasta(File folder) throws IOException, UnsupportedEncodingException, InterruptedException, FTPListParseException {
@@ -1475,7 +1563,6 @@ public class FrmInicio extends javax.swing.JFrame {
         try {
             Configuracoes cfg = new Configuracoes();
             String destinos = cfg.getPropriedade("pasta_destino");
-            String origem = cfg.getPropriedade("pasta_origem");
             String bkRapido = cfg.getPropriedade("backup_facil");
             String nomeArquivo = cfg.getPropriedade("nome_arquivo") + dataBackup() + ".zip";
 
@@ -1483,11 +1570,13 @@ public class FrmInicio extends javax.swing.JFrame {
                 destinos = "[" + new File(destinos).getParent() + "],";
             }
             if (destinos.equals("")) {
-                if (!origem.equals("")) {
+                if (new File(txtOrigem.getText()).exists()) {
                     int dialogResult = JOptionPane.showConfirmDialog(null, "<html>Não há nenhum destino de backup selecionado<br> Deseja informar agora?</html>", "Destino do backup", JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         selecionarDestino();
                     }
+                } else if (!txtOrigem.getText().equals("Pasta do sistema")) {
+                    mensagemTemporaria("Informe uma pasta do sistema válida", "Pasta do sistema inválida", 5, JOptionPane.ERROR_MESSAGE);
                 }
             } else {
 

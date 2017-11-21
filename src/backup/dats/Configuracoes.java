@@ -102,6 +102,8 @@ public class Configuracoes {
         propriedades.put("backupPorParametrosOrigem", "");
         propriedades.put("backupPorParametrosDestino", "");
         propriedades.put("backupPorParametrosRapido", "");
+        propriedades.put("dividirArquivo", "false");
+        propriedades.put("tamanhoPartes", "50");
     }
 
     private String getPadrao(String propriedade) {
