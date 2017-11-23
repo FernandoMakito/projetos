@@ -62,8 +62,8 @@ public class Configuracoes {
 
     private void setPadrao() throws IOException {
         propriedades.put("nome_arquivo", getSiglaCliente());
-        propriedades.put("extensoes", "dat/fr3/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con/int");
-        propriedades.put("extensoes_ativas", "dat/fr3/con");
+        propriedades.put("extensoes", "dat/fr3/int/hdr/k1/k2/k3/k4/k5/k6/k7/k8/tag/flx/rpt/exe/cfg/dll/txt/con");
+        propriedades.put("extensoes_ativas", "dat/fr3/con/int");
         propriedades.put("pasta_origem", "");
         propriedades.put("pasta_destino", "");
         propriedades.put("compactacao", "7");

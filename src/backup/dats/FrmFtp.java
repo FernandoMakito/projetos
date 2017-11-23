@@ -208,6 +208,12 @@ public class FrmFtp extends javax.swing.JFrame {
         jLabel13.setText("Mb");
 
         ckDividirArquivo.setText("Dividir arquivos em partes de");
+        ckDividirArquivo.setToolTipText("Envia para o FTP partes do arquivo, para evitar problemas de conexão");
+        ckDividirArquivo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ckDividirArquivoMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -223,11 +229,12 @@ public class FrmFtp extends javax.swing.JFrame {
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(ckDividirArquivo)
+            .addGroup(jPanel11Layout.createSequentialGroup()
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTamanhoParte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13)))
+                    .addComponent(jLabel13)
+                    .addComponent(ckDividirArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -248,9 +255,9 @@ public class FrmFtp extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btSalvaConfig)
                 .addContainerGap())
@@ -293,14 +300,14 @@ public class FrmFtp extends javax.swing.JFrame {
         String porta = txtPorta.getText();
         String user = txtUsuario.getText();
         String pass = String.valueOf(txtSenha.getPassword());
-        
+
         File arquivo = new File("ftpTest.txt");
         if (!arquivo.exists()) {
             arquivo.createNewFile();
         }
 
         String uploadPath = txtDestino.getText();
-        logger.info("Testando servidor FTP, host: "+host+":"+porta+" usuário: "+ user+" pasta: "+uploadPath);
+        logger.info("Testando servidor FTP, host: " + host + ":" + porta + " usuário: " + user + " pasta: " + uploadPath);
         if (porta.equals("")) {
             client.connect(host);
         } else {
@@ -351,6 +358,7 @@ public class FrmFtp extends javax.swing.JFrame {
             ckApagar.setSelected(Boolean.valueOf(cfg.getPropriedade("apagar_arquivo_local")));
             ckDividirArquivo.setSelected(Boolean.valueOf(cfg.getPropriedade("dividirArquivo")));
             txtTamanhoParte.setText(cfg.getPropriedade("tamanhoPartes"));
+            txtTamanhoParte.setEnabled(Boolean.valueOf(cfg.getPropriedade("dividirArquivo")));
         } catch (UnsupportedEncodingException ex) {
             logger.erro(ex.getMessage());
         } catch (IOException ex) {
@@ -379,6 +387,14 @@ public class FrmFtp extends javax.swing.JFrame {
             logger.erro(ex.getMessage());
         }
     }//GEN-LAST:event_btSalvaConfigActionPerformed
+
+    private void ckDividirArquivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ckDividirArquivoMouseClicked
+        if (ckDividirArquivo.isSelected()) {
+            txtTamanhoParte.setEnabled(true);
+        } else {
+            txtTamanhoParte.setEnabled(false);
+        }
+    }//GEN-LAST:event_ckDividirArquivoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -416,12 +432,8 @@ public class FrmFtp extends javax.swing.JFrame {
     private javax.swing.JButton btSalvaConfig;
     private javax.swing.JButton btTestarConexao;
     private javax.swing.JCheckBox ckApagar;
-    private javax.swing.JCheckBox ckApagar1;
-    private javax.swing.JCheckBox ckApagar2;
     private javax.swing.JCheckBox ckDividirArquivo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -429,17 +441,11 @@ public class FrmFtp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JTextField txtDestino;
     private javax.swing.JTextField txtDiasManter;
-    private javax.swing.JTextField txtDiasManter1;
-    private javax.swing.JTextField txtDiasManter2;
     private javax.swing.JTextField txtPorta;
     private javax.swing.JPasswordField txtSenha;
     private javax.swing.JTextField txtServidor;

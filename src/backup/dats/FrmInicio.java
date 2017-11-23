@@ -97,7 +97,7 @@ public class FrmInicio extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Makito Backup 2.1");
+        setTitle("Makito Backup 2.2");
         setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(400, 530));
         setResizable(false);
@@ -542,7 +542,7 @@ public class FrmInicio extends javax.swing.JFrame {
             getExtSelecionadas();
             backupRapidoVerificado = false;
             listaArquivos();
-            
+
         } catch (IOException ex) {
             logger.erro(ex.getMessage());
         }
@@ -748,7 +748,7 @@ public class FrmInicio extends javax.swing.JFrame {
 
     private void enviaFTP() throws IOException, IllegalStateException, FTPIllegalReplyException, FTPException, FileNotFoundException, FTPDataTransferException, FTPAbortedException, FTPListParseException {
         progresso.setStringPainted(true);
-        statusSistema.setText("Enviando arquivo ao FTP");
+        statusSistema.setText("Conectando no servidor de FTP");
         while (!verificaFtp()) {
             verificaFtp();
         }
@@ -761,10 +761,8 @@ public class FrmInicio extends javax.swing.JFrame {
             String pass = cfg.getPropriedade("ftp_senha");
             String nomeArquivo = cfg.getPropriedade("nome_arquivo");
             File arquivo = new File(txtDestino.getText());
+
             
-            progresso.setValue(0);
-            final int t = (int) arquivo.length();
-            progresso.setMaximum(t);
             String uploadPath = cfg.getPropriedade("ftp_caminho");
             Boolean apagarLocal = Boolean.valueOf(cfg.getPropriedade("apagar_arquivo_local"));
             int diasManter = Integer.valueOf(cfg.getPropriedade("manter_arquivos_ftp"));
@@ -780,17 +778,21 @@ public class FrmInicio extends javax.swing.JFrame {
 
             List<File> arquivosEnviar = new ArrayList<>();
             arquivosEnviar.add(arquivo);
-
-            if (cfg.getPropriedade("dividirArquivo").equals("true")) {
+            final String tamanhoTotal = humanReadableByteCount(arquivo.length(), true);
+            final int tamanhoTotalBytes = (int) arquivo.length();
+            final Boolean divide = cfg.getPropriedade("dividirArquivo").equals("true") && ((tamanhoTotalBytes/1048576) > Integer.valueOf(cfg.getPropriedade("tamanhoPartes")));
+            progresso.setValue(0);
+            progresso.setMaximum((int) arquivo.length());
+            if (divide) {
                 try {
                     //dividir arquivo em partes
                     compactarEmPartes(arquivo.toPath().toString(), cfg.getPropriedade("tamanhoPartes"));
                     arquivosEnviar.clear();
-                    while (arquivosDivididos.isEmpty()) {                        
+                    while (arquivosDivididos.isEmpty()) {
                         //statusSistema.setText("Dividindo arquivo em partes");
                         System.out.println("Aguardando");
                     }
-                    for (String parteArquivo : arquivosDivididos){
+                    for (String parteArquivo : arquivosDivididos) {
                         arquivosEnviar.add(new File(parteArquivo));
                     }
                     //arquivosEnviar.addAll(arquivosDivididos);
@@ -799,13 +801,14 @@ public class FrmInicio extends javax.swing.JFrame {
                 } catch (InterruptedException ex) {
                     Logger.getLogger(FrmInicio.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+                    
             }
 
             for (final File arquivoEnvio : arquivosEnviar) {
+
                 client.upload(arquivoEnvio, new FTPDataTransferListener() {
                     int transfBytes = 0;
-
+                    
                     @Override
                     public void started() {
                         //System.out.println("Iniciou");
@@ -815,8 +818,15 @@ public class FrmInicio extends javax.swing.JFrame {
                     @Override
                     public void transferred(int i) {
                         transfBytes += i;
-                        progresso.setValue(transfBytes);
-                        statusSistema.setText("Enviando arquivo ao FTP ( " + humanReadableByteCount(transfBytes, true) + " de " + humanReadableByteCount(arquivoEnvio.length(), true) + " )");
+                        setTotalEnviadoFtp(i);
+                        progresso.setValue(getTotalEnviadoFtp());
+                        progresso.setMaximum(tamanhoTotalBytes);
+                        //statusSistema.setText("Enviando arquivo ao FTP ( " + humanReadableByteCount(transfBytes, true) + " de " + humanReadableByteCount(arquivoEnvio.length(), true) + " )");
+                        if(!divide){
+                            statusSistema.setText("Enviando arquivo ao FTP ( " + humanReadableByteCount(getTotalEnviadoFtp(), true) + " de " + tamanhoTotal + " )");
+                        }else{
+                            statusSistema.setText("Enviando parte ao FTP ("+humanReadableByteCount(transfBytes, true)+"/"+humanReadableByteCount(arquivoEnvio.length(), true)+") Total:(" + humanReadableByteCount(getTotalEnviadoFtp(), true) + "/" + tamanhoTotal + " )");
+                        }
                     }
 
                     @Override
@@ -853,23 +863,30 @@ public class FrmInicio extends javax.swing.JFrame {
                     }
                 }
                 //conferencia se arquivo está
-                System.out.println(arquivo.getName()+"=="+arquivoFtp.getName());
-                if (arquivo.getName().equals(arquivoFtp.getName())) {
+                if (arquivo.getName().equals(arquivoFtp.getName().replace("(FTP)", ""))) {
                     encontrouArquivo = true;
+                }
+            }
+            if (divide) {
+                //apaga arquivos divididos
+                for (File arquivoApagar : arquivosEnviar) {
+                    statusSistema.setText("Apagando arquivos temporários");
+                    logger.info("Apagando arquivo particionado enviado ao FTP -->" + arquivoApagar.getAbsolutePath());
+                    arquivoApagar.delete();
                 }
             }
             if (apagarLocal && encontrouArquivo) {
                 logger.info("Apagando arquivo local depois do backup no FTP -->" + arquivo.getAbsolutePath());
                 arquivo.delete();
             }
-            
+
             client.disconnect(true);
             if (encontrouArquivo) {
                 statusSistema.setText("Arquivo enviado ao FTP com sucesso");
                 logger.info("Arquivo enviado ao FTP com sucesso");
             } else {
                 statusSistema.setText("Operação com FTP concluída com falhas");
-                logger.info("O upload no FTP terminou, porém não foi possivel confirmar a existencia dele no servidor");
+                logger.info("O upload no FTP terminou, porém não foi possivel confirmar a existencia no servidor");
             }
         } catch (IOException | IllegalStateException | FTPIllegalReplyException | FTPException | NumberFormatException e) {
             if (!rapido) {
@@ -883,7 +900,13 @@ public class FrmInicio extends javax.swing.JFrame {
             progresso.setStringPainted(true);
         }
     }
-
+    int totalEnviado;
+    private void setTotalEnviadoFtp(int bytes){
+        totalEnviado +=  bytes;
+    }
+    private int getTotalEnviadoFtp(){
+        return totalEnviado;
+    }
     private String getAtualPath() throws IOException {
         String path = new File(".").getCanonicalPath();
         return path;
@@ -1046,7 +1069,7 @@ public class FrmInicio extends javax.swing.JFrame {
         desligaPC = cfg.getPropriedade("desliga_pc").equals("true");
         return valorCompac;
     }
-    
+
     private void compactar(final String destination, final String source) throws IOException, UnsupportedEncodingException, InterruptedException {
         statusSistema.setText("Criando arquivo compactado");
         logger.info("Criando arquivo compactado");
@@ -1107,11 +1130,13 @@ public class FrmInicio extends javax.swing.JFrame {
         }.start();
 
     }
-    
+
     ArrayList<String> arquivosDivididos = new ArrayList<>();
+
     private void compactarEmPartes(final String source, final String tamPartes) throws IOException, UnsupportedEncodingException, InterruptedException {
         statusSistema.setText("Dividindo backup em partes");
         logger.info("Dividindo backup em partes");
+        arquivosDivididos.clear();
         progresso.setMaximum(100);
         progresso.setStringPainted(true);
         new Thread() {
@@ -1126,19 +1151,18 @@ public class FrmInicio extends javax.swing.JFrame {
                     parameters.setCompressionMethod(Zip4jConstants.COMP_DEFLATE);
                     parameters.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
                     parameters.setCompressionLevel(tipoCompactacao());
-                    
-                    
+
                     File bk = new File(source);
 
-                    zipFile.createZipFile(bk, parameters, true, ((Integer.valueOf(tamPartes)*1024)*1024));
-                    
+                    zipFile.createZipFile(bk, parameters, true, ((Integer.valueOf(tamPartes) * 1024) * 1024));
+
                     ProgressMonitor progressMonitor = zipFile.getProgressMonitor();
 
                     while (progressMonitor.getState() == ProgressMonitor.STATE_BUSY) {
                         try {
                             progresso.setValue(progressMonitor.getPercentDone());
                             File arquivoAtual = new File(progressMonitor.getFileName());
-                            statusSistema.setText("Compactando " + arquivoAtual.getName());
+                            statusSistema.setText("Divindo " + arquivoAtual.getName());
                         } catch (Exception e) {
                             System.out.println("Errooooo");
                         }
@@ -1146,25 +1170,25 @@ public class FrmInicio extends javax.swing.JFrame {
                     if (progressMonitor.getResult() == ProgressMonitor.RESULT_ERROR) {
                         // Any exception can be retrieved as below:
                         if (progressMonitor.getException() != null) {
-                            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao compactar:\n" + progressMonitor.getException().toString(), "Erro ao compactar", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao dividir em partes:\n" + progressMonitor.getException().toString(), "Erro ao Dividir", JOptionPane.ERROR_MESSAGE);
                             logger.erro("Ocorreu um erro ao dividir" + progressMonitor.getException().toString());
                         } else {
                             JOptionPane.showMessageDialog(null, "Ocorreu um erro desconhecido ao dividir em partes", "Erro ao dividir", JOptionPane.ERROR_MESSAGE);
                             logger.erro("Ocorreu um erro desconhecido ao dividir");
                         }
-                    }else if(progressMonitor.getResult() == ProgressMonitor.RESULT_SUCCESS){
+                    } else if (progressMonitor.getResult() == ProgressMonitor.RESULT_SUCCESS) {
                         ArrayList retList = zipFile.getSplitZipFiles();
                         arquivosDivididos.addAll(retList);
                         statusSistema.setText("Arquivo dividido com sucesso");
                         logger.info("Arquivo dividido com sucesso");
-                    } 
+                    }
                 } catch (ZipException e) {
                 } catch (IOException ex) {
                     mensagemTemporaria("Ocorreu um erro desconhecido ao dividir arquivo", "Erro ao dividir", 30, JOptionPane.ERROR_MESSAGE);
                 }
             }
         }.start();
-            
+
     }
 
     private void apagaPasta(File folder) throws IOException, UnsupportedEncodingException, InterruptedException, FTPListParseException {
